@@ -43,56 +43,35 @@ const RecentlyItem = ({ item }) => {
 const HomeScreen = ({ navigation }) => {
     return (
         <View style={styles.container}>
-            <ScrollView>
-                <SafeAreaView style={{ flex: 1 }}>
-                    <SectionList
-                        contentContainerStyle={{ paddingHorizontal: 10 }}
-                        stickySectionHeadersEnabled={false}
-                        sections={SECTIONS}
-                        renderSectionHeader={({ section }) => (
-                            <>
-                                <Text style={styles.sectionHeader}> {section.title}</Text>
-                                <FlatList
-                                    horizontal
-                                    data={section.data}
-                                    renderItem={({ item }) => <SearchItem item={item} />}
-                                    showsHorizontalScrollIndicator={false}
-                                />
-                            </>
-                        )}
-                        renderItem={({ item, section }) => {
-                            if (section.horizontal) {
-                                return null;
-                            }
-                            return <SearchItem item={item} />;
-                        }}
-                    />
-
-                    <SectionList
-                        contentContainerStyle={{ paddingHorizontal: 10 }}
-                        stickySectionHeadersEnabled={false}
-                        sections={RECENTLY}
-                        renderSectionHeader={({ section }) => (
-                            <>
-                                <Text style={styles.sectionHeader}> {section.title}</Text>
-                                <FlatList
-                                    horizontal
-                                    data={section.data}
-                                    renderItem={({ item }) => <RecentlyItem item={item} />}
-                                    showsHorizontalScrollIndicator={false}
-                                />
-                            </>
-                        )}
-                        renderItem={({ item, section }) => {
-                            if (section.horizontal) {
-                                return null;
-                            }
-                            return <RecentlyItem item={item} />;
-                        }}
-                    />
+            <ScrollView contentInsetAdjustmentBehavior="automatic">
+                <SafeAreaView>
+                    <ScrollView
+                        showsVerticalScrollIndicator={false}
+                        showsHorizontalScrollIndicator={false}
+                    >
+                        <Text style={styles.sectionHeader}>fsdsfdqsfdq</Text>
+                        <FlatList
+                            data={SECTIONS}
+                            renderItem={({ item }) => <SearchItem item={item} />}
+                            horizontal={true}
+                            showsVerticalScrollIndicator={false}
+                            showsHorizontalScrollIndicator={false}
+                        />
+                        <Text style={styles.sectionHeader}>fsdfdssfdqfd</Text>
+                        <FlatList
+                            data={RECENTLY}
+                            renderItem={({ item }) => <RecentlyItem item={item} />}
+                            horizontal={true}
+                            showsVerticalScrollIndicator={false}
+                            showsHorizontalScrollIndicator={false}
+                        />
+                    </ScrollView>
+                    
                 </SafeAreaView>
             </ScrollView>
+
         </View>
+
     );
 };
 
@@ -100,76 +79,64 @@ const HomeScreen = ({ navigation }) => {
 
 const SECTIONS = [
     {
-        title: 'Vous cherchez.. ?',
-        horizontal: true,
-        data: [
-            {
-                key: '1',
-                text: 'Catamarans',
-                uri: 'https://picsum.photos/id/1/200',
-            },
-            {
-                key: '2',
-                text: 'Yacht',
-                uri: 'https://picsum.photos/id/10/200',
-            },
+        key: '1',
+        text: 'Catamarans',
+        uri: 'https://picsum.photos/id/1/200',
+    },
+    {
+        key: '2',
+        text: 'Yacht',
+        uri: 'https://picsum.photos/id/10/200',
+    },
 
-            {
-                key: '3',
-                text: 'Item text 3',
-                uri: 'https://picsum.photos/id/1002/200',
-            },
-            {
-                key: '4',
-                text: 'Item text 4',
-                uri: 'https://picsum.photos/id/1006/200',
-            },
-            {
-                key: '5',
-                text: 'Item text 5',
-                uri: 'https://picsum.photos/id/1008/200',
-            },
-        ],
+    {
+        key: '3',
+        text: 'Item text 3',
+        uri: 'https://picsum.photos/id/1002/200',
+    },
+    {
+        key: '4',
+        text: 'Item text 4',
+        uri: 'https://picsum.photos/id/1006/200',
+    },
+    {
+        key: '5',
+        text: 'Item text 5',
+        uri: 'https://picsum.photos/id/1008/200',
     },
 ];
 
 const RECENTLY = [
     {
-        title: 'Publié récemment',
-        horizontal: true,
-        data: [
-            {
-                key: '1',
-                text: 'Yacht Imperator 44m',
-                price: "300 €/semaine",
-                uri: 'https://picsum.photos/id/1/200',
-            },
-            {
-                key: '2',
-                text: 'Yacht Imperator 44m',
-                price: "300 €/semaine",
-                uri: 'https://picsum.photos/id/10/200',
-            },
+        key: '1',
+        text: 'Yacht Imperator 44m',
+        price: "300 €/semaine",
+        uri: 'https://picsum.photos/id/1/200',
+    },
+    {
+        key: '2',
+        text: 'Yacht Imperator 44m',
+        price: "300 €/semaine",
+        uri: 'https://picsum.photos/id/10/200',
+    },
 
-            {
-                key: '3',
-                text: 'Yacht Imperator 44m',
-                price: "300 €/semaine",
-                uri: 'https://picsum.photos/id/1002/200',
-            },
-            {
-                key: '4',
-                text: 'Yacht Imperator 44m',
-                price: "300 €/semaine",
-                uri: 'https://picsum.photos/id/1006/200',
-            },
-            {
-                key: '5',
-                text: 'Yacht Imperator 44m',
-                price: "300 €/semaine",
-                uri: 'https://picsum.photos/id/1008/200',
-            },
-        ],
+    {
+        key: '3',
+        text: 'Yacht Imperator 44m',
+        price: "300 €/semaine",
+        uri: 'https://picsum.photos/id/1002/200',
+    },
+    {
+        key: '4',
+        text: 'Yacht Imperator 44m',
+        price: "300 €/semaine",
+        uri: 'https://picsum.photos/id/1006/200',
+    },
+    {
+        key: '5',
+        text: 'Yacht Imperator 44m',
+        price: "300 €/semaine",
+        uri: 'https://picsum.photos/id/1008/200',
     },
 ];
 
