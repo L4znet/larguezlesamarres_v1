@@ -49,16 +49,18 @@ const HomeScreen = ({ navigation }) => {
                         showsVerticalScrollIndicator={false}
                         showsHorizontalScrollIndicator={false}
                     >
-                        <Text style={styles.sectionHeader}>fsdsfdqsfdq</Text>
+                        <Text style={styles.sectionHeader}>Vous cherchez ?</Text>
                         <FlatList
+                            style={styles.searchItemContainer}
                             data={SECTIONS}
                             renderItem={({ item }) => <SearchItem item={item} />}
                             horizontal={true}
                             showsVerticalScrollIndicator={false}
                             showsHorizontalScrollIndicator={false}
                         />
-                        <Text style={styles.sectionHeader}>fsdfdssfdqfd</Text>
+                        <Text style={styles.sectionHeader}>Publié récemment</Text>
                         <FlatList
+                            style={styles.recentlyItemContainer}
                             data={RECENTLY}
                             renderItem={({ item }) => <RecentlyItem item={item} />}
                             horizontal={true}
@@ -66,7 +68,7 @@ const HomeScreen = ({ navigation }) => {
                             showsHorizontalScrollIndicator={false}
                         />
                     </ScrollView>
-                    
+
                 </SafeAreaView>
             </ScrollView>
 
@@ -143,16 +145,19 @@ const RECENTLY = [
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginBottom:50
     },
     sectionHeader: {
         fontWeight: '800',
         fontSize: 35,
         color: '#000',
-        marginVertical:40
+        marginVertical:40,
+        marginLeft:30
+    },
+    searchItemContainer:{
+        marginLeft:30
     },
     searchItem: {
-        margin: 10,
+        marginRight:30,
         borderRadius:20,
         backgroundColor: "#FFF",
         height:200,
@@ -179,9 +184,12 @@ const styles = StyleSheet.create({
             fontWeight:"bold"
         },
     },
-
+    recentlyItemContainer:{
+        marginLeft:30
+    },
     recentlyItem: {
-        margin: 10,
+        marginRight:30,
+        marginBottom:30,
         borderRadius:20,
         backgroundColor: "#FFF",
         height:360,
