@@ -16,13 +16,13 @@ const Navigation = (navigation) => {
         <Tab.Navigator
             screenOptions={{
                 tabBarStyle:{
-                    backgroundColor:"#222",
+                    backgroundColor:"#3FDEFF",
                     height:110,
                     fontSize:30,
                     paddingTop:20,
                 },
-                tabBarActiveTintColor: '#B69F73',
-                tabBarInactiveTintColor: 'gray',
+                tabBarActiveTintColor: '#FFF',
+                tabBarInactiveTintColor: '#198298',
                 tabBarLabelStyle:{
                     fontSize:16
                 }
@@ -32,21 +32,21 @@ const Navigation = (navigation) => {
                 name="Home" component={HomeScreen}
                 options={{
                     tabBarIcon: ({ focused }) =>
-                        (<Foundation name="home" size={30} color={focused ? "#B69F73" : "gray"} />)
+                        (<Foundation name="home" size={30} color={focused ? "#FFF" : "#198298"} />)
                 }}
             />
             <Tab.Screen
                 name="Favorite" component={FavoriteScreen}
                 options={{
                     tabBarIcon: ({ focused }) =>
-                        (<MaterialIcons name="favorite" size={30} color={focused ? "#B69F73" : "gray"} />)
+                        (<MaterialIcons name="favorite" size={30} color={focused ? "#FFF" : "#198298"} />)
                 }}
             />
             <Tab.Screen
                 name="Tchat" component={TchatScreen}
                 options={{
                     tabBarIcon: ({ focused }) =>
-                        (<Entypo name="message" size={30} color={focused ? "#B69F73" : "gray"} />)
+                        (<Entypo name="message" size={30} color={focused ? "#FFF" : "#198298"} />)
                 }}
             />
             <Tab.Screen
@@ -54,14 +54,14 @@ const Navigation = (navigation) => {
                 component={BookingScreen}
                 options={{
                     tabBarIcon: ({ focused }) =>
-                        (<Entypo name="calendar" size={30} color={focused ? "#B69F73" : "gray"} />)
+                        (<Entypo name="calendar" size={30} color={focused ? "#FFF" : "#198298"} />)
                 }}
             />
             <Tab.Screen
                 name="Profile" component={ProfileScreen}
                 options={{
                     tabBarIcon: ({ focused }) =>
-                        (<FontAwesome name="user"  size={30} color={focused ? "#B69F73" : "gray"} />)
+                        (<FontAwesome name="user"  size={30} color={focused ? "#FFF" : "#198298"} />)
                 }}
             />
         </Tab.Navigator>
