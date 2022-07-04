@@ -7,75 +7,9 @@ import {
     SafeAreaView,
     Image,
     FlatList,
-    ScrollView
+    ScrollView,
+    TouchableOpacity
 } from 'react-native';
-
-const SearchItem = ({ item }) => {
-    return (
-        <View style={styles.searchItem}>
-            <Image
-                source={{
-                    uri: item.uri,
-                }}
-                style={styles.searchItem.itemPhoto}
-                resizeMode="cover"
-            />
-            <View style={styles.searchItem.itemCaption}><Text style={styles.searchItem.itemCaptionText}>{item.text}</Text></View>
-        </View>
-    );
-};
-const RecentlyItem = ({ item }) => {
-    return (
-        <View style={styles.recentlyItem}>
-            <Image
-                source={{
-                    uri: item.uri,
-                }}
-                style={styles.recentlyItem.itemPhoto}
-                resizeMode="cover"
-            />
-            <View style={styles.recentlyItem.itemCaption}><Text style={styles.recentlyItem.itemCaptionText}>{item.text}</Text></View>
-            <View style={styles.recentlyItem.itemCaption}><Text style={styles.recentlyItem.itemCaptionText}>{item.price}</Text></View>
-        </View>
-    );
-};
-
-const HomeScreen = ({ navigation }) => {
-    return (
-        <View style={styles.container}>
-            <ScrollView contentInsetAdjustmentBehavior="automatic">
-                <SafeAreaView>
-                    <ScrollView
-                        showsVerticalScrollIndicator={false}
-                        showsHorizontalScrollIndicator={false}
-                    >
-                        <Text style={styles.sectionHeader}>Vous cherchez ?</Text>
-                        <FlatList
-                            style={styles.searchItemContainer}
-                            data={SECTIONS}
-                            renderItem={({ item }) => <SearchItem item={item} />}
-                            horizontal={true}
-                            showsVerticalScrollIndicator={false}
-                            showsHorizontalScrollIndicator={false}
-                        />
-                        <Text style={styles.sectionHeader}>Publié récemment</Text>
-                        <FlatList
-                            style={styles.recentlyItemContainer}
-                            data={RECENTLY}
-                            renderItem={({ item }) => <RecentlyItem item={item} />}
-                            horizontal={true}
-                            showsVerticalScrollIndicator={false}
-                            showsHorizontalScrollIndicator={false}
-                        />
-                    </ScrollView>
-
-                </SafeAreaView>
-            </ScrollView>
-
-        </View>
-
-    );
-};
 
 
 
@@ -142,13 +76,147 @@ const RECENTLY = [
     },
 ];
 
+
+const SearchItem = ({ item }) => {
+    return (
+        <View style={styles.searchItem}>
+            <Image
+                source={{
+                    uri: item.uri,
+                }}
+                style={styles.searchItem.itemPhoto}
+                resizeMode="cover"
+            />
+            <View style={styles.searchItem.itemCaption}><Text style={styles.searchItem.itemCaptionText}>{item.text}</Text></View>
+        </View>
+    );
+};
+const RecentlyItem = ({ item }) => {
+    return (
+        <View style={styles.recentlyItem}>
+            <Image
+                source={{
+                    uri: item.uri,
+                }}
+                style={styles.recentlyItem.itemPhoto}
+                resizeMode="cover"
+            />
+            <View style={styles.recentlyItem.itemCaption}><Text style={styles.recentlyItem.itemCaptionText}>{item.text}</Text></View>
+            <View style={styles.recentlyItem.itemCaption}><Text style={styles.recentlyItem.itemCaptionText}>{item.price}</Text></View>
+        </View>
+    );
+};
+
+const HomeScreen = ({ navigation }) => {
+    return (
+        <View style={styles.container}>
+            <ScrollView contentInsetAdjustmentBehavior="automatic">
+                <SafeAreaView>
+                    <ScrollView
+                        showsVerticalScrollIndicator={false}
+                        showsHorizontalScrollIndicator={false}
+                    >
+                        <Text style={styles.sectionHeader}>Vous cherchez ?</Text>
+                        <FlatList
+                            style={styles.searchItemContainer}
+                            data={SECTIONS}
+                            renderItem={({ item }) => <SearchItem item={item} />}
+                            horizontal={true}
+                            showsVerticalScrollIndicator={false}
+                            showsHorizontalScrollIndicator={false}
+                        />
+                        <Text style={styles.sectionHeader}>Publié récemment</Text>
+                        <FlatList
+                            style={styles.recentlyItemContainer}
+                            data={RECENTLY}
+                            renderItem={({ item }) => <RecentlyItem item={item} />}
+                            horizontal={true}
+                            showsVerticalScrollIndicator={false}
+                            showsHorizontalScrollIndicator={false}
+                        />
+                    </ScrollView>
+
+                </SafeAreaView>
+                <View style={styles.countrySection}>
+                    <Text style={styles.countrySectionHeader}>Quelques destinations de rêves</Text>
+                    <View style={styles.countryGrid}>
+                        <TouchableOpacity style={styles.countryGrid.countryItem}>
+                            <View style={styles.countryItemContent}>
+                                <View style={styles.countryItemContent.countryItemLabel}>
+                                    <Text style={styles.countryItemContent.countryItemLabelText}>
+                                        Guadeloupe
+                                    </Text>
+                                </View>
+                                <Image
+                                    source={{
+                                        uri: "https://picsum.photos/id/1008/200",
+                                    }}
+                                    style={styles.countryItemContent.countryBackgroundImage}
+                                />
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.countryGrid.countryItem}>
+                            <View style={styles.countryItemContent}>
+                                <View style={styles.countryItemContent.countryItemLabel}>
+                                    <Text style={styles.countryItemContent.countryItemLabelText}>
+                                        Guadeloupe
+                                    </Text>
+                                </View>
+                                <Image
+                                    source={{
+                                        uri: "https://picsum.photos/id/1008/200",
+                                    }}
+                                    style={styles.countryItemContent.countryBackgroundImage}
+                                />
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.countryGrid.countryItem}>
+                            <View style={styles.countryItemContent}>
+                                <View style={styles.countryItemContent.countryItemLabel}>
+                                    <Text style={styles.countryItemContent.countryItemLabelText}>
+                                        Guadeloupe
+                                    </Text>
+                                </View>
+                                <Image
+                                    source={{
+                                        uri: "https://picsum.photos/id/1008/200",
+                                    }}
+                                    style={styles.countryItemContent.countryBackgroundImage}
+                                />
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.countryGrid.countryItem}>
+                            <View style={styles.countryItemContent}>
+                                <View style={styles.countryItemContent.countryItemLabel}>
+                                    <Text style={styles.countryItemContent.countryItemLabelText}>
+                                        Guadeloupe
+                                    </Text>
+                                </View>
+                                <Image
+                                    source={{
+                                        uri: "https://picsum.photos/id/1008/200",
+                                    }}
+                                    style={styles.countryItemContent.countryBackgroundImage}
+                                />
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </ScrollView>
+
+        </View>
+
+    );
+};
+
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
     sectionHeader: {
         fontWeight: '800',
-        fontSize: 35,
+        fontSize: 25,
         color: '#000',
         marginVertical:40,
         marginLeft:30
@@ -216,7 +284,52 @@ const styles = StyleSheet.create({
             fontWeight:"bold"
         },
     },
-
+    countrySectionHeader: {
+        fontWeight: '800',
+        fontSize: 25,
+        color: '#000',
+        marginVertical: 40
+    },
+    countrySection:{
+        display:"flex",
+        justifyContent:"center",
+        alignItems:"center"
+    },
+    countryGrid:{
+        display:"flex",
+        flexWrap:"wrap",
+        flexDirection:"row",
+        justifyContent:"center",
+        countryItem:{
+            width:180,
+            height:180,
+            backgroundColor:"#FFF"
+        }
+    },
+    countryItemContent:{
+        width:"100%",
+        height:"100%",
+        countryBackgroundImage:{
+            width:"100%",
+            height:"100%",
+            position:"absolute",
+            zIndex:9997,
+        },
+        countryItemLabel:{
+            backgroundColor:"#000",
+            width:"100%",
+            height:"100%",
+            opacity:0.6,
+            position:"absolute",
+            zIndex:9998,
+            countryItemLabelText:{
+                color:"#FFF",
+                zIndex:9999,
+                width:"100%",
+                height:"100%",
+            }
+        }
+    }
 
 
 });
