@@ -149,7 +149,7 @@ const HomeScreen = ({ navigation }) => {
                                 </View>
                                 <Image
                                     source={{
-                                        uri: "https://picsum.photos/id/1008/200",
+                                        uri: "https://picsum.photos/id/50/200",
                                     }}
                                     style={styles.countryItemContent.countryBackgroundImage}
                                 />
@@ -164,7 +164,7 @@ const HomeScreen = ({ navigation }) => {
                                 </View>
                                 <Image
                                     source={{
-                                        uri: "https://picsum.photos/id/1008/200",
+                                        uri: "https://picsum.photos/id/200/200",
                                     }}
                                     style={styles.countryItemContent.countryBackgroundImage}
                                 />
@@ -179,7 +179,7 @@ const HomeScreen = ({ navigation }) => {
                                 </View>
                                 <Image
                                     source={{
-                                        uri: "https://picsum.photos/id/1008/200",
+                                        uri: "https://picsum.photos/id/20/200",
                                     }}
                                     style={styles.countryItemContent.countryBackgroundImage}
                                 />
@@ -194,7 +194,7 @@ const HomeScreen = ({ navigation }) => {
                                 </View>
                                 <Image
                                     source={{
-                                        uri: "https://picsum.photos/id/1008/200",
+                                        uri: "https://picsum.photos/id/506/200",
                                     }}
                                     style={styles.countryItemContent.countryBackgroundImage}
                                 />
@@ -319,7 +319,7 @@ const styles = StyleSheet.create({
             backgroundColor:"#000",
             width:"100%",
             height:"100%",
-            opacity:0.6,
+            opacity:0.4,
             position:"absolute",
             zIndex:9998,
             countryItemLabelText:{
