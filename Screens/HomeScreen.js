@@ -53,44 +53,11 @@ const RECENTLY = [
         key: '2',
         text: 'Yacht Imperator 44m',
         price: "300 €/semaine",
-        uri: 'https://picsum.photos/id/10/200',
-    },
-
-    {
-        key: '3',
-        text: 'Yacht Imperator 44m',
-        price: "300 €/semaine",
-        uri: 'https://picsum.photos/id/1002/200',
-    },
-    {
-        key: '4',
-        text: 'Yacht Imperator 44m',
-        price: "300 €/semaine",
-        uri: 'https://picsum.photos/id/1006/200',
-    },
-    {
-        key: '5',
-        text: 'Yacht Imperator 44m',
-        price: "300 €/semaine",
-        uri: 'https://picsum.photos/id/1008/200',
-    },
+        uri: 'https://picsum.photos/id/1/200',
+    }
 ];
 
 
-const SearchItem = ({ item }) => {
-    return (
-        <View style={styles.searchItem}>
-            <Image
-                source={{
-                    uri: item.uri,
-                }}
-                style={styles.searchItem.itemPhoto}
-                resizeMode="cover"
-            />
-            <View style={styles.searchItem.itemCaption}><Text style={styles.searchItem.itemCaptionText}>{item.text}</Text></View>
-        </View>
-    );
-};
 const RecentlyItem = ({ item }) => {
     return (
         <View style={styles.recentlyItem}>
@@ -107,102 +74,31 @@ const RecentlyItem = ({ item }) => {
     );
 };
 
+
+const FlatList_Header = () => {
+    return (
+            <Text style={{
+                fontWeight: '800',
+                fontSize: 25,
+                color: '#000',
+                marginVertical:40,
+            }}> Les derniers ajouts</Text>
+
+    );
+}
+
 const HomeScreen = ({ navigation }) => {
     return (
         <View style={styles.container}>
-            <ScrollView contentInsetAdjustmentBehavior="automatic">
-                <SafeAreaView>
-                    <ScrollView
-                        showsVerticalScrollIndicator={false}
-                        showsHorizontalScrollIndicator={false}
-                    >
-                        <Text style={styles.sectionHeader}>Vous cherchez ?</Text>
-                        <FlatList
-                            style={styles.searchItemContainer}
-                            data={SECTIONS}
-                            renderItem={({ item }) => <SearchItem item={item} />}
-                            horizontal={true}
-                            showsVerticalScrollIndicator={false}
-                            showsHorizontalScrollIndicator={false}
-                        />
-                        <Text style={styles.sectionHeader}>Publié récemment</Text>
-                        <FlatList
-                            style={styles.recentlyItemContainer}
-                            data={RECENTLY}
-                            renderItem={({ item }) => <RecentlyItem item={item} />}
-                            horizontal={true}
-                            showsVerticalScrollIndicator={false}
-                            showsHorizontalScrollIndicator={false}
-                        />
-                    </ScrollView>
 
-                </SafeAreaView>
-                <View style={styles.countrySection}>
-                    <Text style={styles.countrySectionHeader}>Quelques destinations de rêves</Text>
-                    <View style={styles.countryGrid}>
-                        <TouchableOpacity style={styles.countryGrid.countryItem}>
-                            <View style={styles.countryItemContent}>
-                                <View style={styles.countryItemContent.countryItemLabel}>
-                                    <Text style={styles.countryItemContent.countryItemLabelText}>
-                                        Guadeloupe
-                                    </Text>
-                                </View>
-                                <Image
-                                    source={{
-                                        uri: "https://picsum.photos/id/50/200",
-                                    }}
-                                    style={styles.countryItemContent.countryBackgroundImage}
-                                />
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.countryGrid.countryItem}>
-                            <View style={styles.countryItemContent}>
-                                <View style={styles.countryItemContent.countryItemLabel}>
-                                    <Text style={styles.countryItemContent.countryItemLabelText}>
-                                        Guadeloupe
-                                    </Text>
-                                </View>
-                                <Image
-                                    source={{
-                                        uri: "https://picsum.photos/id/200/200",
-                                    }}
-                                    style={styles.countryItemContent.countryBackgroundImage}
-                                />
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.countryGrid.countryItem}>
-                            <View style={styles.countryItemContent}>
-                                <View style={styles.countryItemContent.countryItemLabel}>
-                                    <Text style={styles.countryItemContent.countryItemLabelText}>
-                                        Guadeloupe
-                                    </Text>
-                                </View>
-                                <Image
-                                    source={{
-                                        uri: "https://picsum.photos/id/20/200",
-                                    }}
-                                    style={styles.countryItemContent.countryBackgroundImage}
-                                />
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.countryGrid.countryItem}>
-                            <View style={styles.countryItemContent}>
-                                <View style={styles.countryItemContent.countryItemLabel}>
-                                    <Text style={styles.countryItemContent.countryItemLabelText}>
-                                        Guadeloupe
-                                    </Text>
-                                </View>
-                                <Image
-                                    source={{
-                                        uri: "https://picsum.photos/id/506/200",
-                                    }}
-                                    style={styles.countryItemContent.countryBackgroundImage}
-                                />
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </ScrollView>
+            <FlatList
+                style={styles.recentlyItemContainer}
+                data={RECENTLY}
+                renderItem={({ item }) => <RecentlyItem item={item} />}
+                ListHeaderComponent={FlatList_Header}
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}
+            />
 
         </View>
 
