@@ -12,36 +12,6 @@ import {
 } from 'react-native';
 
 
-
-const SECTIONS = [
-    {
-        key: '1',
-        text: 'Catamarans',
-        uri: 'https://picsum.photos/id/1/200',
-    },
-    {
-        key: '2',
-        text: 'Yacht',
-        uri: 'https://picsum.photos/id/10/200',
-    },
-
-    {
-        key: '3',
-        text: 'Item text 3',
-        uri: 'https://picsum.photos/id/1002/200',
-    },
-    {
-        key: '4',
-        text: 'Item text 4',
-        uri: 'https://picsum.photos/id/1006/200',
-    },
-    {
-        key: '5',
-        text: 'Item text 5',
-        uri: 'https://picsum.photos/id/1008/200',
-    },
-];
-
 const RECENTLY = [
     {
         key: '1',
@@ -51,6 +21,18 @@ const RECENTLY = [
     },
     {
         key: '2',
+        text: 'Yacht Imperator 44m',
+        price: "300 €/semaine",
+        uri: 'https://picsum.photos/id/1/200',
+    },
+    {
+        key: '3',
+        text: 'Yacht Imperator 44m',
+        price: "300 €/semaine",
+        uri: 'https://picsum.photos/id/1/200',
+    },
+    {
+        key: '4',
         text: 'Yacht Imperator 44m',
         price: "300 €/semaine",
         uri: 'https://picsum.photos/id/1/200',
