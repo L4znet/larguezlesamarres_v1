@@ -11,6 +11,7 @@ import {
     TouchableOpacity
 } from 'react-native';
 
+import { Foundation, MaterialIcons, Entypo, FontAwesome, AntDesign, Feather  } from '@expo/vector-icons'
 
 const RECENTLY = [
     {
@@ -92,6 +93,24 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
+    header:{
+        title:{
+            fontFamily:"Syne_700Bold",
+            color:"#FFF",
+            fontSize:20,
+        },
+        profil:{
+            width:60,
+            height:60,
+            backgroundColor:"#FFF",
+            borderRadius:"50%",
+            marginBottom:10,
+            marginRight:10,
+            display:"flex",
+            justifyContent:"center",
+            alignItems:"center"
+        },
+    },
     sectionHeader: {
         fontWeight: '800',
         fontSize: 25,
@@ -99,49 +118,21 @@ const styles = StyleSheet.create({
         marginVertical:40,
         marginLeft:30
     },
-    searchItemContainer:{
-        marginLeft:30
-    },
-    searchItem: {
-        marginRight:30,
-        borderRadius:20,
-        backgroundColor: "#FFF",
-        height:200,
-        width:250,
-        itemPhoto: {
-            width: 250,
-            height: 150,
-            borderTopLeftRadius:20,
-            borderTopRightRadius:20
-        },
-        itemCaption: {
-            color: '#000',
-            width:"100%",
-            fontWeight: "bold",
-            display:"flex",
-            justifyContent:"center",
-            alignItems:"center",
-            height:50,
-            borderBottomLeftRadius:20,
-            borderBottomRightRadius:20
-        },
-        itemCaptionText: {
-            fontSize:20,
-            fontWeight:"bold"
-        },
-    },
     recentlyItemContainer:{
         marginLeft:30
     },
+    recentlyItemContainer:{
+        marginLeft:15
+    },
     recentlyItem: {
-        marginRight:30,
+        marginRight:15,
         marginBottom:30,
         borderRadius:20,
         backgroundColor: "#FFF",
         height:360,
-        width:320,
+        width:345,
         itemPhoto: {
-            width: 320,
+            width: 345,
             height: 250,
             borderTopLeftRadius:20,
             borderTopRightRadius:20
