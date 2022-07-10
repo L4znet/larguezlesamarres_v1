@@ -8,10 +8,9 @@ import {
     Image,
     FlatList,
     ScrollView,
-    TouchableOpacity
+    TouchableOpacity,
+    TextInput
 } from 'react-native';
-
-
 
 const SECTIONS = [
     {
@@ -27,20 +26,16 @@ const SECTIONS = [
 
     {
         key: '3',
-        text: 'Item text 3',
+        text: 'Voilier',
         uri: 'https://picsum.photos/id/1002/200',
     },
     {
         key: '4',
-        text: 'Item text 4',
+        text: 'Bateau de plaisance',
         uri: 'https://picsum.photos/id/1006/200',
-    },
-    {
-        key: '5',
-        text: 'Item text 5',
-        uri: 'https://picsum.photos/id/1008/200',
-    },
+    }
 ];
+
 
 const RECENTLY = [
     {
@@ -110,41 +105,24 @@ const RecentlyItem = ({ item }) => {
 const HomeScreen = ({ navigation }) => {
     return (
         <View style={styles.container}>
-            <ScrollView contentInsetAdjustmentBehavior="automatic">
-                <SafeAreaView>
-                    <ScrollView
-                        showsVerticalScrollIndicator={false}
-                        showsHorizontalScrollIndicator={false}
-                    >
-                        <Text style={styles.sectionHeader}>Vous cherchez ?</Text>
-                        <FlatList
-                            style={styles.searchItemContainer}
-                            data={SECTIONS}
-                            renderItem={({ item }) => <SearchItem item={item} />}
-                            horizontal={true}
-                            showsVerticalScrollIndicator={false}
-                            showsHorizontalScrollIndicator={false}
-                        />
-                        <Text style={styles.sectionHeader}>Publié récemment</Text>
-                        <FlatList
-                            style={styles.recentlyItemContainer}
-                            data={RECENTLY}
-                            renderItem={({ item }) => <RecentlyItem item={item} />}
-                            horizontal={true}
-                            showsVerticalScrollIndicator={false}
-                            showsHorizontalScrollIndicator={false}
-                        />
-                    </ScrollView>
 
-                </SafeAreaView>
+            <ScrollView contentInsetAdjustmentBehavior="automatic">
+
+                <View style={styles.search}>
+                    <TextInput style={styles.search.searchbar}/>
+                    <TouchableOpacity style={styles.search.searchButton}>
+                        <Text style={styles.search.searchButtonText}>Lancer la recherche</Text>
+                    </TouchableOpacity>
+                </View>
+
                 <View style={styles.countrySection}>
-                    <Text style={styles.countrySectionHeader}>Quelques destinations de rêves</Text>
+                    <Text style={styles.countrySectionHeader}>Par destinations</Text>
                     <View style={styles.countryGrid}>
                         <TouchableOpacity style={styles.countryGrid.countryItem}>
                             <View style={styles.countryItemContent}>
                                 <View style={styles.countryItemContent.countryItemLabel}>
                                     <Text style={styles.countryItemContent.countryItemLabelText}>
-                                        Guadeloupe
+                                        Côte d'Azur
                                     </Text>
                                 </View>
                                 <Image
@@ -174,7 +152,7 @@ const HomeScreen = ({ navigation }) => {
                             <View style={styles.countryItemContent}>
                                 <View style={styles.countryItemContent.countryItemLabel}>
                                     <Text style={styles.countryItemContent.countryItemLabelText}>
-                                        Guadeloupe
+                                        Guyane
                                     </Text>
                                 </View>
                                 <Image
@@ -189,7 +167,7 @@ const HomeScreen = ({ navigation }) => {
                             <View style={styles.countryItemContent}>
                                 <View style={styles.countryItemContent.countryItemLabel}>
                                     <Text style={styles.countryItemContent.countryItemLabelText}>
-                                        Guadeloupe
+                                        Martinique
                                     </Text>
                                 </View>
                                 <Image
@@ -202,10 +180,23 @@ const HomeScreen = ({ navigation }) => {
                         </TouchableOpacity>
                     </View>
                 </View>
+                <SafeAreaView style={styles.types}>
+                    <ScrollView
+                        showsVerticalScrollIndicator={false}
+                        showsHorizontalScrollIndicator={false}>
+                        <Text style={styles.sectionHeader}>Par types de véhicules</Text>
+                        <FlatList
+                            style={styles.searchItemContainer}
+                            data={SECTIONS}
+                            renderItem={({ item }) => <SearchItem item={item} />}
+                            horizontal={true}
+                            showsVerticalScrollIndicator={false}
+                            showsHorizontalScrollIndicator={false}
+                        />
+                    </ScrollView>
+                </SafeAreaView>
             </ScrollView>
-
         </View>
-
     );
 };
 
@@ -214,18 +205,51 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
+    search:{
+        flex:1,
+        display:"flex",
+        alignItems:"center",
+        flexDirection: "column",
+          searchbar:{
+              width:"95%",
+              height:60,
+              backgroundColor:"#FFF",
+              marginTop:30,
+              borderRadius:50,
+              fontSize:20,
+              paddingLeft:20
+          },
+        searchButton:{
+            width:"65%",
+            height:60,
+            backgroundColor:"#48B781",
+            marginTop:20,
+            borderRadius:50,
+            fontSize:20,
+            display:"flex",
+            justifyContent:"center",
+            alignItems:"center"
+        },
+        searchButtonText:{
+            color:"#FFF",
+            fontSize:18
+        }
+    },
+    types:{
+      marginBottom:70
+    },
     sectionHeader: {
         fontWeight: '800',
         fontSize: 25,
         color: '#000',
         marginVertical:40,
-        marginLeft:30
+        marginLeft:15
     },
     searchItemContainer:{
-        marginLeft:30
+        marginLeft:15,
     },
     searchItem: {
-        marginRight:30,
+        marginRight:15,
         borderRadius:20,
         backgroundColor: "#FFF",
         height:200,
@@ -288,7 +312,9 @@ const styles = StyleSheet.create({
         fontWeight: '800',
         fontSize: 25,
         color: '#000',
-        marginVertical: 40
+        marginVertical: 40,
+        width:"100%",
+        paddingLeft: 15
     },
     countrySection:{
         display:"flex",
@@ -301,8 +327,8 @@ const styles = StyleSheet.create({
         flexDirection:"row",
         justifyContent:"center",
         countryItem:{
-            width:180,
-            height:180,
+            width:170,
+            height:170,
             backgroundColor:"#FFF"
         }
     },
@@ -319,15 +345,18 @@ const styles = StyleSheet.create({
             backgroundColor:"#000",
             width:"100%",
             height:"100%",
-            opacity:0.4,
+            display:"flex",
+            justifyContent:"center",
+            alignItems:"center",
+            opacity:0.6,
             position:"absolute",
             zIndex:9998,
-            countryItemLabelText:{
-                color:"#FFF",
-                zIndex:9999,
-                width:"100%",
-                height:"100%",
-            }
+        },
+        countryItemLabelText:{
+            color:"#FFF",
+            position:"absolute",
+            fontSize:20,
+            fontWeight:"bold"
         }
     }
 
