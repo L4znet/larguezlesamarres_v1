@@ -46,18 +46,21 @@ const Navigation = (navigation) => {
             screenOptions={{
                 tabBarStyle:{
                     backgroundColor:"#48B781",
-                    height:110,
-                    fontSize:30,
-                    paddingTop:20,
+                    height:80,
+                    fontSize:30
+                },
+                tabBarItemStyle:{
+                    height:100,
+                    paddingBottom:20
                 },
                 tabBarActiveTintColor: '#FFF',
                 tabBarInactiveTintColor: '#236d4d',
                 tabBarLabelStyle:{
-                    fontSize:16
+                    fontSize:16,
                 },
                 headerStyle: {
                     backgroundColor: '#48B781',
-                    height:130,
+                    height:110,
                 },
                 headerTitleStyle: {
                     fontFamily:"Syne_700Bold",
@@ -74,7 +77,7 @@ const Navigation = (navigation) => {
                 options={{
                     tabBarIcon: ({ focused }) =>
                         (<Foundation name="home" size={30} color={focused ? "#FFF" : "#348d65"} />),
-                    title:"Feed",
+                    title:"",
                 }}
             />
             <Tab.Screen
@@ -82,7 +85,7 @@ const Navigation = (navigation) => {
                 options={{
                     tabBarIcon: ({ focused }) =>
                         ( <Feather name="search" size={30} color={focused ? "#FFF" : "#348d65"} />),
-                    title:"Recherche",
+                    title:"",
                 }}
             />
             <Tab.Screen
@@ -90,7 +93,7 @@ const Navigation = (navigation) => {
                 options={{
                     tabBarIcon: ({ focused }) =>
                         (<MaterialIcons name="favorite" size={30} color={focused ? "#FFF" : "#348d65"} />),
-                    title:"Vos favoris",
+                    title:"",
                 }}
             />
             <Tab.Screen
@@ -99,7 +102,7 @@ const Navigation = (navigation) => {
                 options={{
                     tabBarIcon: ({ focused }) =>
                         (<Entypo name="calendar" size={30} color={focused ? "#FFF" : "#348d65"} />),
-                    title:"Réservations",
+                    title:"",
                 }}
             />
         </Tab.Navigator>
