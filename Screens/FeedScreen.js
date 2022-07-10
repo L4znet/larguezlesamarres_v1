@@ -70,7 +70,7 @@ const FlatList_Header = () => {
     );
 }
 
-const HomeScreen = ({ navigation }) => {
+const FeedScreen = ({ navigation }) => {
     return (
         <View style={styles.container}>
 
@@ -204,4 +204,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default HomeScreen;
+export default FeedScreen;

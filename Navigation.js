@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useCallback } from "react";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
-import HomeScreen from './Screens/HomeScreen'
+import FeedScreen from './Screens/FeedScreen'
 import FavoriteScreen from './Screens/FavoriteScreen'
 import BookingScreen from './Screens/BookingScreen'
 import ProfileScreen from './Screens/ProfileScreen'
@@ -32,6 +32,7 @@ import {
 
 const Navigation = ({navigation}) => {
 
+    // Est ce que l'utilisateur est connecté
     const logged = false;
 
 
@@ -51,7 +52,6 @@ const Navigation = ({navigation}) => {
 
 
     return (
-
         <Tab.Navigator
             screenOptions={{
                 tabBarStyle:{
@@ -81,47 +81,27 @@ const Navigation = ({navigation}) => {
                 headerTitle:"Larguez les amarres",
                }}>
 
+            <Tab.Screen
+                name="Feed" component={FeedScreen}
+                options={{
+                    tabBarIcon: ({focused}) =>
+                        (<Foundation name="home" size={30} color={focused ? "#FFF" : "#348d65"}/>),
+                    title: "",
+                }}
+            />
+            <Tab.Screen
+                name="Search" component={SearchScreen}
+                options={{
+                    tabBarIcon: ({ focused }) =>
+                        ( <Feather name="search" size={30} color={focused ? "#FFF" : "#348d65"} />),
+                    title:"",
+                }}
+            />
 
 
-            {logged === false &&
-                <Tab.Screen
-                    name="HomeScreen" component={LoginScreen}
-                    options={{
-                        tabBarIcon: ({ focused }) =>
-                            (<AntDesign name="login" size={30} color={focused ? "#FFF" : "#348d65"} />),
-                        title:"",
-                    }}
-                />
-                &&
-                <Tab.Screen
-                    name="HomeScreen" component={LoginScreen}
-                    options={{
-                        tabBarIcon: ({ focused }) =>
-                            (<AntDesign name="register" size={30} color={focused ? "#FFF" : "#348d65"} />),
-                        title:"",
-                    }}
-                />
-            }
+    {/** Si l'utilisateur est connecté, on lui affiche l'écran voulu, sinon on le redirige vers la page de connexion. **/}
 
-            {logged === true &&
-                <Tab.Screen
-                    name="HomeScreen" component={HomeScreen}
-                    options={{
-                        tabBarIcon: ({ focused }) =>
-                            (<Foundation name="home" size={30} color={focused ? "#FFF" : "#348d65"} />),
-                        title:"",
-                    }}
-                />
-                &&
-                <Tab.Screen
-                    name="Search" component={SearchScreen}
-                    options={{
-                        tabBarIcon: ({ focused }) =>
-                            ( <Feather name="search" size={30} color={focused ? "#FFF" : "#348d65"} />),
-                        title:"",
-                    }}
-                />
-                &&
+            {logged == true &&
                 <Tab.Screen
                     name="Favorite" component={FavoriteScreen}
                     options={{
@@ -130,7 +110,20 @@ const Navigation = ({navigation}) => {
                         title:"",
                     }}
                 />
-                &&
+            }
+            {logged == false &&
+                <Tab.Screen
+                    name="Favorite" component={LoginScreen}
+                    options={{
+                        tabBarIcon: ({ focused }) =>
+                            (<MaterialIcons name="favorite" size={30} color={focused ? "#FFF" : "#348d65"} />),
+                        title:"",
+                    }}
+                />
+            }
+
+
+            {logged == true &&
                 <Tab.Screen
                     name="Booking"
                     component={BookingScreen}
@@ -140,11 +133,34 @@ const Navigation = ({navigation}) => {
                         title:"",
                     }}
                 />
-                &&
+            }
+            {logged == false &&
+                <Tab.Screen
+                    name="Booking"
+                    component={LoginScreen}
+                    options={{
+                        tabBarIcon: ({ focused }) =>
+                            (<Entypo name="calendar" size={30} color={focused ? "#FFF" : "#348d65"} />),
+                        title:"",
+                    }}
+                />
+            }
 
+            {logged == true &&
                 <Tab.Screen
                     name="Profil"
                     component={ProfileScreen}
+                    options={{
+                        tabBarIcon: ({ focused }) =>
+                            (<FontAwesome name="user" size={30} color={focused ? "#FFF" : "#348d65"} />),
+                        title:"",
+                    }}
+                />
+            }
+            {logged == false &&
+                <Tab.Screen
+                    name="Profil"
+                    component={LoginScreen}
                     options={{
                         tabBarIcon: ({ focused }) =>
                             (<FontAwesome name="user" size={30} color={focused ? "#FFF" : "#348d65"} />),
