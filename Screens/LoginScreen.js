@@ -61,6 +61,7 @@ const styles = StyleSheet.create({
             marginTop:30,
             paddingLeft:20,
             borderRadius:15,
+            fontSize:16
         },
         button:{
             width:"90%",
@@ -75,7 +76,7 @@ const styles = StyleSheet.create({
         },
         buttonText:{
             color:"#FFF",
-            fontSize:25,
+            fontSize:23,
         },
         buttonPasswordForgot:{
             width:"90%",
@@ -90,7 +91,7 @@ const styles = StyleSheet.create({
         },
         buttonPasswordForgotText:{
             color:"#FFF",
-            fontSize:25,
+            fontSize:23,
         },
         buttonRegister:{
             width:"90%",
@@ -105,7 +106,7 @@ const styles = StyleSheet.create({
         },
         buttonRegisterText:{
             color:"#FFF",
-            fontSize:25,
+            fontSize:23,
         },
     }
 });
