@@ -1,4 +1,4 @@
-import {Text, View, Button, TouchableHighlight, StyleSheet, TextInput, LogBox} from "react-native";
+import {Text, View, Button, TouchableOpacity, StyleSheet, TextInput, LogBox} from "react-native";
 import {StackActions} from "@react-navigation/native";
 import { getAuth, signInWithEmailAndPassword, signOut  } from "firebase/auth";
 import {useState} from "react";
@@ -19,9 +19,6 @@ const LoginScreen = ({ navigation }) => {
                 const errorMessage = error.message;
             });
     }
-
-
-
 
 
     return (

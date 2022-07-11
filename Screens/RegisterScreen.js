@@ -1,28 +1,56 @@
-import React from 'react';
-import {
-    StyleSheet,
-    Text,
-    View,
-    SectionList,
-    SafeAreaView,
-    Image,
-    FlatList,
-    ScrollView,
-    TouchableOpacity,
-    TextInput
-} from 'react-native';
+import {Text, View, Button, TouchableOpacity, StyleSheet, TextInput} from "react-native";
+import {StackActions} from "@react-navigation/native";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import {useState} from "react";
 
 
 const RegisterScreen = ({ navigation }) => {
+
+
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [username, setUsername] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+
+
+
+    const register = () => {
+
+        if(email !== "" && password !== "" & username !== "" && confirmPassword !== ""){
+            if(confirmPassword === password){
+                const auth = getAuth();
+                createUserWithEmailAndPassword(auth, email, password)
+                    .then((userCredential) => {
+                        const user = userCredential.user;
+                        user.updateProfile({
+                            displayName: username
+                        }).then(function() {
+
+                        }, function(error) {
+                        });
+                    })
+                    .catch((error) => {
+                        const errorCode = error.code;
+                        const errorMessage = error.message;
+                    });
+            }
+        }
+    }
+
     return (
         <View style={styles.container}>
             <View style={styles.form}>
                 <Text style={styles.form.title}>Inscrivez-vous</Text>
-                <TextInput style={styles.form.input} placeholder="Nom d'utilisateur" />
-                <TextInput style={styles.form.input} placeholder="E-mail" />
-                <TextInput style={styles.form.input} placeholder="Mot de passe" />
-                <TextInput style={styles.form.input} placeholder="Confirmation du mot de passe" />
-                <TouchableOpacity style={styles.form.button}>
+                <TextInput style={styles.form.input} onChangeText={(username) => setUsername(username)} placeholder="Nom d'utilisateur" />
+                <TextInput style={styles.form.input} onChangeText={(email) => setEmail(email)} placeholder="E-mail" />
+                <TextInput style={styles.form.input} onChangeText={(password) => setPassword(password)} placeholder="Mot de passe" />
+                <TextInput style={styles.form.input} onChangeText={(confirmPassword) => setConfirmPassword(confirmPassword)} placeholder="Confirmation du mot de passe" />
+                <TouchableOpacity
+                    style={styles.form.button}
+                    onPress={() =>
+                        register()
+                    }
+                >
                     <Text style={styles.form.buttonText}>Inscription</Text>
                 </TouchableOpacity>
             </View>
