@@ -9,6 +9,7 @@ import SearchScreen from './Screens/SearchScreen'
 
 import LoginScreen from './Screens/LoginScreen'
 import RegisterScreen from './Screens/RegisterScreen'
+import HomeScreen from './Screens/HomeScreen'
 
 import { Foundation, MaterialIcons, Entypo, FontAwesome, AntDesign, Feather  } from '@expo/vector-icons'
 import {
