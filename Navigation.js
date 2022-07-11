@@ -10,8 +10,6 @@ import SearchScreen from './Screens/SearchScreen'
 import LoginScreen from './Screens/LoginScreen'
 import RegisterScreen from './Screens/RegisterScreen'
 
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
 import { Foundation, MaterialIcons, Entypo, FontAwesome, AntDesign, Feather  } from '@expo/vector-icons'
 import {
     useFonts,
@@ -29,6 +27,7 @@ import {
     StyleSheet
 } from 'react-native';
 
+const Tab = createBottomTabNavigator();
 
 const Navigation = ({navigation}) => {
 
@@ -48,10 +47,9 @@ const Navigation = ({navigation}) => {
         return null;
     }
 
-    const Tab = createBottomTabNavigator();
-
 
     return (
+
         <Tab.Navigator
             screenOptions={{
                 tabBarStyle:{
@@ -70,7 +68,7 @@ const Navigation = ({navigation}) => {
                 },
                 headerStyle: {
                     backgroundColor: '#48B781',
-                    height:110,
+                    height:120,
                 },
                 headerTitleStyle: {
                     fontFamily:"Syne_700Bold",
@@ -79,7 +77,9 @@ const Navigation = ({navigation}) => {
                 },
                 headerTitleAlign: 'left',
                 headerTitle:"Larguez les amarres",
-               }}>
+                headerRight: () => <TouchableOpacity style={styles.header.profil} onPress={() => { navigation.push('Profile'); }}>
+                    <Text><AntDesign name="user" size={35} color="#48B781" /> </Text>
+                </TouchableOpacity>}}>
 
             <Tab.Screen
                 name="Feed" component={FeedScreen}
@@ -98,8 +98,7 @@ const Navigation = ({navigation}) => {
                 }}
             />
 
-
-    {/** Si l'utilisateur est connecté, on lui affiche l'écran voulu, sinon on le redirige vers la page de connexion. **/}
+            {/** Si l'utilisateur est connecté, on lui affiche l'écran voulu, sinon on le redirige vers la page de connexion. **/}
 
             {logged == true &&
                 <Tab.Screen
@@ -146,31 +145,24 @@ const Navigation = ({navigation}) => {
                 />
             }
 
-            {logged == true &&
-                <Tab.Screen
-                    name="Profil"
-                    component={ProfileScreen}
-                    options={{
-                        tabBarIcon: ({ focused }) =>
-                            (<FontAwesome name="user" size={30} color={focused ? "#FFF" : "#348d65"} />),
-                        title:"",
-                    }}
-                />
-            }
-            {logged == false &&
-                <Tab.Screen
-                    name="Profil"
-                    component={LoginScreen}
-                    options={{
-                        tabBarIcon: ({ focused }) =>
-                            (<FontAwesome name="user" size={30} color={focused ? "#FFF" : "#348d65"} />),
-                        title:"",
-                    }}
-                />
-            }
-
         </Tab.Navigator>
-    );
+    )
 };
+
+const styles = StyleSheet.create({
+    header:{
+        profil:{
+            width:60,
+            height:60,
+            backgroundColor:"#FFF",
+            borderRadius:"50%",
+            marginBottom:10,
+            marginRight:10,
+            display:"flex",
+            justifyContent:"center",
+            alignItems:"center"
+        }
+    }
+})
 
 export default Navigation
