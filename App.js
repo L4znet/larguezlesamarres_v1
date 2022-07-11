@@ -8,12 +8,24 @@ import ProfileScreen from './Screens/ProfileScreen'
 import HomeScreen from './Screens/HomeScreen'
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {onAuthStateChanged} from "@firebase/auth";
+import {auth} from "./firebase";
+import {useState} from "react";
 
 const Stack = createNativeStackNavigator();
 
-const logged = false;
+
 
 export default function App() {
+
+    const [isUserLogged, setUserLogged] = useState(false);
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            setUserLogged(true)
+        } else {
+            setUserLogged(false)
+        }
+    });
 
   return (
       <NavigationContainer>
@@ -52,7 +64,7 @@ export default function App() {
                             component={RegisterScreen} />
 
 
-              {logged === false &&
+              {isUserLogged === false &&
                   <Stack.Screen
                       name="Profile"
                       component={HomeScreen}
@@ -72,7 +84,7 @@ export default function App() {
                       }}
                   />
               }
-              {logged === true &&
+              {isUserLogged === true &&
                   <Stack.Screen option={{
                       headerStyle: {
                           backgroundColor: '#f4511e',

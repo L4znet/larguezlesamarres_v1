@@ -1,24 +1,22 @@
 import {Text, View, Button, TouchableOpacity, StyleSheet, TextInput} from "react-native";
-import {StackActions} from "@react-navigation/native";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import {useState} from "react";
+import {auth} from '../firebase.js'
 
 
 const RegisterScreen = ({ navigation }) => {
 
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [username, setUsername] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
+    const [email, setEmail] = useState("charly.escalona1@hotmail.fr");
+    const [username, setUsername] = useState("Charly");
+    const [password, setPassword] = useState("Uzkq24051000");
+    const [confirmPassword, setConfirmPassword] = useState("Uzkq24051000");
 
 
 
     const register = () => {
-
-        if(email !== "" && password !== "" & username !== "" && confirmPassword !== ""){
+        if(email !== "" && password !== "" && username !== "" && confirmPassword !== ""){
             if(confirmPassword === password){
-                const auth = getAuth();
                 createUserWithEmailAndPassword(auth, email, password)
                     .then((userCredential) => {
                         const user = userCredential.user;

@@ -1,17 +1,13 @@
-import React, {useState, useEffect, useCallback } from "react";
+import React, {useState } from "react";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { NavigationContainer } from '@react-navigation/native';
 import FeedScreen from './Screens/FeedScreen'
 import FavoriteScreen from './Screens/FavoriteScreen'
 import BookingScreen from './Screens/BookingScreen'
-import ProfileScreen from './Screens/ProfileScreen'
 import SearchScreen from './Screens/SearchScreen'
-
 import LoginScreen from './Screens/LoginScreen'
-import RegisterScreen from './Screens/RegisterScreen'
-import HomeScreen from './Screens/HomeScreen'
 
-import { Foundation, MaterialIcons, Entypo, FontAwesome, AntDesign, Feather  } from '@expo/vector-icons'
+
+import { Foundation, MaterialIcons, Entypo, AntDesign, Feather  } from '@expo/vector-icons'
 import {
     useFonts,
     Syne_400Regular,
@@ -20,21 +16,29 @@ import {
     Syne_700Bold,
     Syne_800ExtraBold,
 } from '@expo-google-fonts/syne';
-import AppLoading from "expo-app-loading";
 
 import {
     TouchableOpacity,
     Text,
     StyleSheet
 } from 'react-native';
+import {onAuthStateChanged} from "@firebase/auth";
+import {auth} from "./firebase";
 
 const Tab = createBottomTabNavigator();
 
+
 const Navigation = ({navigation}) => {
 
-    // Est ce que l'utilisateur est connecté
-    const logged = false;
 
+    const [isUserLogged, setUserLogged] = useState(false);
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            setUserLogged(true)
+        } else {
+            setUserLogged(false)
+        }
+    });
 
     let [fontsLoaded] = useFonts({
         Syne_400Regular,
@@ -101,7 +105,7 @@ const Navigation = ({navigation}) => {
 
             {/** Si l'utilisateur est connecté, on lui affiche l'écran voulu, sinon on le redirige vers la page de connexion. **/}
 
-            {logged == true &&
+            {isUserLogged === true &&
                 <Tab.Screen
                     name="Favorite" component={FavoriteScreen}
                     options={{
@@ -111,7 +115,7 @@ const Navigation = ({navigation}) => {
                     }}
                 />
             }
-            {logged == false &&
+            {isUserLogged === false &&
                 <Tab.Screen
                     name="Favorite" component={LoginScreen}
                     options={{
@@ -123,7 +127,7 @@ const Navigation = ({navigation}) => {
             }
 
 
-            {logged == true &&
+            {isUserLogged === true &&
                 <Tab.Screen
                     name="Booking"
                     component={BookingScreen}
@@ -134,7 +138,7 @@ const Navigation = ({navigation}) => {
                     }}
                 />
             }
-            {logged == false &&
+            {isUserLogged === false &&
                 <Tab.Screen
                     name="Booking"
                     component={LoginScreen}

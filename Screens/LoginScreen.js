@@ -1,18 +1,18 @@
 import {Text, View, Button, TouchableOpacity, StyleSheet, TextInput, LogBox} from "react-native";
-import {StackActions} from "@react-navigation/native";
 import { getAuth, signInWithEmailAndPassword, signOut  } from "firebase/auth";
 import {useState} from "react";
+import { auth } from '../firebase'
 
 const LoginScreen = ({ navigation }) => {
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [email, setEmail] = useState("charly.escalona1@hotmail.fr");
+    const [password, setPassword] = useState("Uzkq24051000");
     const login = () => {
 
-        const auth = getAuth();
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
-                navigation.navigate('Tasks')
+                console.log()
+                navigation.navigate('Feed')
             })
             .catch((error) => {
                 const errorCode = error.code;
@@ -25,9 +25,9 @@ const LoginScreen = ({ navigation }) => {
         <View style={styles.container}>
             <View style={styles.form}>
                 <Text style={styles.form.title}>Connectez-vous</Text>
-                <TextInput style={styles.form.input} placeholder="E-mail" />
-                <TextInput style={styles.form.input} placeholder="Mot de passe" />
-                <TouchableOpacity style={styles.form.button}>
+                <TextInput style={styles.form.input} onChangeText={(email) => setEmail(email)} placeholder="E-mail" />
+                <TextInput style={styles.form.input} onChangeText={(password) => setPassword(password)} placeholder="Mot de passe" />
+                <TouchableOpacity style={styles.form.button}  onPress={() => { login() }}>
                     <Text style={styles.form.buttonText}>Connexion</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.form.buttonPasswordForgot}  onPress={() => { navigation.push('Register'); }}>
