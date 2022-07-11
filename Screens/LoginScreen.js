@@ -1,19 +1,29 @@
-import React from 'react';
-import {
-    StyleSheet,
-    Text,
-    View,
-    SectionList,
-    SafeAreaView,
-    Image,
-    FlatList,
-    ScrollView,
-    TouchableOpacity,
-    TextInput
-} from 'react-native';
-
+import {Text, View, Button, TouchableHighlight, StyleSheet, TextInput, LogBox} from "react-native";
+import {StackActions} from "@react-navigation/native";
+import { getAuth, signInWithEmailAndPassword, signOut  } from "firebase/auth";
+import {useState} from "react";
 
 const LoginScreen = ({ navigation }) => {
+
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const login = () => {
+
+        const auth = getAuth();
+        signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                navigation.navigate('Tasks')
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+            });
+    }
+
+
+
+
+
     return (
         <View style={styles.container}>
             <View style={styles.form}>
@@ -32,7 +42,6 @@ const LoginScreen = ({ navigation }) => {
                 </TouchableOpacity>
             </View>
         </View>
-
     );
 };
 
