@@ -11,6 +11,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {onAuthStateChanged} from "@firebase/auth";
 import {auth} from "./firebase";
 import {useState} from "react";
+import EditProfilScreen from "./Screens/EditProfilScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -99,7 +100,26 @@ export default function App() {
                       },
                       headerBackVisible:false }}
                       name="Profile"
-                      component={ProfileScreen} />}
+                      component={ProfileScreen} />
+              }
+
+              {isUserLogged === true &&
+                  <Stack.Screen options={{
+                      title: 'Larguez les amarres',
+                      headerStyle: {
+                          backgroundColor: '#48B781'
+                      },
+                      headerTintColor: '#fff',
+                      headerTitleStyle: {
+                          fontWeight: 'bold',
+                          fontFamily:"Syne_700Bold",
+                          color:"#FFF",
+                          fontSize:20
+                      },
+                      headerBackVisible:false }}
+                      name="EditProfil"
+                      component={EditProfilScreen} />
+              }
 
           </Stack.Navigator>
       </NavigationContainer>
