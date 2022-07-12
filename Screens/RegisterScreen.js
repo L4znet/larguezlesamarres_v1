@@ -1,29 +1,33 @@
 import {Text, View, Button, TouchableOpacity, StyleSheet, TextInput} from "react-native";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import {getAuth, createUserWithEmailAndPassword, updateProfile} from "firebase/auth";
 import {useState} from "react";
-import {auth} from '../firebase.js'
-
+import {auth, storage} from '../firebase.js'
+import { ref, uploadBytes,getDownloadURL } from "firebase/storage";
+import uuid from "react-native-uuid";
+import profilPictureDefault from '../assets/default.png'
 
 const RegisterScreen = ({ navigation }) => {
-
 
     const [email, setEmail] = useState("charly.escalona1@hotmail.fr");
     const [username, setUsername] = useState("Charly");
     const [password, setPassword] = useState("Uzkq24051000");
     const [confirmPassword, setConfirmPassword] = useState("Uzkq24051000");
 
+
     const register = () => {
         if(email !== "" && password !== "" && username !== "" && confirmPassword !== ""){
             if(confirmPassword === password){
                 createUserWithEmailAndPassword(auth, email, password)
-                    .then((userCredential) => {
-                        const user = userCredential.user;
-                        user.updateProfile({
-                            displayName: username
-                        }).then(function() {
+                    .then(async (userCredential) => {
 
-                        }, function(error) {
-                        });
+                        const user = userCredential.user;
+
+                        await updateProfile((user), {
+                            displayName: username, photoURL: "../assets/default.png"
+                        })
+
+                        navigation.navigate("Login")
+
                     })
                     .catch((error) => {
                         const errorCode = error.code;
