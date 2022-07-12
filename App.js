@@ -46,7 +46,7 @@ export default function App() {
                                 headerBackVisible:false
                             }}
                             component={LoginScreen} />
-              <Stack.Screen name="Register"
+                <Stack.Screen name="Register"
                             options={{
                                 title: 'Larguez les amarres',
                                 headerStyle: {
@@ -60,7 +60,7 @@ export default function App() {
                                     fontSize:20
                                 },
                                 headerBackVisible:false
-                            }}r
+                            }}
                             component={RegisterScreen} />
 
 
@@ -85,20 +85,21 @@ export default function App() {
                   />
               }
               {isUserLogged === true &&
-                  <Stack.Screen option={{
+                  <Stack.Screen options={{
+                      title: 'Larguez les amarres',
                       headerStyle: {
-                          backgroundColor: '#f4511e',
+                          backgroundColor: '#48B781'
                       },
                       headerTintColor: '#fff',
                       headerTitleStyle: {
                           fontWeight: 'bold',
+                          fontFamily:"Syne_700Bold",
+                          color:"#FFF",
+                          fontSize:20
                       },
-                      headerTitleAlign: 'left',
-                      headerTitle:"Larguez les amarres",
-                  }}
+                      headerBackVisible:false }}
                       name="Profile"
-                      component={ProfileScreen} />
-              }
+                      component={ProfileScreen} />}
 
           </Stack.Navigator>
       </NavigationContainer>

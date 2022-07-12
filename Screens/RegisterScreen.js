@@ -12,8 +12,6 @@ const RegisterScreen = ({ navigation }) => {
     const [password, setPassword] = useState("Uzkq24051000");
     const [confirmPassword, setConfirmPassword] = useState("Uzkq24051000");
 
-
-
     const register = () => {
         if(email !== "" && password !== "" && username !== "" && confirmPassword !== ""){
             if(confirmPassword === password){
@@ -45,10 +43,7 @@ const RegisterScreen = ({ navigation }) => {
                 <TextInput style={styles.form.input} onChangeText={(confirmPassword) => setConfirmPassword(confirmPassword)} placeholder="Confirmation du mot de passe" />
                 <TouchableOpacity
                     style={styles.form.button}
-                    onPress={() =>
-                        register()
-                    }
-                >
+                    onPress={() => register() }>
                     <Text style={styles.form.buttonText}>Inscription</Text>
                 </TouchableOpacity>
             </View>
