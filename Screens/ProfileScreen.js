@@ -1,5 +1,4 @@
-import {Text, View, Button, TouchableOpacity, StyleSheet, Image, ScrollView} from "react-native";
-import { Entypo } from '@expo/vector-icons'
+import {Text, View, TouchableOpacity, StyleSheet, Image, ScrollView} from "react-native";
 import {signOut} from "firebase/auth";
 import { NavigationContainer } from '@react-navigation/native';
 import {auth} from '../firebase'
@@ -7,24 +6,23 @@ import {auth} from '../firebase'
 const logout = () => {
     signOut(auth).then(() => {})
 }
+
 const deleteAccount = () => {
     const user = auth.currentUser
-    user.delete().then(function() {
-        console.log("fdssfdsfd")
-    })
+    user.delete().then(function() {})
 
     signOut(auth).then(() => {})
 }
 
 
-const ProfileScreen = ({ navigation }) => {
+const ProfileScreen = ({navigation}) => {
     return (
         <ScrollView>
             <View style={styles.container}>
                 <View style={styles.container}>
                     <Image
                         style={styles.profilPicture}
-                        source={{ uri: auth.currentUser.photoURL }}
+                        source={require('../assets/default.png')}
                     />
                     <Text style={styles.username}>{auth.currentUser.displayName}</Text>
                     <View  style={styles.loginCredentials}>
@@ -32,7 +30,7 @@ const ProfileScreen = ({ navigation }) => {
                         <Text style={styles.loginCredentials.email}>{auth.currentUser.email}</Text>
                     </View>
 
-                    <TouchableOpacity style={styles.editProfil}><Text style={styles.editProfil.editProfilText}>Modifier mon profil</Text></TouchableOpacity>
+                    <TouchableOpacity onPress={() => { navigation.navigate('EditProfil') }} style={styles.editProfil}><Text style={styles.editProfil.editProfilText}>Modifier mon profil</Text></TouchableOpacity>
                     <TouchableOpacity onPress={() => { logout() }} style={styles.logout}><Text style={styles.logout.logoutText}>Déconnexion</Text></TouchableOpacity>
                 </View>
                 <View style={styles.dangerZone}>
