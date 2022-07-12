@@ -5,6 +5,7 @@ import {auth, storage} from '../firebase.js'
 import { ref, uploadBytes,getDownloadURL } from "firebase/storage";
 import uuid from "react-native-uuid";
 import profilPictureDefault from '../assets/default.png'
+import {Asset} from "expo-asset";
 
 const RegisterScreen = ({ navigation }) => {
 
@@ -14,25 +15,24 @@ const RegisterScreen = ({ navigation }) => {
     const [confirmPassword, setConfirmPassword] = useState("Uzkq24051000");
 
 
-    const register = () => {
-        if(email !== "" && password !== "" && username !== "" && confirmPassword !== ""){
-            if(confirmPassword === password){
+    const register = async () => {
+        if (email !== "" && password !== "" && username !== "" && confirmPassword !== "") {
+            if (confirmPassword === password) {
                 createUserWithEmailAndPassword(auth, email, password)
                     .then(async (userCredential) => {
 
                         const user = userCredential.user;
 
                         await updateProfile((user), {
-                            displayName: username, photoURL: "../assets/default.png"
+                            displayName: username
                         })
-
-                        navigation.navigate("Login")
-
                     })
                     .catch((error) => {
                         const errorCode = error.code;
                         const errorMessage = error.message;
                     });
+
+                navigation.navigate("Login")
             }
         }
     }
