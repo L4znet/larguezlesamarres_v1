@@ -1,5 +1,14 @@
 import {Text, View, Button, TouchableOpacity, StyleSheet, Image, ScrollView} from "react-native";
 import { Entypo } from '@expo/vector-icons'
+import {signOut} from "firebase/auth";
+import { NavigationContainer } from '@react-navigation/native';
+import {auth} from '../firebase'
+
+const logout = () => {
+    signOut(auth).then(() => {
+    }).catch((error) => {
+    })
+}
 
 
 const ProfileScreen = ({ navigation }) => {
@@ -13,12 +22,12 @@ const ProfileScreen = ({ navigation }) => {
                     />
                     <Text style={styles.username}>John Doe</Text>
                     <View  style={styles.loginCredentials}>
-                        <Text style={styles.loginCredentials.title}> Vos informations de connexion</Text>
+                        <Text style={styles.loginCredentials.title}>Adresse e-mail de connexion</Text>
                         <Text style={styles.loginCredentials.email}>doejohn@helloworld.com</Text>
                     </View>
 
                     <TouchableOpacity style={styles.editProfil}><Text style={styles.editProfil.editProfilText}>Modifier mon profil</Text></TouchableOpacity>
-                    <TouchableOpacity style={styles.logout}><Text style={styles.logout.logoutText}>Déconnexion</Text></TouchableOpacity>
+                    <TouchableOpacity onPress={() => { logout() }} style={styles.logout}><Text style={styles.logout.logoutText}>Déconnexion</Text></TouchableOpacity>
                 </View>
                 <View style={styles.dangerZone}>
                     <Text style={styles.deleteAccount.title}>DANGER ZONE</Text>
@@ -27,6 +36,8 @@ const ProfileScreen = ({ navigation }) => {
                 </View>
             </View>
         </ScrollView>
+
+
     );
 }
 
