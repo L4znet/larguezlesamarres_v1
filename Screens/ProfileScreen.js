@@ -5,9 +5,15 @@ import { NavigationContainer } from '@react-navigation/native';
 import {auth} from '../firebase'
 
 const logout = () => {
-    signOut(auth).then(() => {
-    }).catch((error) => {
+    signOut(auth).then(() => {})
+}
+const deleteAccount = () => {
+    const user = auth.currentUser
+    user.delete().then(function() {
+        console.log("fdssfdsfd")
     })
+
+    signOut(auth).then(() => {})
 }
 
 
@@ -18,12 +24,12 @@ const ProfileScreen = ({ navigation }) => {
                 <View style={styles.container}>
                     <Image
                         style={styles.profilPicture}
-                        source={require('../assets/default.png')}
+                        source={{ uri: auth.currentUser.photoURL }}
                     />
-                    <Text style={styles.username}>John Doe</Text>
+                    <Text style={styles.username}>{auth.currentUser.displayName}</Text>
                     <View  style={styles.loginCredentials}>
                         <Text style={styles.loginCredentials.title}>Adresse e-mail de connexion</Text>
-                        <Text style={styles.loginCredentials.email}>doejohn@helloworld.com</Text>
+                        <Text style={styles.loginCredentials.email}>{auth.currentUser.email}</Text>
                     </View>
 
                     <TouchableOpacity style={styles.editProfil}><Text style={styles.editProfil.editProfilText}>Modifier mon profil</Text></TouchableOpacity>
@@ -31,7 +37,7 @@ const ProfileScreen = ({ navigation }) => {
                 </View>
                 <View style={styles.dangerZone}>
                     <Text style={styles.deleteAccount.title}>DANGER ZONE</Text>
-                    <TouchableOpacity style={styles.deleteAccount}><Text style={styles.deleteAccount.deleteAccountText}>Supprimer mon compte</Text></TouchableOpacity>
+                    <TouchableOpacity onPress={() => { deleteAccount() }} style={styles.deleteAccount}><Text style={styles.deleteAccount.deleteAccountText}>Supprimer mon compte</Text></TouchableOpacity>
                     <Text style={styles.deleteAccount.warningMessage}>Cette action est irréversible</Text>
                 </View>
             </View>
