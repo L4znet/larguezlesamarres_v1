@@ -24,14 +24,20 @@ const ProfileScreen = ({navigation}) => {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
 
+    const uploadPickerPicture = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
 
-    const uploadToFirebase = async (imageToUpload) => {
-        console.log(imageToUpload)
 
-        const response = await fetch(imageToUpload);
+        const response = await fetch(result.uri);
         const blob = await response.blob();
-        const fileRef = ref(storage,  uuid.v4());
-        const result = await uploadBytes(fileRef, blob).then(async () => {
+        const fileRef = ref(storage, displayName);
+
+         await uploadBytes(fileRef, blob).then(async () => {
             const downloadURl = await getDownloadURL(fileRef)
 
             updateProfile(auth.currentUser, {
@@ -41,19 +47,7 @@ const ProfileScreen = ({navigation}) => {
             }).catch((error) => {
             });
         });
-    }
-
-    const uploadPickerPicture = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-        });
-
-        if (!result.cancelled) {
-            await uploadToFirebase(result.uri)
-        }
+         
     }
 
 

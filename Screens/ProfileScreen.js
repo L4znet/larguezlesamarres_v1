@@ -32,9 +32,7 @@ const ProfileScreen = ({navigation}) => {
                 <View style={styles.container}>
                     <Image
                         style={styles.profilPicture}
-                        source={{
-                            uri: JSON.parse(currentUser).photoURL,
-                        }}
+                        source={{ uri: JSON.parse(currentUser).photoURL }}
                     />
                     <Text style={styles.username}>{JSON.parse(currentUser).displayName}</Text>
                     <View  style={styles.loginCredentials}>
