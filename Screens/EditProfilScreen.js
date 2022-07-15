@@ -1,47 +1,129 @@
-import {Text, View, TouchableOpacity, StyleSheet, Image, ScrollView} from "react-native";
-import {signOut} from "firebase/auth";
-import { NavigationContainer } from '@react-navigation/native';
-import {auth} from '../firebase'
+import {
+    View,
+    TextInput,
+    StyleSheet,
+    Text,
+    TouchableOpacity
+} from 'react-native';
+import {
+    updateEmail,
+    updatePassword,
+    updateProfile
+} from "firebase/auth";
+import {auth, storage} from '../firebase'
+import {useEffect, useState} from "react";
+import * as ImagePicker from 'expo-image-picker';
+import { ref, uploadBytes,getDownloadURL } from "firebase/storage";
+import uuid from "react-native-uuid";
 
-const logout = () => {
-    signOut(auth).then(() => {})
-}
 
-const deleteAccount = () => {
-    const user = auth.currentUser
-    user.delete().then(function() {})
+const ProfileScreen = ({navigation}) => {
 
-    signOut(auth).then(() => {})
-}
+    const [email, setEmail] = useState(auth.currentUser.email);
+    const [displayName, setDisplayName] = useState(auth.currentUser.displayName);
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
 
 
-const ProfileScreen = () => {
+    const uploadToFirebase = async (imageToUpload) => {
+        console.log(imageToUpload)
+
+        const response = await fetch(imageToUpload);
+        const blob = await response.blob();
+        const fileRef = ref(storage,  uuid.v4());
+        const result = await uploadBytes(fileRef, blob).then(async () => {
+            const downloadURl = await getDownloadURL(fileRef)
+
+            updateProfile(auth.currentUser, {
+                photoURL: downloadURl
+            }).then(() => {
+                navigation.navigate("Profile")
+            }).catch((error) => {
+            });
+        });
+    }
+
+    const uploadPickerPicture = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+
+        if (!result.cancelled) {
+            await uploadToFirebase(result.uri)
+        }
+    }
+
+
+
+    const changeProfil = async () => {
+
+        if(displayName !== auth.currentUser.displayName){
+            updateProfile(auth.currentUser, {
+                displayName: displayName
+            }).then(() => {
+                navigation.navigate("Profile")
+            }).catch((error) => {
+            });
+        }
+
+        if(email !== auth.currentUser.email){
+
+            updateEmail(auth.currentUser, email).then(() => {
+                navigation.navigate("Profile")
+            }).catch((error) => {
+            });
+        }
+
+        if(password === confirmPassword && password !== ""){
+
+            updatePassword(auth.currentUser, password).then(() => {
+                navigation.navigate("Profile")
+            }).catch((error) => {
+            });
+        }
+    }
+
+
     return (
-        <ScrollView>
-            <View style={styles.container}>
-                <View style={styles.container}>
-                    <Image
-                        style={styles.profilPicture}
-                        source={require('../assets/default.png')}
-                    />
-                    <Text style={styles.username}>{auth.currentUser.displayName}</Text>
-                    <View  style={styles.loginCredentials}>
-                        <Text style={styles.loginCredentials.title}>Adresse e-mail de connexion</Text>
-                        <Text style={styles.loginCredentials.email}>{auth.currentUser.email}</Text>
-                    </View>
-
-                    <TouchableOpacity style={styles.editProfil}><Text style={styles.editProfil.editProfilText}>Modifier mon profil</Text></TouchableOpacity>
-                    <TouchableOpacity onPress={() => { logout() }} style={styles.logout}><Text style={styles.logout.logoutText}>Déconnexion</Text></TouchableOpacity>
-                </View>
-                <View style={styles.dangerZone}>
-                    <Text style={styles.deleteAccount.title}>DANGER ZONE</Text>
-                    <TouchableOpacity onPress={() => { deleteAccount() }} style={styles.deleteAccount}><Text style={styles.deleteAccount.deleteAccountText}>Supprimer mon compte</Text></TouchableOpacity>
-                    <Text style={styles.deleteAccount.warningMessage}>Cette action est irréversible</Text>
-                </View>
-            </View>
-        </ScrollView>
-
-
+        <View style={styles.container}>
+            <TouchableOpacity onPress={() => { uploadPickerPicture() }} style={styles.editProfilPicture}>
+                <Text style={styles.editProfilPicture.text}>Modifier la photo de profil</Text>
+            </TouchableOpacity>
+            <TextInput
+                style={styles.input}
+                onChangeText={newDisplayName => setDisplayName(newDisplayName)}
+                value={displayName}
+                placeholder="Votre nom"
+                placeholderTextColor="#7b7b7b"
+            />
+            <TextInput
+                style={styles.input}
+                onChangeText={newEmail => setEmail(newEmail)}
+                value={email}
+                placeholder="Votre nouvelle adresse e-mail"
+                placeholderTextColor="#7b7b7b"
+            />
+            <TextInput
+                style={styles.input}
+                onChangeText={newPassword => setPassword(newPassword)}
+                value={password}
+                placeholder="Votre nouveau mot de passe"
+                placeholderTextColor="#7b7b7b"
+            />
+            <TextInput
+                style={styles.input}
+                onChangeText={newConfirmPassword => setConfirmPassword(newConfirmPassword)}
+                value={confirmPassword}
+                placeholder="Confirmation du mot de passe"
+                placeholderTextColor="#7b7b7b"
+            />
+            <TouchableOpacity onPress={() => {  changeProfil() }} style={styles.confirmSave}>
+                <Text style={styles.confirmSave.text}>Enregistrer vos modifications</Text>
+            </TouchableOpacity>
+        </View>
     );
 }
 
@@ -50,108 +132,47 @@ const styles = StyleSheet.create({
     container:{
         flex:1,
         display:"flex",
-        justifyContent:"center",
         alignItems:"center",
         width:"100%"
     },
-    profilPicture:{
-        width:150,
-        height:150,
-        marginTop:50
-    },
-    username:{
-        fontSize:30,
-        marginVertical:20,
-        fontWeight:"bold"
-    },
-    loginCredentials:{
-        width:"100%",
-        height:100,
-        backgroundColor:"#dfdfdf",
+    editProfilPicture:{
+        width:300,
+        height:70,
+        backgroundColor:"#000",
+        borderRadius:100,
         display:"flex",
-        flexDirection:"column",
-        justifyContent:"flex-end",
-        alignItems:"center",
-        title:{
-            fontSize:20,
-            fontWeight: "bold",
-            marginBottom:10
-        },
-        email:{
-            fontSize:20,
-            marginBottom:20
-        },
-        passwordText:{
-            fontSize:20,
-            height:30,
-            marginBottom:20
-        },
-        passwwordFake:{
-            marginLeft:2,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop:20,
+        text:{
+            color:"#FFF",
+            textAlign:"center",
+            fontSize:20
         }
     },
-    editProfil:{
-        width:"80%",
-        height:60,
+    confirmSave:{
+        width:300,
+        height:70,
         backgroundColor:"#48B781",
-        marginTop:30,
+        borderRadius:100,
         display:"flex",
-        justifyContent:"center",
-        alignItems:"center",
-        borderRadius:15,
-        editProfilText:{
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop:20,
+        text:{
             color:"#FFF",
-            fontSize:18
+            textAlign:"center",
+            fontSize:20
         }
     },
-    logout:{
-        width:"80%",
-        height:60,
-        backgroundColor:"#c74a4a",
-        marginTop:30,
-        display:"flex",
-        justifyContent:"center",
-        alignItems:"center",
-        borderRadius:15,
-        logoutText:{
-            color:"#FFF",
-            fontSize:18
-        }
-    },
-    dangerZone:{
-        display:"flex",
-        justifyContent:"center",
-        alignItems:"center",
-        width:"100%",
-        height:250,
-        marginVertical:30,
-    },
-    deleteAccount:{
-        width:"80%",
-        height:60,
-        backgroundColor:"#c74a4a",
-        marginTop:10,
-        display:"flex",
-        justifyContent:"center",
-        alignItems:"center",
-        borderRadius:15,
-        deleteAccountText:{
-            color:"#FFF",
-            fontSize:18
-        },
-        title:{
-            color:"#c74a4a",
-            fontSize:30,
-            fontWeight:"bold",
-            marginVertical:40
-        },
-        warningMessage:{
-            color:"#c74a4a",
-            fontSize:20,
-            fontWeight:"bold",
-            marginTop:10
-        }
-    },
+    input:{
+        width:350,
+        height:50,
+        backgroundColor: "#e3e3e3",
+        marginTop:20,
+        paddingLeft:20,
+        fontSize:20,
+    }
 })
 
 export default ProfileScreen;

@@ -2,32 +2,44 @@ import {Text, View, TouchableOpacity, StyleSheet, Image, ScrollView} from "react
 import {signOut} from "firebase/auth";
 import { NavigationContainer } from '@react-navigation/native';
 import {auth} from '../firebase'
+import {useEffect, useState} from "react";
+import navigation from "../Navigation";
+
 
 const logout = () => {
     signOut(auth).then(() => {})
 }
 
 const deleteAccount = () => {
-    const user = auth.currentUser
-    user.delete().then(function() {})
+    auth.currentUser.delete().then(function() {})
 
     signOut(auth).then(() => {})
 }
 
 
 const ProfileScreen = ({navigation}) => {
+    const [currentUser, setCurrentUser] = useState(JSON.stringify(auth.currentUser));
+
+    navigation.addListener('focus', async () => {
+        auth.currentUser.reload().then(() => {
+            setCurrentUser(JSON.stringify(auth.currentUser))
+        });
+    });
+
     return (
         <ScrollView>
             <View style={styles.container}>
                 <View style={styles.container}>
                     <Image
                         style={styles.profilPicture}
-                        source={require('../assets/default.png')}
+                        source={{
+                            uri: JSON.parse(currentUser).photoURL,
+                        }}
                     />
-                    <Text style={styles.username}>{auth.currentUser.displayName}</Text>
+                    <Text style={styles.username}>{JSON.parse(currentUser).displayName}</Text>
                     <View  style={styles.loginCredentials}>
                         <Text style={styles.loginCredentials.title}>Adresse e-mail de connexion</Text>
-                        <Text style={styles.loginCredentials.email}>{auth.currentUser.email}</Text>
+                        <Text style={styles.loginCredentials.email}>{JSON.parse(currentUser).email}</Text>
                     </View>
 
                     <TouchableOpacity onPress={() => { navigation.navigate('EditProfil') }} style={styles.editProfil}><Text style={styles.editProfil.editProfilText}>Modifier mon profil</Text></TouchableOpacity>
