@@ -24,7 +24,8 @@ const RegisterScreen = ({ navigation }) => {
                         const user = userCredential.user;
 
                         await updateProfile((user), {
-                            displayName: username
+                            displayName: username,
+                            photoURL:"https://firebasestorage.googleapis.com/v0/b/larguezlesamarres-a1817.appspot.com/o/default.png?alt=media&token=f91ec0d2-e0ba-4808-916e-6b3b31a2e3be"
                         })
                     })
                     .catch((error) => {
