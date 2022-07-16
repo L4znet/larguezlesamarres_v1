@@ -1,9 +1,7 @@
 import {Text, View, TouchableOpacity, StyleSheet, Image, ScrollView} from "react-native";
 import {signOut} from "firebase/auth";
-import { NavigationContainer } from '@react-navigation/native';
 import {auth, db, doc, deleteDoc, storage, deleteObject} from '../firebase'
-import {useEffect, useState} from "react";
-import navigation from "../Navigation";
+import { useState} from "react";
 import {ref} from "firebase/storage";
 
 
@@ -19,9 +17,7 @@ const deleteAccount = async () => {
     if(fileRef.name !== "default"){
         const profilPict = ref(storage, fileRef.name);
         deleteObject(profilPict).then(() => {
-            // File deleted successfully
         }).catch((error) => {
-            // Uh-oh, an error occurred!
         });
     }
 
@@ -82,7 +78,8 @@ const styles = StyleSheet.create({
     profilPicture:{
         width:150,
         height:150,
-        marginTop:50
+        marginTop:50,
+        borderRadius: "100%"
     },
     username:{
         fontSize:30,
