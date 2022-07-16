@@ -3,7 +3,9 @@ import {signOut} from "firebase/auth";
 import {auth, db, doc, deleteDoc, storage, deleteObject} from '../firebase'
 import { useState} from "react";
 import {ref} from "firebase/storage";
-
+import ToggleSwitch from "toggle-switch-react-native";
+import {useDispatch, useSelector} from "react-redux";
+import {toggleLeftHandMode} from "../store/settingsSlice";
 
 const logout = () => {
     signOut(auth).then(() => {})
@@ -28,14 +30,24 @@ const deleteAccount = async () => {
 }
 
 
+
+
 const ProfileScreen = ({navigation}) => {
+
+
     const [currentUser, setCurrentUser] = useState(JSON.stringify(auth.currentUser));
+    const leftHandMode = useSelector((state) => state.settings.leftHandMode)
+    const dispatch = useDispatch()
 
     navigation.addListener('focus', async () => {
         auth.currentUser.reload().then(() => {
             setCurrentUser(JSON.stringify(auth.currentUser))
         });
     });
+
+    const leftMode = () => {
+        dispatch(toggleLeftHandMode())
+    }
 
     return (
         <ScrollView>
@@ -50,9 +62,21 @@ const ProfileScreen = ({navigation}) => {
                         <Text style={styles.loginCredentials.title}>Adresse e-mail de connexion</Text>
                         <Text style={styles.loginCredentials.email}>{JSON.parse(currentUser).email}</Text>
                     </View>
-
                     <TouchableOpacity onPress={() => { navigation.navigate('EditProfil') }} style={styles.editProfil}><Text style={styles.editProfil.editProfilText}>Modifier mon profil</Text></TouchableOpacity>
                     <TouchableOpacity onPress={() => { logout() }} style={styles.logout}><Text style={styles.logout.logoutText}>Déconnexion</Text></TouchableOpacity>
+                </View>
+                <View  style={[{marginTop:30, paddingBottom:30}, styles.options]}>
+                    <Text style={styles.options.title}>Options d'accessibilités</Text>
+                    <ToggleSwitch
+                        isOn={leftHandMode}
+                        onColor="green"
+                        offColor="#a9a9a9"
+                        label="Mode gaucher"
+                        labelStyle={{ color: "black", fontWeight: "900", fontSize:20 }}
+                        size="large"
+                        animationSpeed="100"
+                        onToggle={isOn => leftMode()}
+                    />
                 </View>
                 <View style={styles.dangerZone}>
                     <Text style={styles.deleteAccount.title}>DANGER ZONE</Text>
@@ -79,12 +103,26 @@ const styles = StyleSheet.create({
         width:150,
         height:150,
         marginTop:50,
-        borderRadius: "100%"
+        borderRadius:100
     },
     username:{
         fontSize:30,
         marginVertical:20,
         fontWeight:"bold"
+    },
+    options:{
+        width:"100%",
+        height:150,
+        backgroundColor:"#dfdfdf",
+        display:"flex",
+        flexDirection:"column",
+        justifyContent:"space-between",
+        alignItems:"center",
+        title:{
+            fontSize:25,
+            fontWeight: "bold",
+            marginTop:20
+        },
     },
     loginCredentials:{
         width:"100%",
@@ -145,8 +183,8 @@ const styles = StyleSheet.create({
         justifyContent:"center",
         alignItems:"center",
         width:"100%",
-        height:250,
-        marginVertical:30,
+        height:220,
+        marginVertical:10,
     },
     deleteAccount:{
         width:"80%",
@@ -165,7 +203,7 @@ const styles = StyleSheet.create({
             color:"#c74a4a",
             fontSize:30,
             fontWeight:"bold",
-            marginVertical:40
+            marginVertical:10
         },
         warningMessage:{
             color:"#c74a4a",

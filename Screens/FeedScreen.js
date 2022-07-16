@@ -3,15 +3,12 @@ import {
     StyleSheet,
     Text,
     View,
-    SectionList,
-    SafeAreaView,
     Image,
     FlatList,
-    ScrollView,
-    TouchableOpacity
 } from 'react-native';
-
-import { Foundation, MaterialIcons, Entypo, FontAwesome, AntDesign, Feather  } from '@expo/vector-icons'
+import {selector, useRecoilState, useRecoilValue} from "recoil";
+import {toggleLeftHandMode} from "../store/settingsSlice";
+import {useDispatch, useSelector} from "react-redux";
 
 const RECENTLY = [
     {
@@ -42,15 +39,11 @@ const RECENTLY = [
 
 
 const RecentlyItem = ({ item }) => {
+
+
     return (
         <View style={styles.recentlyItem}>
-            <Image
-                source={{
-                    uri: item.uri,
-                }}
-                style={styles.recentlyItem.itemPhoto}
-                resizeMode="cover"
-            />
+            <Image source={{uri: item.uri}} style={styles.recentlyItem.itemPhoto} resizeMode="cover"/>
             <View style={styles.recentlyItem.itemCaption}><Text style={styles.recentlyItem.itemCaptionText}>{item.text}</Text></View>
             <View style={styles.recentlyItem.itemCaption}><Text style={styles.recentlyItem.itemCaptionText}>{item.price}</Text></View>
         </View>
@@ -64,16 +57,16 @@ const FlatList_Header = () => {
                 fontWeight: '800',
                 fontSize: 25,
                 color: '#000',
-                marginVertical:40,
+                marginVertical:40
             }}> Les derniers ajouts</Text>
-
     );
 }
 
-const FeedScreen = ({ navigation }) => {
+const FeedScreen = () => {
+
+
     return (
         <View style={styles.container}>
-
             <FlatList
                 style={styles.recentlyItemContainer}
                 data={RECENTLY}
@@ -116,9 +109,6 @@ const styles = StyleSheet.create({
         fontSize: 25,
         color: '#000',
         marginVertical:40,
-        marginLeft:30
-    },
-    recentlyItemContainer:{
         marginLeft:30
     },
     recentlyItemContainer:{

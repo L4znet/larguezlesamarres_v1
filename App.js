@@ -12,6 +12,8 @@ import {onAuthStateChanged} from "@firebase/auth";
 import {auth} from "./firebase";
 import {useState} from "react";
 import EditProfilScreen from "./Screens/EditProfilScreen";
+import {Provider} from "react-redux";
+import {store} from "./store";
 
 const Stack = createNativeStackNavigator();
 
@@ -29,50 +31,68 @@ export default function App() {
     });
 
   return (
-      <NavigationContainer>
-          <Stack.Navigator>
-              <Stack.Screen name="Tabs" component={Navigation} options={{ headerShown: false }} />
-              <Stack.Screen name="Login" options={{
-                                title: 'Larguez les amarres',
-                                headerStyle: {
-                                    backgroundColor: '#48B781',
-                                },
-                                headerTintColor: '#fff',
-                                headerTitleStyle: {
-                                    fontWeight: 'bold',
-                                    fontFamily:"Syne_700Bold",
-                                    color:"#FFF",
-                                    fontSize:20
-                                },
-                                headerBackVisible:false
-                            }}
-                            component={LoginScreen} />
-                <Stack.Screen name="Register"
-                            options={{
-                                title: 'Larguez les amarres',
-                                headerStyle: {
-                                    backgroundColor: '#48B781',
-                                },
-                                headerTintColor: '#fff',
-                                headerTitleStyle: {
-                                    fontWeight: 'bold',
-                                    fontFamily:"Syne_700Bold",
-                                    color:"#FFF",
-                                    fontSize:20
-                                },
-                                headerBackVisible:false
-                            }}
-                            component={RegisterScreen} />
+      <Provider store={store}>
+          <NavigationContainer>
+              <Stack.Navigator>
+                  <Stack.Screen name="Tabs" component={Navigation} options={{ headerShown: false }} />
+                  <Stack.Screen name="Login" options={{
+                      title: 'Larguez les amarres',
+                      headerStyle: {
+                          backgroundColor: '#48B781',
+                      },
+                      headerTintColor: '#fff',
+                      headerTitleStyle: {
+                          fontWeight: 'bold',
+                          fontFamily:"Syne_700Bold",
+                          color:"#FFF",
+                          fontSize:20
+                      },
+                      headerBackVisible:false
+                  }}
+                                component={LoginScreen} />
+                  <Stack.Screen name="Register"
+                                options={{
+                                    title: 'Larguez les amarres',
+                                    headerStyle: {
+                                        backgroundColor: '#48B781',
+                                    },
+                                    headerTintColor: '#fff',
+                                    headerTitleStyle: {
+                                        fontWeight: 'bold',
+                                        fontFamily:"Syne_700Bold",
+                                        color:"#FFF",
+                                        fontSize:20
+                                    },
+                                    headerBackVisible:false
+                                }}
+                                component={RegisterScreen} />
 
 
-              {isUserLogged === false &&
-                  <Stack.Screen
-                      name="Profile"
-                      component={HomeScreen}
-                      options={{
+                  {isUserLogged === false &&
+                      <Stack.Screen
+                          name="Profile"
+                          component={HomeScreen}
+                          options={{
+                              title: 'Larguez les amarres',
+                              headerStyle: {
+                                  backgroundColor: '#48B781',
+                              },
+                              headerTintColor: '#fff',
+                              headerTitleStyle: {
+                                  fontWeight: 'bold',
+                                  fontFamily:"Syne_700Bold",
+                                  color:"#FFF",
+                                  fontSize:20
+                              },
+                              headerBackVisible:false
+                          }}
+                      />
+                  }
+                  {isUserLogged === true &&
+                      <Stack.Screen options={{
                           title: 'Larguez les amarres',
                           headerStyle: {
-                              backgroundColor: '#48B781',
+                              backgroundColor: '#48B781'
                           },
                           headerTintColor: '#fff',
                           headerTitleStyle: {
@@ -81,49 +101,32 @@ export default function App() {
                               color:"#FFF",
                               fontSize:20
                           },
-                          headerBackVisible:false
-                      }}
-                  />
-              }
-              {isUserLogged === true &&
-                  <Stack.Screen options={{
-                      title: 'Larguez les amarres',
-                      headerStyle: {
-                          backgroundColor: '#48B781'
-                      },
-                      headerTintColor: '#fff',
-                      headerTitleStyle: {
-                          fontWeight: 'bold',
-                          fontFamily:"Syne_700Bold",
-                          color:"#FFF",
-                          fontSize:20
-                      },
-                      headerBackVisible:false }}
-                      name="Profile"
-                      component={ProfileScreen} />
-              }
+                          headerBackVisible:false }}
+                                    name="Profile"
+                                    component={ProfileScreen} />
+                  }
 
-              {isUserLogged === true &&
-                  <Stack.Screen options={{
-                      title: 'Larguez les amarres',
-                      headerStyle: {
-                          backgroundColor: '#48B781'
-                      },
-                      headerTintColor: '#fff',
-                      headerTitleStyle: {
-                          fontWeight: 'bold',
-                          fontFamily:"Syne_700Bold",
-                          color:"#FFF",
-                          fontSize:20
-                      },
-                      headerBackVisible:false }}
-                      name="EditProfil"
-                      component={EditProfilScreen} />
-              }
+                  {isUserLogged === true &&
+                      <Stack.Screen options={{
+                          title: 'Larguez les amarres',
+                          headerStyle: {
+                              backgroundColor: '#48B781'
+                          },
+                          headerTintColor: '#fff',
+                          headerTitleStyle: {
+                              fontWeight: 'bold',
+                              fontFamily:"Syne_700Bold",
+                              color:"#FFF",
+                              fontSize:20
+                          },
+                          headerBackVisible:false }}
+                                    name="EditProfil"
+                                    component={EditProfilScreen} />
+                  }
 
-          </Stack.Navigator>
-      </NavigationContainer>
-
+              </Stack.Navigator>
+          </NavigationContainer>
+      </Provider>
   );
 }
 
