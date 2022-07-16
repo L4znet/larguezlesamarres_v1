@@ -4,11 +4,10 @@ import {
     Text,
     View,
     Image,
-    FlatList,
+    FlatList, TouchableOpacity, TouchableHighlight,
 } from 'react-native';
-import {selector, useRecoilState, useRecoilValue} from "recoil";
-import {toggleLeftHandMode} from "../store/settingsSlice";
-import {useDispatch, useSelector} from "react-redux";
+import { AntDesign } from '@expo/vector-icons';
+import {useSelector} from "react-redux";
 
 const RECENTLY = [
     {
@@ -64,7 +63,7 @@ const FlatList_Header = () => {
 
 const FeedScreen = () => {
 
-
+    const leftHandMode = useSelector((state) => state.settings.leftHandMode)
     return (
         <View style={styles.container}>
             <FlatList
@@ -75,7 +74,13 @@ const FeedScreen = () => {
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
             />
-
+            <TouchableHighlight
+                activeOpacity={1}
+                underlayColor="#5ee1a0"
+                onPress={() => alert('Pressed!')}
+                style={[styles.addButton, leftHandMode ? {right:20} : {left:20}]}>
+                <AntDesign name="plus" size={30} color="white" />
+            </TouchableHighlight>
         </View>
 
     );
@@ -85,6 +90,17 @@ const FeedScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+    },
+    addButton:{
+        width:80,
+        height:80,
+        backgroundColor:"#48B781",
+        position:"absolute",
+        bottom:20,
+        borderRadius:100,
+        display:"flex",
+        justifyContent:"center",
+        alignItems:"center",
     },
     header:{
         title:{
