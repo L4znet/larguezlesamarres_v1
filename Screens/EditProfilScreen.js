@@ -35,7 +35,7 @@ const ProfileScreen = ({navigation}) => {
 
         const response = await fetch(result.uri);
         const blob = await response.blob();
-        const fileRef = ref(storage, displayName);
+        const fileRef = ref(storage, auth.currentUser.uid);
 
          await uploadBytes(fileRef, blob).then(async () => {
             const downloadURl = await getDownloadURL(fileRef)
@@ -47,7 +47,7 @@ const ProfileScreen = ({navigation}) => {
             }).catch((error) => {
             });
         });
-         
+
     }
 
 
