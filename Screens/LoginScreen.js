@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
             fontSize:35,
             fontWeight:"bold",
             marginTop:20,
-            marginLeft:20,
+            textAlign:"center",
         },
         registerText:{
             fontSize:30,
