@@ -1,19 +1,34 @@
 import {Text, View, TouchableOpacity, StyleSheet, Image, ScrollView} from "react-native";
 import {signOut} from "firebase/auth";
 import { NavigationContainer } from '@react-navigation/native';
-import {auth} from '../firebase'
+import {auth, db, doc, deleteDoc, storage, deleteObject} from '../firebase'
 import {useEffect, useState} from "react";
 import navigation from "../Navigation";
+import {ref} from "firebase/storage";
 
 
 const logout = () => {
     signOut(auth).then(() => {})
 }
 
-const deleteAccount = () => {
-    auth.currentUser.delete().then(function() {})
+const deleteAccount = async () => {
+    auth.currentUser.delete().then(function () {})
 
-    signOut(auth).then(() => {})
+    const fileRef = ref(storage, auth.currentUser.uid);
+
+    if(fileRef.name !== "default"){
+        const profilPict = ref(storage, fileRef.name);
+        deleteObject(profilPict).then(() => {
+            // File deleted successfully
+        }).catch((error) => {
+            // Uh-oh, an error occurred!
+        });
+    }
+
+    await deleteDoc(doc(db, "users", auth.currentUser.uid));
+
+    signOut(auth).then(() => {
+    })
 }
 
 
