@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
     StyleSheet,
     Text,
@@ -8,6 +8,8 @@ import {
 } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import {useSelector} from "react-redux";
+import {onAuthStateChanged} from "@firebase/auth";
+import {auth} from "../firebase";
 
 const RECENTLY = [
     {
@@ -61,9 +63,19 @@ const FlatList_Header = () => {
     );
 }
 
-const FeedScreen = () => {
+const FeedScreen = ({navigation}) => {
 
     const leftHandMode = useSelector((state) => state.settings.leftHandMode)
+
+    const [isUserLogged, setUserLogged] = useState(false);
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            setUserLogged(true)
+        } else {
+            setUserLogged(false)
+        }
+    });
+
     return (
         <View style={styles.container}>
             <FlatList
@@ -74,13 +86,17 @@ const FeedScreen = () => {
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
             />
-            <TouchableHighlight
-                activeOpacity={1}
-                underlayColor="#5ee1a0"
-                onPress={() => alert('Pressed!')}
-                style={[styles.addButton, leftHandMode ? {right:20} : {left:20}]}>
-                <AntDesign name="plus" size={30} color="white" />
-            </TouchableHighlight>
+            {isUserLogged === true &&
+                <TouchableHighlight
+                    activeOpacity={1}
+                    underlayColor="#5ee1a0"
+                    onPress={() => navigation.navigate('AddPost')}
+                    style={[styles.addButton, leftHandMode ? {right:20} : {left:20}]}>
+                    <AntDesign name="plus" size={30} color="white" />
+                </TouchableHighlight>
+            }
+
+
         </View>
 
     );
