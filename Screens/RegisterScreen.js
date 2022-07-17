@@ -26,7 +26,7 @@ const RegisterScreen = ({ navigation }) => {
 
                         await updateProfile((user), {
                             displayName: username,
-                            photoURL:"https://firebasestorage.googleapis.com/v0/b/larguezlesamarres-a1817.appspot.com/o/default.png?alt=media&token=377c368e-ce5d-488b-a9bf-28be8cbcc379"
+                            photoURL:"https://firebasestorage.googleapis.com/v0/b/larguezlesamarres-a1817.appspot.com/o/photoprofil%2Fdefault.png?alt=media&token=9b50844b-3104-4e0e-9a55-7ce2d82b25c3"
                         })
 
                         await setDoc(doc(db, "users", user.uid), {
