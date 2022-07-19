@@ -5,7 +5,7 @@ import { useState} from "react";
 import {ref} from "firebase/storage";
 import ToggleSwitch from "toggle-switch-react-native";
 import {useDispatch, useSelector} from "react-redux";
-import {toggleLeftHandMode} from "../store/settingsSlice";
+import {toggleLeftHandMode, toggleTenantOwner} from "../store/settingsSlice";
 
 const logout = () => {
     signOut(auth).then(() => {})
@@ -37,6 +37,7 @@ const ProfileScreen = ({navigation}) => {
 
     const [currentUser, setCurrentUser] = useState(JSON.stringify(auth.currentUser));
     const leftHandMode = useSelector((state) => state.settings.leftHandMode)
+    const ownerTenantState = useSelector((state) => state.settings.ownerTenantState)
     const dispatch = useDispatch()
 
     navigation.addListener('focus', async () => {
@@ -47,6 +48,10 @@ const ProfileScreen = ({navigation}) => {
 
     const leftMode = () => {
         dispatch(toggleLeftHandMode())
+    }
+
+    const ownerTenantMode = () => {
+        dispatch(toggleTenantOwner())
     }
 
     return (
@@ -66,17 +71,35 @@ const ProfileScreen = ({navigation}) => {
                     <TouchableOpacity onPress={() => { logout() }} style={styles.logout}><Text style={styles.logout.logoutText}>Déconnexion</Text></TouchableOpacity>
                 </View>
                 <View  style={[{marginTop:30, paddingBottom:30}, styles.options]}>
-                    <Text style={styles.options.title}>Options d'accessibilités</Text>
+                    <Text style={styles.options.title}>Options d'interface</Text>
                     <ToggleSwitch
+                        style={{marginTop:30, width:"100%", display:"flex", flexDirection:"row", alignItems:"center", justifyContent:"center"}}
                         isOn={leftHandMode}
                         onColor="green"
                         offColor="#a9a9a9"
                         label="Mode gaucher"
                         labelStyle={{ color: "black", fontWeight: "900", fontSize:20 }}
                         size="large"
-                        animationSpeed="100"
+                        animationSpeed={150}
                         onToggle={isOn => leftMode()}
                     />
+                    <View style={{display:"flex", flexDirection:"column", width:"100%"}}>
+                        <ToggleSwitch
+                            style={{marginTop:40, width:"100%", alignItems:"center", justifyContent:"center"}}
+                            isOn={ownerTenantState}
+                            onColor="green"
+                            offColor="blue"
+                            animationSpeed={150}
+                            label="Changer de type de profil"
+                            labelStyle={{ color: "black", fontWeight: "900", fontSize:20, marginBottom:20 }}
+                            size="large"
+                            onToggle={isOn => ownerTenantMode()}
+                        />
+                        <View style={{display:"flex", flexDirection:"row", justifyContent:"space-between", marginTop:20}}>
+                            <Text style={{fontSize:20, marginLeft:60}}> Propriétaire</Text>
+                            <Text style={{fontSize:20, marginRight:80}}>Locataire</Text>
+                        </View>
+                    </View>
                 </View>
                 <View style={styles.dangerZone}>
                     <Text style={styles.deleteAccount.title}>DANGER ZONE</Text>
@@ -112,14 +135,16 @@ const styles = StyleSheet.create({
     },
     options:{
         width:"100%",
-        height:150,
+        height:"auto",
         backgroundColor:"#dfdfdf",
         display:"flex",
         flexDirection:"column",
         justifyContent:"space-between",
         alignItems:"center",
+        paddingTop:20,
+        paddingBottom:50,
         title:{
-            fontSize:25,
+            fontSize:30,
             fontWeight: "bold",
             marginTop:20
         },
