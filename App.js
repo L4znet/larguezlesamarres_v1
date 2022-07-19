@@ -14,6 +14,7 @@ import {useState} from "react";
 import EditProfilScreen from "./Screens/EditProfilScreen";
 import {Provider} from "react-redux";
 import {store} from "./store";
+import AddPostScreen from "./Screens/AddPostScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -49,7 +50,7 @@ export default function App() {
                       },
                       headerBackVisible:false
                   }}
-                                component={LoginScreen} />
+                  component={LoginScreen} />
                   <Stack.Screen name="Register"
                                 options={{
                                     title: 'Larguez les amarres',
@@ -122,6 +123,24 @@ export default function App() {
                           headerBackVisible:false }}
                                     name="EditProfil"
                                     component={EditProfilScreen} />
+                  }
+
+                  {isUserLogged === true &&
+                      <Stack.Screen options={{
+                          title: 'Larguez les amarres',
+                          headerStyle: {
+                              backgroundColor: '#48B781'
+                          },
+                          headerTintColor: '#fff',
+                          headerTitleStyle: {
+                              fontWeight: 'bold',
+                              fontFamily:"Syne_700Bold",
+                              color:"#FFF",
+                              fontSize:20
+                          },
+                          headerBackVisible:false }}
+                                    name="AddPost"
+                                    component={AddPostScreen} />
                   }
 
               </Stack.Navigator>

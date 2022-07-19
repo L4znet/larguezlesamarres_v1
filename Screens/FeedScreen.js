@@ -1,14 +1,15 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
     StyleSheet,
     Text,
     View,
     Image,
-    FlatList,
+    FlatList, TouchableOpacity, TouchableHighlight,
 } from 'react-native';
-import {selector, useRecoilState, useRecoilValue} from "recoil";
-import {toggleLeftHandMode} from "../store/settingsSlice";
-import {useDispatch, useSelector} from "react-redux";
+import { AntDesign } from '@expo/vector-icons';
+import {useSelector} from "react-redux";
+import {onAuthStateChanged} from "@firebase/auth";
+import {auth} from "../firebase";
 
 const RECENTLY = [
     {
@@ -62,8 +63,18 @@ const FlatList_Header = () => {
     );
 }
 
-const FeedScreen = () => {
+const FeedScreen = ({navigation}) => {
 
+    const leftHandMode = useSelector((state) => state.settings.leftHandMode)
+
+    const [isUserLogged, setUserLogged] = useState(false);
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            setUserLogged(true)
+        } else {
+            setUserLogged(false)
+        }
+    });
 
     return (
         <View style={styles.container}>
@@ -75,7 +86,15 @@ const FeedScreen = () => {
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
             />
-
+            {isUserLogged === true &&
+                <TouchableHighlight
+                    activeOpacity={1}
+                    underlayColor="#5ee1a0"
+                    onPress={() => navigation.navigate('AddPost')}
+                    style={[styles.addButton, leftHandMode ? {right:20} : {left:20}]}>
+                    <AntDesign name="plus" size={30} color="white" />
+                </TouchableHighlight>
+            }
         </View>
 
     );
@@ -85,6 +104,17 @@ const FeedScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+    },
+    addButton:{
+        width:80,
+        height:80,
+        backgroundColor:"#48B781",
+        position:"absolute",
+        bottom:20,
+        borderRadius:100,
+        display:"flex",
+        justifyContent:"center",
+        alignItems:"center",
     },
     header:{
         title:{
