@@ -95,8 +95,6 @@ const FeedScreen = ({navigation}) => {
                     <AntDesign name="plus" size={30} color="white" />
                 </TouchableHighlight>
             }
-
-
         </View>
 
     );
