@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
     StyleSheet,
     Text,
@@ -9,7 +9,66 @@ import {
 import { AntDesign } from '@expo/vector-icons';
 import {useSelector} from "react-redux";
 import {onAuthStateChanged} from "@firebase/auth";
-import {auth} from "../firebase";
+import {auth, query, collection, onSnapshot, db} from "../firebase";
+
+const FeedScreen = ({navigation}) => {
+
+    const leftHandMode = useSelector((state) => state.settings.leftHandMode)
+    const [offers, setOffers] = useState({});
+
+    const [isUserLogged, setUserLogged] = useState(false);
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            setUserLogged(true)
+        } else {
+            setUserLogged(false)
+        }
+    });
+
+    const getOffer = useCallback(async() => {
+        fetch('http://192.168.1.15:3000/api/posts', {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                }
+            }).then(response => response.json()).then(data => { setOffers(data) })
+
+    }, [])
+
+    useEffect( () => {
+        getOffer()
+    }, [])
+
+
+
+
+    return (
+        <View style={styles.container}>
+            <FlatList
+                style={styles.recentlyItemContainer}
+                data={offers}
+                renderItem={({ item }) => <RecentlyItem item={item} />}
+                ListHeaderComponent={FlatList_Header}
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}
+            />
+            {isUserLogged === true &&
+                <TouchableHighlight
+                    activeOpacity={1}
+                    underlayColor="#5ee1a0"
+                    onPress={() => navigation.navigate('AddPost')}
+                    style={[styles.addButton, leftHandMode ? {right:20} : {left:20}]}>
+                    <AntDesign name="plus" size={30} color="white" />
+                </TouchableHighlight>
+            }
+        </View>
+
+    );
+};
+
+
+
 
 const RECENTLY = [
     {
@@ -41,12 +100,13 @@ const RECENTLY = [
 
 const RecentlyItem = ({ item }) => {
 
+    console.log(item.task)
 
     return (
         <View style={styles.recentlyItem}>
-            <Image source={{uri: item.uri}} style={styles.recentlyItem.itemPhoto} resizeMode="cover"/>
-            <View style={styles.recentlyItem.itemCaption}><Text style={styles.recentlyItem.itemCaptionText}>{item.text}</Text></View>
-            <View style={styles.recentlyItem.itemCaption}><Text style={styles.recentlyItem.itemCaptionText}>{item.price}</Text></View>
+            <Image source={{uri: item.task.thumbnail}} style={styles.recentlyItem.itemPhoto} resizeMode="cover"/>
+            <View style={styles.recentlyItem.itemCaption}><Text style={styles.recentlyItem.itemCaptionText}>{item.task.title}</Text></View>
+            <View style={styles.recentlyItem.itemCaption}><Text style={styles.recentlyItem.itemCaptionText}>{item.task.price}</Text></View>
         </View>
     );
 };
@@ -63,42 +123,6 @@ const FlatList_Header = () => {
     );
 }
 
-const FeedScreen = ({navigation}) => {
-
-    const leftHandMode = useSelector((state) => state.settings.leftHandMode)
-
-    const [isUserLogged, setUserLogged] = useState(false);
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            setUserLogged(true)
-        } else {
-            setUserLogged(false)
-        }
-    });
-
-    return (
-        <View style={styles.container}>
-            <FlatList
-                style={styles.recentlyItemContainer}
-                data={RECENTLY}
-                renderItem={({ item }) => <RecentlyItem item={item} />}
-                ListHeaderComponent={FlatList_Header}
-                showsVerticalScrollIndicator={false}
-                showsHorizontalScrollIndicator={false}
-            />
-            {isUserLogged === true &&
-                <TouchableHighlight
-                    activeOpacity={1}
-                    underlayColor="#5ee1a0"
-                    onPress={() => navigation.navigate('AddPost')}
-                    style={[styles.addButton, leftHandMode ? {right:20} : {left:20}]}>
-                    <AntDesign name="plus" size={30} color="white" />
-                </TouchableHighlight>
-            }
-        </View>
-
-    );
-};
 
 
 const styles = StyleSheet.create({
