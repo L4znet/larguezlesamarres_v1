@@ -15,10 +15,9 @@ import EditProfilScreen from "./Screens/EditProfilScreen";
 import {Provider} from "react-redux";
 import {store} from "./store";
 import AddPostScreen from "./Screens/AddPostScreen";
+import ShowPostScreen from "./Screens/ShowPostScreen";
 
 const Stack = createNativeStackNavigator();
-
-
 
 export default function App() {
 
@@ -30,6 +29,7 @@ export default function App() {
             setUserLogged(false)
         }
     });
+
 
   return (
       <Provider store={store}>
@@ -141,6 +141,22 @@ export default function App() {
                           headerBackVisible:false }}
                                     name="AddPost"
                                     component={AddPostScreen} />
+                  }
+                  {isUserLogged === true &&
+                      <Stack.Screen options={{
+                          title: 'Larguez les amarres',
+                          headerTintColor: '#fff',
+                          headerTitleStyle: {
+                              fontWeight: 'bold',
+                              fontFamily:"Syne_700Bold",
+                              color:"#FFF",
+                              fontSize:20
+                          },
+                          headerBackVisible:false,
+                          headerShown:false
+                      }}
+                                    name="ShowPost"
+                                    component={ShowPostScreen} />
                   }
 
               </Stack.Navigator>
