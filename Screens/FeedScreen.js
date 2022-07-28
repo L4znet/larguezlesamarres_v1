@@ -9,6 +9,7 @@ import axios from "axios";
 const FeedScreen = ({navigation}) => {
 
     const leftHandMode = useSelector((state) => state.settings.leftHandMode)
+    const ownerTenantState = useSelector((state) => state.settings.ownerTenantState)
     const [offers, setOffers] = useState([]);
     const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -100,7 +101,7 @@ const FeedScreen = ({navigation}) => {
                 onRefresh={getRefresh}
                 refreshing={isRefreshing}
             />
-            {isUserLogged === true &&
+            {isUserLogged === true && ownerTenantState === false &&
                 <TouchableHighlight
                     activeOpacity={1}
                     underlayColor="#5ee1a0"
