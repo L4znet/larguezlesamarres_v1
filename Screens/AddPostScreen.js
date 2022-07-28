@@ -77,7 +77,8 @@ const AddPostScreen = ({ navigation }) => {
                 equipments: equipments,
                 thumbnail:thumbnail,
                 price:price,
-                pricePer:pricePer
+                pricePer:pricePer,
+                authorId:auth.currentUser.uid
             }).then(() => {
             })
 
