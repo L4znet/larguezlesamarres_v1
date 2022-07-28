@@ -1,71 +1,16 @@
-import React, {useState} from 'react';
-import {
-    StyleSheet,
-    Text,
-    View,
-    Image,
-    FlatList, TouchableOpacity, TouchableHighlight,
-} from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
+import React, {useEffect, useState} from 'react';
+import {FlatList, Image, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View,} from 'react-native';
+import {AntDesign} from '@expo/vector-icons';
 import {useSelector} from "react-redux";
 import {onAuthStateChanged} from "@firebase/auth";
-import {auth} from "../firebase";
-
-const RECENTLY = [
-    {
-        key: '1',
-        text: 'Yacht Imperator 44m',
-        price: "300 €/semaine",
-        uri: 'https://picsum.photos/id/1/200',
-    },
-    {
-        key: '2',
-        text: 'Yacht Imperator 44m',
-        price: "300 €/semaine",
-        uri: 'https://picsum.photos/id/1/200',
-    },
-    {
-        key: '3',
-        text: 'Yacht Imperator 44m',
-        price: "300 €/semaine",
-        uri: 'https://picsum.photos/id/1/200',
-    },
-    {
-        key: '4',
-        text: 'Yacht Imperator 44m',
-        price: "300 €/semaine",
-        uri: 'https://picsum.photos/id/1/200',
-    }
-];
-
-
-const RecentlyItem = ({ item }) => {
-
-
-    return (
-        <View style={styles.recentlyItem}>
-            <Image source={{uri: item.uri}} style={styles.recentlyItem.itemPhoto} resizeMode="cover"/>
-            <View style={styles.recentlyItem.itemCaption}><Text style={styles.recentlyItem.itemCaptionText}>{item.text}</Text></View>
-            <View style={styles.recentlyItem.itemCaption}><Text style={styles.recentlyItem.itemCaptionText}>{item.price}</Text></View>
-        </View>
-    );
-};
-
-
-const FlatList_Header = () => {
-    return (
-            <Text style={{
-                fontWeight: '800',
-                fontSize: 25,
-                color: '#000',
-                marginVertical:40
-            }}> Les derniers ajouts</Text>
-    );
-}
+import {auth, collection, query} from "../firebase";
+import axios from "axios";
 
 const FeedScreen = ({navigation}) => {
 
     const leftHandMode = useSelector((state) => state.settings.leftHandMode)
+    const [offers, setOffers] = useState([]);
+    const [isRefreshing, setIsRefreshing] = useState(false);
 
     const [isUserLogged, setUserLogged] = useState(false);
     onAuthStateChanged(auth, (user) => {
@@ -76,15 +21,84 @@ const FeedScreen = ({navigation}) => {
         }
     });
 
+    const getRefresh = () => {
+        setIsRefreshing(true)
+        axios.get("http://192.168.1.24:3000/api/posts").then(r => {
+            setOffers(r.data)
+            setIsRefreshing(false)
+        })
+    }
+
+    const getOffer = () => {
+        axios.get("http://192.168.1.24:3000/api/posts").then(r => setOffers(r.data))
+    }
+
+
+    useEffect(() => {
+        return navigation.addListener('change', () =>  getOffer());
+    }, [navigation])
+
+    useEffect(() => {
+        getOffer()
+    }, [])
+
+    const RecentlyItem = ({ item }) => {
+        switch (item.pricePer) {
+            case 'week':
+                item.pricePer = "semaine"
+                break;
+            case 'month':
+                item.pricePer = "mois"
+                break;
+            case 'day':
+                item.pricePer = "jour"
+                break;
+            case 'hour':
+                item.pricePer = "heure"
+                break;
+        }
+
+
+
+        return (
+            <TouchableOpacity style={styles.recentlyItem} onPress={() => {
+                navigation.navigate("ShowPost", {
+                    id: item.key,
+                });
+            }}>
+                <Image source={{uri: item.thumbnail}} style={styles.recentlyItem.itemPhoto} resizeMode="cover"/>
+                <View style={styles.recentlyItem.itemCaption}><Text style={styles.recentlyItem.itemCaptionText}>{item.title}</Text></View>
+                <View style={styles.recentlyItem.itemCaption}><Text style={styles.recentlyItem.itemCaptionText}>{item.price} € par {item.pricePer}</Text></View>
+            </TouchableOpacity>
+        );
+    };
+
+
+    const FlatList_Header = () => {
+        return (
+            <Text style={{
+                fontWeight: '800',
+                fontSize: 25,
+                color: '#000',
+                marginVertical:40
+            }}> Les derniers ajouts</Text>
+        );
+    }
+
+
+
     return (
         <View style={styles.container}>
             <FlatList
                 style={styles.recentlyItemContainer}
-                data={RECENTLY}
+                data={offers}
                 renderItem={({ item }) => <RecentlyItem item={item} />}
+                keyExtractor={item => item.key}
                 ListHeaderComponent={FlatList_Header}
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
+                onRefresh={getRefresh}
+                refreshing={isRefreshing}
             />
             {isUserLogged === true &&
                 <TouchableHighlight

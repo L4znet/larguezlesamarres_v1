@@ -4,7 +4,13 @@
     <list default="true" id="5a86a01f-4fc1-4bc5-90a6-11d5188f116f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Screens/AddPostScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/Screens/AddPostScreen.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Screens/FeedScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/Screens/FeedScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Screens/SearchScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/Screens/SearchScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/babel.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/babel.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,70 +26,38 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
-  </component>
-  <component name="ProjectId" id="2BU8NT3d48V3uqWZWwK4AF8oIlH" />
+  <component name="ProjectId" id="2CRM5QcR945GWVt0GB4A3t0tvwd" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "C:/Users/Charly/Desktop/larguezlesamarres/Screens",
-    "nodejs_package_manager_path": "yarn",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\IntelliJ IDEA 2022.1\\plugins\\JavaScriptLanguage\\jsLanguageServicesImpl\\external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Charly/Desktop/larguezlesamarres&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\IntelliJ IDEA 2022.1\\plugins\\JavaScriptLanguage\\jsLanguageServicesImpl\\external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\Charly\Desktop\larguezlesamarres\Screens" />
-      <recent name="C:\Users\Charly\Desktop\larguezlesamarres\components" />
-      <recent name="C:\Users\Charly\Desktop\larguezlesamarres" />
-    </key>
-  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="5a86a01f-4fc1-4bc5-90a6-11d5188f116f" name="Changes" comment="" />
-      <created>1656949262314</created>
+      <created>1658760765936</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1656949262314</updated>
-      <workItem from="1656949263875" duration="1016000" />
-      <workItem from="1656950300209" duration="78000" />
-      <workItem from="1656950393087" duration="2556000" />
-      <workItem from="1656962599361" duration="9706000" />
-      <workItem from="1657402267160" duration="31223000" />
-      <workItem from="1657571174646" duration="33000" />
-      <workItem from="1657571225265" duration="111000" />
-      <workItem from="1657571429781" duration="182000" />
-      <workItem from="1657571623447" duration="35000" />
-      <workItem from="1657571665291" duration="123000" />
-      <workItem from="1657571802946" duration="50000" />
-      <workItem from="1657571864670" duration="48000" />
-      <workItem from="1657571917662" duration="21980000" />
-      <workItem from="1657884454669" duration="34437000" />
+      <updated>1658760765936</updated>
+      <workItem from="1658760770098" duration="5598000" />
+      <workItem from="1658767812084" duration="1311000" />
+      <workItem from="1658831610019" duration="28329000" />
+      <workItem from="1658956520768" duration="5233000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-  </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
   </component>
 </project>

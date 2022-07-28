@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { doc, setDoc, getFirestore, deleteDoc } from "firebase/firestore";
+import { doc, setDoc, getFirestore, deleteDoc, query, collection } from "firebase/firestore";
 import {getAuth} from "firebase/auth";
 import { getStorage, deleteObject } from "firebase/storage";
 
