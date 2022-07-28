@@ -15,21 +15,20 @@ import {AntDesign, Ionicons} from "@expo/vector-icons";
 import { doc, getDoc } from "firebase/firestore";
 import {db} from "../firebase";
 import {useEffect, useState} from "react";
+import axios from "axios";
 const ShowPostScreen = ({ route, navigation }) => {
     const defaultThumbnail = "https://firebasestorage.googleapis.com/v0/b/larguezlesamarres-a1817.appspot.com/o/thumnails%2Fdefault.png?alt=media&token=8fae89e3-c7d0-47e1-b555-188c55080ef2"
     const {id} = route.params;
-    const [offer, setOffer] = useState([]);
+    const [offer, setOffer] = useState("");
 
 
 
     useEffect(  () => {
         const getOffer = async () => {
-            const docRef = doc(db, "posts", id);
-            const docSnap = await getDoc(docRef);
-
-            setOffer(docSnap.data())
+            axios.get("http://192.168.1.24:3000/api/posts?id=" + id).then(r => {
+                setOffer(r.data[0])
+            })
         }
-
         getOffer()
 
     }, [])
