@@ -1,18 +1,29 @@
 import React, {useEffect, useState} from 'react';
 import {FlatList, Image, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View,} from 'react-native';
 import {AntDesign} from '@expo/vector-icons';
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {onAuthStateChanged} from "@firebase/auth";
 import {auth, collection, query} from "../firebase";
 import axios from "axios";
+import useFetch from "react-fetch-hook";
+import {toggleOfferSent} from "../store/statesLoadSlice";
+
+
 
 const FeedScreen = ({navigation}) => {
 
     const leftHandMode = useSelector((state) => state.settings.leftHandMode)
+    const ownerTenantState = useSelector((state) => state.settings.ownerTenantState)
+    const offerSent = useSelector((state) => state.statesLoad.offerSent)
     const [offers, setOffers] = useState([]);
     const [isRefreshing, setIsRefreshing] = useState(false);
+    const dispatch = useDispatch()
 
     const [isUserLogged, setUserLogged] = useState(false);
+    /**
+     * Permet de savoir si l'utilisateur est connecté ou non, et de détecter un éventuel changement d'état (déconnexion etc..)
+     *
+     */
     onAuthStateChanged(auth, (user) => {
         if (user) {
             setUserLogged(true)
@@ -21,28 +32,58 @@ const FeedScreen = ({navigation}) => {
         }
     });
 
-    const getRefresh = () => {
-        setIsRefreshing(true)
+    /**
+     * Method qui va load les données, on détecte via un paramètre si cette méthode est exécuté dans le cas d'un pull to refresh
+     *
+     * @param refreshingTriggered
+     */
+    const getOffer = (refreshingTriggered = false) => {
+        if(refreshingTriggered){
+            setIsRefreshing(true)
+        }
         axios.get("http://192.168.1.24:3000/api/posts").then(r => {
             setOffers(r.data)
-            setIsRefreshing(false)
+            if(refreshingTriggered){
+                setIsRefreshing(false)
+            }
         })
     }
 
-    const getOffer = () => {
-        axios.get("http://192.168.1.24:3000/api/posts").then(r => setOffers(r.data))
+    /**
+       On refresh uniquement si une offre vient d'être ajoutée
+     */
+    if(offerSent){
+        getOffer()
+        dispatch(toggleOfferSent())
     }
 
 
-    useEffect(() => {
-        return navigation.addListener('change', () =>  getOffer());
-    }, [navigation])
+    /**
+     * Méthode lancée quand on pull to refresh
+     */
+    const getRefresh = () => {
+        setIsRefreshing(true)
+        getOffer(true)
+    }
 
+    /**
+     * Permet de load les données au lancement de l'app
+     *
+     */
+    const { isLoading, data, error } = useFetch(
+        "http://192.168.1.24:3000/api/posts"
+    );
     useEffect(() => {
-        getOffer()
-    }, [])
+        setOffers(data)
+    }, [data])
+
 
     const RecentlyItem = ({ item }) => {
+
+        /**
+         * On transforme l'affichage de la donnée "prix par..."
+         *
+         */
         switch (item.pricePer) {
             case 'week':
                 item.pricePer = "semaine"
@@ -58,8 +99,6 @@ const FeedScreen = ({navigation}) => {
                 break;
         }
 
-
-
         return (
             <TouchableOpacity style={styles.recentlyItem} onPress={() => {
                 navigation.navigate("ShowPost", {
@@ -70,6 +109,7 @@ const FeedScreen = ({navigation}) => {
                 <View style={styles.recentlyItem.itemCaption}><Text style={styles.recentlyItem.itemCaptionText}>{item.title}</Text></View>
                 <View style={styles.recentlyItem.itemCaption}><Text style={styles.recentlyItem.itemCaptionText}>{item.price} € par {item.pricePer}</Text></View>
             </TouchableOpacity>
+
         );
     };
 
@@ -84,8 +124,6 @@ const FeedScreen = ({navigation}) => {
             }}> Les derniers ajouts</Text>
         );
     }
-
-
 
     return (
         <View style={styles.container}>

@@ -13,25 +13,36 @@ import RNPickerSelect from "react-native-picker-select";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import {AntDesign, Ionicons} from "@expo/vector-icons";
 import { doc, getDoc } from "firebase/firestore";
-import {db} from "../firebase";
+import {auth, db} from "../firebase";
 import {useEffect, useState} from "react";
 import axios from "axios";
+import {useSelector} from "react-redux";
 const ShowPostScreen = ({ route, navigation }) => {
     const defaultThumbnail = "https://firebasestorage.googleapis.com/v0/b/larguezlesamarres-a1817.appspot.com/o/thumnails%2Fdefault.png?alt=media&token=8fae89e3-c7d0-47e1-b555-188c55080ef2"
     const {id} = route.params;
     const [offer, setOffer] = useState("");
+    const ownerTenantState = useSelector((state) => state.settings.ownerTenantState)
 
 
-
-    useEffect(  () => {
-        const getOffer = async () => {
-            axios.get("http://192.168.1.24:3000/api/posts?id=" + id).then(r => {
-                setOffer(r.data[0])
+    const askForBooking = () => {
+        if(auth.currentUser.uid !== offer.authorId){
+            axios.post("http://192.168.1.24:3000/api/booking/ask", {
+                offerId:offer.key,
+                tenantId:auth.currentUser.uid,
+                ownerId:offer.authorId,
+                state:0
+            }).then(r => {
+                //setOffer(r.data[0])
             })
         }
-        getOffer()
+    }
 
-    }, [])
+    navigation.addListener('focus', async () => {
+        setOffer("")
+        axios.get("http://192.168.1.24:3000/api/posts/" + id).then(r => {
+            setOffer(r.data)
+        })
+    });
 
     switch (offer.pricePer) {
         case 'week':
@@ -101,9 +112,16 @@ const ShowPostScreen = ({ route, navigation }) => {
                 <Text style={styles.single.equipments}>
                     {offer.equipments}
                 </Text>
-                <TouchableOpacity style={styles.single.contact}>
-                    <Text style={styles.single.contactLabel}>Demander la disponibilité</Text>
-                </TouchableOpacity>
+                {ownerTenantState === true && auth.currentUser.uid !== offer.authorId &&
+                    <TouchableOpacity style={styles.single.contact} onPress={askForBooking()}>
+                        <Text style={styles.single.contactLabel}>Demander la disponibilité</Text>
+                    </TouchableOpacity>
+                }
+                {ownerTenantState === true && auth.currentUser.uid === offer.authorId &&
+                    <View style={styles.disabled}>
+                        <Text style={styles.single.contactLabel}>Demander la disponibilité</Text>
+                    </View>
+                }
             </View>
         </ScrollView>
     );
