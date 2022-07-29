@@ -138,7 +138,7 @@ const FeedScreen = ({navigation}) => {
                 onRefresh={getRefresh}
                 refreshing={isRefreshing}
             />
-            {isUserLogged === true &&
+            {isUserLogged === true && ownerTenantState === false &&
                 <TouchableHighlight
                     activeOpacity={1}
                     underlayColor="#5ee1a0"
