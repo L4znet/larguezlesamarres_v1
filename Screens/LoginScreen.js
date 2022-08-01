@@ -11,7 +11,6 @@ const LoginScreen = ({ navigation }) => {
 
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
-                console.log()
                 navigation.navigate('Feed')
             })
             .catch((error) => {

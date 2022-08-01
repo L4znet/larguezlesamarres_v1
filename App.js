@@ -16,7 +16,7 @@ import {Provider} from "react-redux";
 import {store} from "./store";
 import AddPostScreen from "./Screens/AddPostScreen";
 import ShowPostScreen from "./Screens/ShowPostScreen";
-
+import Toast, {BaseToast, ErrorToast} from 'react-native-toast-message';
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -30,8 +30,49 @@ export default function App() {
         }
     });
 
+    const toastConfig = {
+        success: (props) => (
+            <BaseToast
+                {...props}
+                style={{ borderLeftColor: '#1bff00', borderLeftWidth:10, height:100}}
+                contentContainerStyle={{ paddingHorizontal: 15 }}
+                text1Style={{
+                    fontSize: 20,
+                    fontWeight: '400'
+                }}
+                text2Style={{
+                    fontSize: 15,
+                    fontWeight: '400',
+                    color:"#000",
+                       width:"100%",
+                }}
+            />
+        ),
+        error: (props) => (
+            <ErrorToast
+                {...props}
+                text1Style={{
+                    fontSize: 20,
+                    fontWeight: '400'
+                }}
+                text2Style={{
+                    fontSize: 14,
+                    fontWeight: '400',
+                    color:"#000"
+                }}
+            />
+        ),
+        tomatoToast: ({ text1, props }) => (
+            <View style={{ height: 60, width: '100%', backgroundColor: 'tomato' }}>
+                <Text>{text1}</Text>
+                <Text>{props.uuid}</Text>
+            </View>
+        )
+    };
 
-  return (
+
+
+    return (
       <Provider store={store}>
           <NavigationContainer>
               <Stack.Navigator>
@@ -161,6 +202,7 @@ export default function App() {
 
               </Stack.Navigator>
           </NavigationContainer>
+          <Toast config={toastConfig} />
       </Provider>
   );
 }

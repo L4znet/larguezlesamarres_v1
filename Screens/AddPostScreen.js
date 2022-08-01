@@ -23,6 +23,7 @@ const AddPostScreen = ({ navigation }) => {
     const [cabins, setCabins] = useState("50");
     const [captain, setCaptain] = useState(true);
     const [teams, setTeams] = useState(false);
+    const [liked, setLiked] = useState(false);
     const dispatch = useDispatch()
 
     const [detail, setDetail] = useState("Je met en location ce bateau, profitez en, ça va être cool Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod\n" +
@@ -82,7 +83,8 @@ const AddPostScreen = ({ navigation }) => {
                 thumbnail:thumbnail,
                 price:price,
                 pricePer:pricePer,
-                authorId:auth.currentUser.uid
+                authorId:auth.currentUser.uid,
+                liked:liked
             }).then(() => {
             })
 
