@@ -3,13 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="5a86a01f-4fc1-4bc5-90a6-11d5188f116f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Screens/AddPostScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/Screens/AddPostScreen.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Screens/FavoriteScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/Screens/FavoriteScreen.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Screens/LoginScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/Screens/LoginScreen.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Screens/ShowPostScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/Screens/ShowPostScreen.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/store/statesLoadSlice.js" beforeDir="false" afterPath="$PROJECT_DIR$/store/statesLoadSlice.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
