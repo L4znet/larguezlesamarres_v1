@@ -7,8 +7,7 @@ import {auth, collection, query} from "../firebase";
 import axios from "axios";
 import useFetch from "react-fetch-hook";
 import {toggleOfferSent} from "../store/statesLoadSlice";
-
-
+import CardOffer from "../components/CardOffer";
 
 const FeedScreen = ({navigation}) => {
 
@@ -80,36 +79,8 @@ const FeedScreen = ({navigation}) => {
 
     const RecentlyItem = ({ item }) => {
 
-        /**
-         * On transforme l'affichage de la donnée "prix par..."
-         *
-         */
-        switch (item.pricePer) {
-            case 'week':
-                item.pricePer = "semaine"
-                break;
-            case 'month':
-                item.pricePer = "mois"
-                break;
-            case 'day':
-                item.pricePer = "jour"
-                break;
-            case 'hour':
-                item.pricePer = "heure"
-                break;
-        }
-
         return (
-            <TouchableOpacity style={styles.recentlyItem} onPress={() => {
-                navigation.navigate("ShowPost", {
-                    id: item.key,
-                });
-            }}>
-                <Image source={{uri: item.thumbnail}} style={styles.recentlyItem.itemPhoto} resizeMode="cover"/>
-                <View style={styles.recentlyItem.itemCaption}><Text style={styles.recentlyItem.itemCaptionText}>{item.title}</Text></View>
-                <View style={styles.recentlyItem.itemCaption}><Text style={styles.recentlyItem.itemCaptionText}>{item.price} € par {item.pricePer}</Text></View>
-            </TouchableOpacity>
-
+            <CardOffer item={item} navigation={navigation}/>
         );
     };
 
@@ -186,44 +157,15 @@ const styles = StyleSheet.create({
             alignItems:"center"
         },
     },
+    recentlyItemContainer:{
+        marginLeft:15
+    },
     sectionHeader: {
         fontWeight: '800',
         fontSize: 25,
         color: '#000',
         marginVertical:40,
         marginLeft:30
-    },
-    recentlyItemContainer:{
-        marginLeft:15
-    },
-    recentlyItem: {
-        marginRight:15,
-        marginBottom:30,
-        borderRadius:20,
-        backgroundColor: "#FFF",
-        height:360,
-        width:345,
-        itemPhoto: {
-            width: 345,
-            height: 250,
-            borderTopLeftRadius:20,
-            borderTopRightRadius:20
-        },
-        itemCaption: {
-            color: '#000',
-            width:"100%",
-            fontWeight: "bold",
-            display:"flex",
-            justifyContent:"center",
-            alignItems:"center",
-            height:50,
-            borderBottomLeftRadius:20,
-            borderBottomRightRadius:20
-        },
-        itemCaptionText: {
-            fontSize:20,
-            fontWeight:"bold"
-        },
     },
     countrySectionHeader: {
         fontWeight: '800',
