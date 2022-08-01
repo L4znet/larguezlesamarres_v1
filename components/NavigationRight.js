@@ -1,7 +1,6 @@
 import React, {useState } from "react";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import FeedScreen from '../Screens/FeedScreen'
-import FavoriteScreen from '../Screens/FavoriteScreen'
 import BookingScreen from '../Screens/BookingScreen'
 import SearchScreen from '../Screens/SearchScreen'
 import LoginScreen from '../Screens/LoginScreen'
@@ -104,28 +103,6 @@ const NavigationRight = ({navigation}) => {
             />
 
             {/** Si l'utilisateur est connecté, on lui affiche l'écran voulu, sinon on le redirige vers la page de connexion. **/}
-
-            {isUserLogged === true &&
-                <Tab.Screen
-                    name="Favorite" component={FavoriteScreen}
-                    options={{
-                        tabBarIcon: ({ focused }) =>
-                            (<MaterialIcons name="favorite" size={30} color={focused ? "#FFF" : "#348d65"} />),
-                        title:"",
-                    }}
-                />
-            }
-            {isUserLogged === false &&
-                <Tab.Screen
-                    name="Favorite" component={LoginScreen}
-                    options={{
-                        tabBarIcon: ({ focused }) =>
-                            (<MaterialIcons name="favorite" size={30} color={focused ? "#FFF" : "#348d65"} />),
-                        title:"",
-                    }}
-                />
-            }
-
 
             {isUserLogged === true &&
                 <Tab.Screen

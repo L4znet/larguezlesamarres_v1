@@ -97,15 +97,6 @@ const ShowPostScreen = ({ route, navigation }) => {
         }
     }
 
-    const likePost = () => {
-        axios.post('http://192.168.1.24:3000/api/favorite/like', {
-            userId:auth.currentUser.uid,
-            offerId:offer.key
-        })
-        dispatch(toggleFavoriteAdded())
-        messageToast("success", "Génial", "Cette offre a bien été ajoutée à vos favoris")
-    }
-
     return (
         <ScrollView>
             <View style={styles.single}>
@@ -115,22 +106,6 @@ const ShowPostScreen = ({ route, navigation }) => {
                         <TouchableOpacity style={[styles.thumbnail.button, styles.thumbnail.back]} onPress={() => {navigation.navigate("Feed")}}>
                             <Text style={styles.thumbnail.buttonLabel}><Ionicons name="chevron-back" size={35} color="white" /></Text>
                         </TouchableOpacity>
-                        {offer.liked === true &&
-                            <View style={[styles.thumbnail.button, styles.thumbnail.liked]}>
-                                <Text style={styles.thumbnail.buttonLabel}>
-                                    <Entypo name="bookmark" size={45} color="#FFF" />
-                                </Text>
-                            </View>
-                        }
-
-                        {offer.liked === false &&
-                            <TouchableOpacity style={[styles.thumbnail.button, styles.thumbnail.like]} onPress={() => likePost()}>
-                                <Text style={styles.thumbnail.buttonLabel}>
-                                    <Entypo name="bookmark" size={45} color="#FFF" />
-                                </Text>
-                            </TouchableOpacity>
-                        }
-
                     </View>
                 </ImageBackground>
                 <Text style={styles.single.boatName}>{offer.boatName}</Text>

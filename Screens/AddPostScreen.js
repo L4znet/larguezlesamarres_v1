@@ -83,8 +83,7 @@ const AddPostScreen = ({ navigation }) => {
                 thumbnail:thumbnail,
                 price:price,
                 pricePer:pricePer,
-                authorId:auth.currentUser.uid,
-                liked:liked
+                authorId:auth.currentUser.uid
             }).then(() => {
             })
 
