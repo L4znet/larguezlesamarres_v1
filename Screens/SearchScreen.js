@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
     StyleSheet,
     Text,
@@ -11,6 +11,7 @@ import {
     TouchableOpacity,
     TextInput
 } from 'react-native';
+import axios from "axios";
 
 const SECTIONS = [
     {
@@ -102,15 +103,26 @@ const RecentlyItem = ({ item }) => {
     );
 };
 
-const HomeScreen = ({ navigation }) => {
+const SearchScreen = ({ navigation }) => {
+
+    const [query, setQuery] = useState("");
+
+    const searchResult = () => {
+        axios.post("http://192.168.1.24:3000/api/search", {
+            query: query
+        }).then(response => {
+            console.log(response.data)
+        })
+    }
+
     return (
         <View style={styles.container}>
 
             <ScrollView contentInsetAdjustmentBehavior="automatic">
 
                 <View style={styles.search}>
-                    <TextInput style={styles.search.searchbar}/>
-                    <TouchableOpacity style={styles.search.searchButton}>
+                    <TextInput style={styles.search.searchbar} onChangeText={(query) => setQuery(query)} placeholder={"Nom de bateau, capacités à bord..."}/>
+                    <TouchableOpacity style={styles.search.searchButton} onPress={() => {searchResult()}}>
                         <Text style={styles.search.searchButtonText}>Lancer la recherche</Text>
                     </TouchableOpacity>
                 </View>
@@ -210,15 +222,15 @@ const styles = StyleSheet.create({
         display:"flex",
         alignItems:"center",
         flexDirection: "column",
-          searchbar:{
-              width:"95%",
-              height:60,
-              backgroundColor:"#FFF",
-              marginTop:30,
-              borderRadius:50,
-              fontSize:20,
-              paddingLeft:20
-          },
+        searchbar:{
+            width:"95%",
+            height:60,
+            backgroundColor:"#FFF",
+            marginTop:30,
+            borderRadius:50,
+            fontSize:20,
+            paddingLeft:20
+        },
         searchButton:{
             width:"65%",
             height:60,
@@ -236,7 +248,7 @@ const styles = StyleSheet.create({
         }
     },
     types:{
-      marginBottom:70
+        marginBottom:70
     },
     sectionHeader: {
         fontWeight: '800',
@@ -364,4 +376,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default HomeScreen;
+export default SearchScreen;
