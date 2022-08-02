@@ -1,4 +1,4 @@
-import {Text, View, Button, TouchableHighlight, StyleSheet, FlatList, TouchableOpacity} from "react-native";
+import {Text, View, StyleSheet, FlatList, TouchableOpacity, Alert} from "react-native";
 import {AntDesign} from "@expo/vector-icons";
 import CardOffer from "../components/CardOffer";
 import axios from "axios";
@@ -10,6 +10,27 @@ import {toggleMyOffersLoaded, toggleOfferSent} from "../store/statesLoadSlice";
 
 const ManageOffers = ({ navigation }) => {
     const [offers, setOffers] = useState([]);
+
+    const deleteOffer = (id) => {
+        return Alert.alert(
+            "Confirmation",
+            "Êtes-vous sûr de vouloir supprimer cette offre ? Cette opération est irréversible.",
+            [
+                {
+                    text: "Supprimer",
+                    onPress: () => {
+                        axios.delete('http://192.168.1.24:3000/api/posts/' + id)
+                        navigation.replace('Tabs', { screen: 'Feed' });
+                    },
+                },
+                {
+                    text: "Annuler",
+                },
+            ]
+        );
+    }
+
+
 
     const getMyOffers = () => {
         axios.get('http://192.168.1.24:3000/api/posts/' + auth.currentUser.uid + '/posts').then((response) => {
@@ -42,7 +63,9 @@ const ManageOffers = ({ navigation }) => {
             <>
                 <CardOffer item={item} navigation={navigation}/>
                 <View style={{display:"flex", flexDirection:"row", width:"95%", marginBottom:60, justifyContent:"space-between"}}>
-                    <TouchableOpacity style={[styles.button, styles.delete]} onPress={() => {}}>
+                    <TouchableOpacity style={[styles.button, styles.delete]} onPress={() => {
+                        deleteOffer(item.key)
+                    }}>
                         <Text style={styles.label}>Supprimer</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={[styles.button, styles.edit]} onPress={() => {
