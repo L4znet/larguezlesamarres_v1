@@ -11,7 +11,7 @@ import {updateProfile} from "firebase/auth";
 import {BASEAPI} from '@env'
 
 import {useDispatch, useSelector} from "react-redux";
-import {toggleOfferSent} from "../store/statesLoadSlice";
+import {toggleMyOffersLoaded, toggleOfferSent} from "../store/statesLoadSlice";
 
 const AddPostScreen = ({ navigation }) => {
     const defaultThumbnail = "https://firebasestorage.googleapis.com/v0/b/larguezlesamarres-a1817.appspot.com/o/thumnails%2Fdefault.png?alt=media&token=8fae89e3-c7d0-47e1-b555-188c55080ef2"
@@ -25,6 +25,7 @@ const AddPostScreen = ({ navigation }) => {
     const [teams, setTeams] = useState(false);
     const [liked, setLiked] = useState(false);
     const dispatch = useDispatch()
+    const isMyOffersLoaded = useSelector((state) => state.statesLoad.myOffersLoaded)
 
     const [detail, setDetail] = useState("Je met en location ce bateau, profitez en, ça va être cool Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod\n" +
         "tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,\n" +
@@ -66,8 +67,6 @@ const AddPostScreen = ({ navigation }) => {
 
     const savePost = async () => {
 
-        dispatch(toggleOfferSent())
-
         try {
             axios.post("http://192.168.1.24:3000/api/posts", {
                 title: title,
@@ -87,7 +86,7 @@ const AddPostScreen = ({ navigation }) => {
             }).then(() => {
             })
 
-            navigation.navigate('Feed')
+            navigation.replace('Tabs', { screen: 'Feed' });
 
         } catch (error) {
             console.log("An error has occurred : " + error)
