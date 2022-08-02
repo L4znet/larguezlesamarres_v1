@@ -24,13 +24,14 @@ import {
 import {onAuthStateChanged} from "@firebase/auth";
 import {auth} from "../firebase";
 import ManageOffersScreen from "../Screens/ManageOffersScreen";
+import {useSelector} from "react-redux";
 
 const Tab = createBottomTabNavigator();
 
 
 const NavigationLeft = ({navigation}) => {
 
-
+    const ownerTenantState = useSelector((state) => state.settings.ownerTenantState)
     const [isUserLogged, setUserLogged] = useState(false);
     onAuthStateChanged(auth, (user) => {
         if (user) {
@@ -105,7 +106,7 @@ const NavigationLeft = ({navigation}) => {
 
             {/** Si l'utilisateur est connecté, on lui affiche l'écran voulu, sinon on le redirige vers la page de connexion. **/}
 
-            {isUserLogged === true &&
+            {isUserLogged === true && ownerTenantState === false &&
                 <Tab.Screen
                     name="ManageOffers" component={ManageOffersScreen}
                     options={{
