@@ -5,6 +5,7 @@ const statesLoadSlice = createSlice({
     initialState: {
         offerSent: false,
         favoriteAdded: false,
+        myOffersLoaded:false,
     },
     reducers: {
         toggleOfferSent(state){
@@ -13,8 +14,11 @@ const statesLoadSlice = createSlice({
         toggleFavoriteAdded(state){
             state.favoriteAdded = !state.favoriteAdded
         },
+        toggleMyOffersLoaded(state){
+            state.myOffersLoaded = !state.myOffersLoaded
+        },
     }
 })
-export const { toggleOfferSent, toggleFavoriteAdded } = statesLoadSlice.actions
+export const { toggleOfferSent, toggleFavoriteAdded, toggleMyOffersLoaded } = statesLoadSlice.actions
 
 export default statesLoadSlice.reducer
