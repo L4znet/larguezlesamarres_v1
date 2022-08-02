@@ -13,37 +13,27 @@ import {BASEAPI} from '@env'
 import {useDispatch, useSelector} from "react-redux";
 import {toggleMyOffersLoaded, toggleOfferSent} from "../store/statesLoadSlice";
 
-const AddPostScreen = ({ navigation }) => {
+const EditPostScreen = ({ route, navigation }) => {
+
+    const {item} = route.params;
+
     const defaultThumbnail = "https://firebasestorage.googleapis.com/v0/b/larguezlesamarres-a1817.appspot.com/o/thumnails%2Fdefault.png?alt=media&token=8fae89e3-c7d0-47e1-b555-188c55080ef2"
-    const [title, setTitle] = useState("Mon super bateau, que j'adore");
-    const [boatName, setBoatName] = useState("Le flamboyant");
-    const [localization, setLocalization] = useState("Nantes");
-    const [capacity, setCapacity] = useState("50");
-    const [sleeping, setSleeping] = useState("50");
-    const [cabins, setCabins] = useState("50");
-    const [captain, setCaptain] = useState(true);
-    const [teams, setTeams] = useState(false);
-    const [liked, setLiked] = useState(false);
-    const dispatch = useDispatch()
-    const isMyOffersLoaded = useSelector((state) => state.statesLoad.myOffersLoaded)
+    const [title, setTitle] = useState(item.title);
+    const [boatName, setBoatName] = useState(item.boatName);
+    const [localization, setLocalization] = useState(item.localization);
+    const [capacity, setCapacity] = useState(item.capacity);
+    const [sleeping, setSleeping] = useState(item.sleeping);
+    const [cabins, setCabins] = useState(item.cabins);
+    const [captain, setCaptain] = useState(item.captain);
+    const [teams, setTeams] = useState(item.teams);
+    const [detail, setDetail] = useState(item.detail);
 
-    const [detail, setDetail] = useState("Je met en location ce bateau, profitez en, ça va être cool Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod\n" +
-        "tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,\n" +
-        "quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo\n" +
-        "consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse\n" +
-        "cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non\n" +
-        "proident, sunt in culpa qui officia deserunt mollit anim id est laborum. ");
+    const [equipments, setEquipments] = useState(item.equipments);
 
-    const [equipments, setEquipments] = useState("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod\n" +
-        "tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,\n" +
-        "quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo\n" +
-        "consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse\n" +
-        "cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non\n" +
-        "proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
+    const [thumbnail, setThumbnail] = useState(item.thumbnail);
+    const [pricePer, setPricePer] = useState(item.pricePer);
+    const [price, setPrice] = useState(item.price);
 
-    const [thumbnail, setThumbnail] = useState(defaultThumbnail);
-    const [pricePer, setPricePer] = useState("week");
-    const [price, setPrice] = useState("500");
 
 
     const uploadThumnail = async () => {
@@ -65,10 +55,11 @@ const AddPostScreen = ({ navigation }) => {
         });
     }
 
-    const savePost = async () => {
+    const updatePost = async () => {
 
         try {
-            axios.post("http://192.168.1.24:3000/api/posts", {
+            axios.put("http://192.168.1.24:3000/api/posts", {
+                offerId:item.key,
                 title: title,
                 boatName: boatName,
                 localization: localization,
@@ -82,10 +73,8 @@ const AddPostScreen = ({ navigation }) => {
                 thumbnail:thumbnail,
                 price:price,
                 pricePer:pricePer,
-                authorId:auth.currentUser.uid
             }).then(() => {
             })
-
             navigation.replace('Tabs', { screen: 'Feed' });
 
         } catch (error) {
@@ -105,20 +94,20 @@ const AddPostScreen = ({ navigation }) => {
                     </ImageBackground>
                 </TouchableHighlight>
 
-                <TextInput style={[styles.form.fullInput, styles.form.input]} onChangeText={(title) => setTitle(title)} placeholder="Titre de l'annonce" />
-                <TextInput style={[styles.form.fullInput, styles.form.input]} onChangeText={(boatName) => setBoatName(boatName)} placeholder="Nom du bateau" />
-                <TextInput style={[styles.form.fullInput, styles.form.input]} onChangeText={(localization) => setLocalization(localization)} placeholder="Votre localisation" />
+                <TextInput style={[styles.form.fullInput, styles.form.input]} value={title} onChangeText={(title) => setTitle(title)} placeholder="Titre de l'annonce" />
+                <TextInput style={[styles.form.fullInput, styles.form.input]} value={boatName} onChangeText={(boatName) => setBoatName(boatName)} placeholder="Nom du bateau" />
+                <TextInput style={[styles.form.fullInput, styles.form.input]} value={localization} onChangeText={(localization) => setLocalization(localization)} placeholder="Votre localisation" />
                 <View style={styles.boatConfiguration.row}>
-                    <TextInput keyboardType="number-pad" style={[styles.form.halfInput, styles.form.input]} onChangeText={(price) => setPrice(price)} placeholder="Prix du véhicule" />
+                    <TextInput keyboardType="number-pad" value={price} style={[styles.form.halfInput, styles.form.input]} onChangeText={(price) => setPrice(price)} placeholder="Prix du véhicule" />
                     <RNPickerSelect style={selector}
-                        onValueChange={(pricePer) => setPricePer(pricePer)}
-                        placeholder={{label: 'Par', value: ""}}
-                        items={[
-                            {label: 'Mois', value: 'month'},
-                            {label: 'Semaine', value: 'week'},
-                            {label: 'Jour', value: 'day'},
-                            {label: 'Heure', value: 'hour'},
-                        ]}
+                                    onValueChange={(pricePer) => setPricePer(pricePer)}
+                                    placeholder={{label: 'Par', value: ""}}
+                                    items={[
+                                        {label: 'Mois', value: 'month'},
+                                        {label: 'Semaine', value: 'week'},
+                                        {label: 'Jour', value: 'day'},
+                                        {label: 'Heure', value: 'hour'},
+                                    ]}
                     />
                 </View>
 
@@ -126,15 +115,15 @@ const AddPostScreen = ({ navigation }) => {
                     <Text style={styles.subtitle}>Configuration de votre véhicule</Text>
 
                     <View style={styles.boatConfiguration.row}>
-                        <TextInput keyboardType="number-pad" style={[styles.form.halfInput, styles.form.input]} onChangeText={(capacity) => setCapacity(capacity)} placeholder="Capacités à bord" />
+                        <TextInput keyboardType="number-pad" value={capacity} style={[styles.form.halfInput, styles.form.input]} onChangeText={(capacity) => setCapacity(capacity)} placeholder="Capacités à bord" />
                         <Text style={styles.boatConfiguration.label}>personnes</Text>
                     </View>
                     <View style={styles.boatConfiguration.row}>
-                        <TextInput keyboardType="number-pad" style={[styles.form.halfInput, styles.form.input]} onChangeText={(sleeping) => setSleeping(sleeping)} placeholder="Couchages" />
+                        <TextInput keyboardType="number-pad" value={sleeping} style={[styles.form.halfInput, styles.form.input]} onChangeText={(sleeping) => setSleeping(sleeping)} placeholder="Couchages" />
                         <Text style={styles.boatConfiguration.label}>couchages</Text>
                     </View>
                     <View style={styles.boatConfiguration.row}>
-                        <TextInput keyboardType="number-pad" style={[styles.form.halfInput, styles.form.input]} onChangeText={(cabins) => setCabins(cabins)} placeholder="Cabines" />
+                        <TextInput keyboardType="number-pad" value={cabins} style={[styles.form.halfInput, styles.form.input]} onChangeText={(cabins) => setCabins(cabins)} placeholder="Cabines" />
                         <Text style={styles.boatConfiguration.label}>cabines</Text>
                     </View>
                     <View style={styles.boatConfiguration.row}>
@@ -165,6 +154,7 @@ const AddPostScreen = ({ navigation }) => {
 
                 <Text style={styles.subtitle}>Description</Text>
                 <TextInput
+                    value={detail}
                     style={[styles.form.textarea, styles.form.input]}
                     multiline={true}
                     onChangeText={(detail) => setDetail(detail)}
@@ -174,6 +164,7 @@ const AddPostScreen = ({ navigation }) => {
                 <View style={styles.accessories}>
                     <Text style={styles.subtitle}>Équipements (facultatif)</Text>
                     <TextInput
+                        value={equipments}
                         style={[styles.form.textarea, styles.form.input]}
                         multiline={true}
                         onChangeText={(equipment) => setEquipments(equipments)}
@@ -181,8 +172,8 @@ const AddPostScreen = ({ navigation }) => {
                     />
                 </View>
 
-                <TouchableOpacity onPress={() => savePost()} style={styles.save}>
-                    <Text style={styles.save.saveText}>Poster</Text>
+                <TouchableOpacity onPress={() => updatePost()} style={styles.save}>
+                    <Text style={styles.save.saveText}>Modifier</Text>
                 </TouchableOpacity>
             </KeyboardAwareScrollView>
         </View>
@@ -359,4 +350,4 @@ const selector = StyleSheet.create({
 
 });
 
-export default AddPostScreen;
+export default EditPostScreen;

@@ -48,14 +48,6 @@ const FeedScreen = ({navigation}) => {
         })
     }
 
-    /**
-       On refresh uniquement si une offre vient d'être ajoutée
-     */
-    if(offerSent){
-        getOffer()
-        dispatch(toggleOfferSent())
-    }
-
 
     /**
      * Méthode lancée quand on pull to refresh
@@ -65,17 +57,14 @@ const FeedScreen = ({navigation}) => {
         getOffer(true)
     }
 
-    /**
-     * Permet de load les données au lancement de l'app
-     *
-     */
-    const { isLoading, data, error } = useFetch(
-        "http://192.168.1.24:3000/api/posts"
-    );
-    useEffect(() => {
-        setOffers(data)
-    }, [data])
 
+    useEffect(() => {
+        getOffer()
+
+        return () => {
+            setOffers([]);
+        };
+    }, [])
 
     const RecentlyItem = ({ item }) => {
 
