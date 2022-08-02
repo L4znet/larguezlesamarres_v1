@@ -6,7 +6,7 @@ import SearchScreen from '../Screens/SearchScreen'
 import LoginScreen from '../Screens/LoginScreen'
 
 
-import { Foundation, MaterialIcons, Entypo, AntDesign, Feather  } from '@expo/vector-icons'
+import {Foundation, MaterialIcons, Entypo, AntDesign, Feather, FontAwesome} from '@expo/vector-icons'
 import {
     useFonts,
     Syne_400Regular,
@@ -23,6 +23,7 @@ import {
 } from 'react-native';
 import {onAuthStateChanged} from "@firebase/auth";
 import {auth} from "../firebase";
+import ManageOffersScreen from "../Screens/ManageOffersScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -103,6 +104,27 @@ const NavigationRight = ({navigation}) => {
             />
 
             {/** Si l'utilisateur est connecté, on lui affiche l'écran voulu, sinon on le redirige vers la page de connexion. **/}
+
+            {isUserLogged === true &&
+                <Tab.Screen
+                    name="ManageOffers" component={ManageOffersScreen}
+                    options={{
+                        tabBarIcon: ({ focused }) =>
+                            (<FontAwesome name="pencil-square-o" size={30} color={focused ? "#FFF" : "#348d65"} />),
+                        title:"",
+                    }}
+                />
+            }
+            {isUserLogged === false &&
+                <Tab.Screen
+                    name="ManageOffers" component={LoginScreen}
+                    options={{
+                        tabBarIcon: ({ focused }) =>
+                            (<MaterialIcons name="favorite" size={30} color={focused ? "#FFF" : "#348d65"} />),
+                        title:"",
+                    }}
+                />
+            }
 
             {isUserLogged === true &&
                 <Tab.Screen
