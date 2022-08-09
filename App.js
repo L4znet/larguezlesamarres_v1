@@ -18,6 +18,7 @@ import AddPostScreen from "./Screens/AddPostScreen";
 import ShowPostScreen from "./Screens/ShowPostScreen";
 import Toast, {BaseToast, ErrorToast} from 'react-native-toast-message';
 import EditPostScreen from "./Screens/EditPostScreen";
+import ResultsScreen from "./Screens/ResultsScreen";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -184,6 +185,24 @@ export default function App() {
                           headerBackVisible:false }}
                                     name="EditProfil"
                                     component={EditProfilScreen} />
+                  }
+                  {isUserLogged === true &&
+                      <Stack.Screen options={{
+                          title: 'Larguez les amarres',
+                          headerStyle: {
+                              backgroundColor: '#48B781'
+                          },
+                          headerTintColor: '#fff',
+                          headerTitleStyle: {
+                              fontWeight: 'bold',
+                              fontFamily:"Syne_700Bold",
+                              color:"#FFF",
+                              fontSize:20
+                          },
+                          headerBackVisible:false }}
+                          name="Results"
+                          component={ResultsScreen}
+                      />
                   }
 
                   {isUserLogged === true &&
