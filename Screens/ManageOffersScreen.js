@@ -52,7 +52,8 @@ const ManageOffers = ({ navigation }) => {
                 fontWeight: '800',
                 fontSize: 25,
                 color: '#000',
-                marginVertical:40
+                marginVertical:40,
+                marginLeft:15,
             }}>Vos offres</Text>
         );
     }
@@ -62,7 +63,7 @@ const ManageOffers = ({ navigation }) => {
         return (
             <>
                 <CardOffer item={item} navigation={navigation}/>
-                <View style={{display:"flex", flexDirection:"row", width:"95%", marginBottom:60, justifyContent:"space-between"}}>
+                <View style={{display:"flex", flexDirection:"row", width:"95%", marginBottom:60, justifyContent:"space-between", marginLeft:15}}>
                     <TouchableOpacity style={[styles.button, styles.delete]} onPress={() => {
                         deleteOffer(item.key)
                     }}>
@@ -79,6 +80,8 @@ const ManageOffers = ({ navigation }) => {
             </>
         );
     };
+
+
 
     return (
         <View style={styles.container}>
@@ -98,16 +101,14 @@ const ManageOffers = ({ navigation }) => {
 
 
 const styles = StyleSheet.create({
-    recentlyItemContainer:{
-        marginLeft:15
-    },
     button:{
         width:"45%",
         height:70,
         borderRadius:20,
         display:"flex",
         justifyContent:"center",
-        alignItems:"center"
+        alignItems:"center",
+        marginRight:15,
     },
     delete:{
         backgroundColor:"#d34141"
