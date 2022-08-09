@@ -42,6 +42,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#FFF",
         height:360,
         width:345,
+        marginLeft:15,
         itemPhoto: {
             width: 345,
             height: 250,

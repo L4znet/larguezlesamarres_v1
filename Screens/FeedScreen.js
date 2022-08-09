@@ -80,7 +80,8 @@ const FeedScreen = ({navigation}) => {
                 fontWeight: '800',
                 fontSize: 25,
                 color: '#000',
-                marginVertical:40
+                marginVertical:40,
+                marginLeft:15,
             }}> Les derniers ajouts</Text>
         );
     }
@@ -145,9 +146,6 @@ const styles = StyleSheet.create({
             justifyContent:"center",
             alignItems:"center"
         },
-    },
-    recentlyItemContainer:{
-        marginLeft:15
     },
     sectionHeader: {
         fontWeight: '800',
