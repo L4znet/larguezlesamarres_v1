@@ -105,14 +105,21 @@ const RecentlyItem = ({ item }) => {
 
 const SearchScreen = ({ navigation }) => {
 
-    const [query, setQuery] = useState("");
+    const [searchQuery, setQuery] = useState("500");
 
     const searchResult = () => {
+
+
         axios.post("http://192.168.1.24:3000/api/search", {
-            query: query
+            query: searchQuery
         }).then(response => {
-            console.log(response.data)
+            navigation.navigate('Results', {
+                results:response.data,
+            });
         })
+
+
+
     }
 
     return (
