@@ -63,6 +63,14 @@ const ManageOffers = ({ navigation }) => {
         return (
             <>
                 <CardOffer item={item} navigation={navigation}/>
+                <TouchableOpacity style={styles.bookingButton} onPress={() => {
+                    navigation.navigate("OfferBooking", {
+                        authorId: item.authorId,
+                        offerId:item.key
+                    });
+                }}>
+                    <Text style={styles.label}>Consulter les réservations</Text>
+                </TouchableOpacity>
                 <View style={{display:"flex", flexDirection:"row", width:"95%", marginBottom:60, justifyContent:"space-between", marginLeft:15}}>
                     <TouchableOpacity style={[styles.button, styles.delete]} onPress={() => {
                         deleteOffer(item.key)
@@ -119,6 +127,17 @@ const styles = StyleSheet.create({
     label:{
         color:"#FFF",
         fontSize:20,
+    },
+    bookingButton:{
+        width:"92%",
+        height:70,
+        borderRadius:20,
+        display:"flex",
+        justifyContent:"center",
+        alignItems:"center",
+        marginLeft:15,
+        marginBottom:15,
+        backgroundColor:"#48B781"
     }
 })
 

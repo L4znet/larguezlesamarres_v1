@@ -3,8 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="5a86a01f-4fc1-4bc5-90a6-11d5188f116f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/NavigationLeft.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/NavigationLeft.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/NavigationRight.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/NavigationRight.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Screens/ManageOffersScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/Screens/ManageOffersScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Screens/ShowPostScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/Screens/ShowPostScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn-error.log" beforeDir="false" afterPath="$PROJECT_DIR$/yarn-error.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
