@@ -7,6 +7,7 @@ import {auth, db} from "../firebase";
 import axios from "axios";
 import GestureRecognizer from "react-native-swipe-gestures";
 import {collection, doc, getDoc, getDocs, query, where, onSnapshot} from "firebase/firestore";
+import navigation from "../Navigation";
 
 
 const bookedItemHeader = () => {
@@ -17,11 +18,11 @@ const bookedItemHeader = () => {
     );
 }
 
-const BookedItem = ({item}) => {
+const BookedItem = (props) => {
 
     let state = ""
     let style = ""
-    switch (JSON.parse(item).state) {
+    switch (JSON.parse(props.item).state) {
         case '0':
             state = "En attente"
             style = {color: "#3fbdf1"}
@@ -31,6 +32,10 @@ const BookedItem = ({item}) => {
             style = {color: "#56e12a"}
             break;
         case '2':
+            state = "En cours"
+            style = {color: "#006cff"}
+            break;
+        case '3':
             state = "Passée"
             style = {color: "#bababa"}
             break;
@@ -40,12 +45,22 @@ const BookedItem = ({item}) => {
             break;
     }
 
+    let navigation = props.navigation
+
+    const goToNextScreen = () => {
+        if(JSON.parse(props.item).state){
+            navigation.navigate("Payment", {
+                item: JSON.parse(props.item)
+            });
+        } else if(JSON.parse(item).state === "-1") {
+            //navigation.navigate("")
+        }
+    }
+
     return (
-        <TouchableOpacity style={styles.item} onPress={() => {
-            props.openModalProps()
-        }}>
+        <TouchableOpacity style={styles.item} onPress={() => goToNextScreen()}>
             <View style={{flexDirection:"column", display:"flex"}}>
-                <Text style={styles.item.title}>{JSON.parse(item).post.title}</Text>
+                <Text style={styles.item.title}>{JSON.parse(props.item).post.title}</Text>
                 <Text style={[styles.state, style]}>{state}</Text>
             </View>
         </TouchableOpacity>
@@ -53,7 +68,7 @@ const BookedItem = ({item}) => {
 }
 
 
-const BookingScreen = ({route}) => {
+const BookingScreen = ({navigation, route}) => {
     const [modalState, setModalState] = useState(false);
     const [postData, setPostData] = useState([]);
     const [bookingData, setBookingData] = useState(null);
@@ -61,36 +76,30 @@ const BookingScreen = ({route}) => {
 
     const getBooking = async () => {
 
-        const colRef = collection(db, "messages");
-        const docSnap = await getDocs(colRef);
 
-        let bookings = []
+        const q = query(collection(db, "messages"));
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            let bookings = [];
+            querySnapshot.forEach((doc) => {
+                bookings.push(doc.data());
+            });
+            let bookingData = []
+            for (const property in bookings[0]) {
 
-        docSnap.forEach(doc => {
-            bookings.push(doc.data());
-        })
-        let test = []
-        for (const property in bookings[0]) {
-            test.push(JSON.stringify(bookings[0][property]))
-        }
-        setBookingData(test)
+                bookingData.push(JSON.stringify(bookings[0][property]))
+            }
 
+            setBookingData(bookingData)
+        });
     }
-
 
     useEffect( () => {
-
-        const controller = new AbortController();
-        controller.signal;
-        getBooking()
-        return () => controller.abort();
+         getBooking()
+        return () => {
+            setBookingData([]);
+        };
     }, [])
 
-
-
-    const openModal = () => {
-        setModalState(!modalState)
-    }
 
     const formatDate = (dateToFormat) => {
         let options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -99,13 +108,15 @@ const BookingScreen = ({route}) => {
         return date.toLocaleDateString("fr-FR", options)
     }
 
+
+
     return (
         <>
             <FlatList
                 style={styles.recentlyItemContainer}
                 ListHeaderComponent={bookedItemHeader}
                 data={bookingData}
-                renderItem={({ item }) => <BookedItem item={item}/>}
+                renderItem={({ item }) => <BookedItem navigation={navigation} item={item}/>}
                 keyExtractor={(item, index) => index}
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
