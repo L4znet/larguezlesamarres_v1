@@ -2,6 +2,7 @@
   "expo": {
     "name": "larguezlesamarres",
     "slug": "larguezlesamarres",
+    "scheme": "larguezlesamarres",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
