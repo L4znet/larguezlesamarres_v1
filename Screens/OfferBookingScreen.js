@@ -32,6 +32,10 @@ const BookedItem = (props) => {
             style = {color: "#56e12a"}
             break;
         case '2':
+            state = "En cours"
+            style = {color: "#006cff"}
+            break;
+        case '3':
             state = "Passée"
             style = {color: "#bababa"}
             break;
@@ -91,7 +95,7 @@ const OfferBookingScreen = ({route}) => {
         return () => controller.abort();
     }, [])
 
-    const sendMessage = async (state, ) => {
+    const sendMessage = async (state, startDate, endDate) => {
         const messageRef = collection(db, "messages/")
         await setDoc(doc(messageRef, clickedBooking.tenantId), {
             [clickedBooking.id]:{
@@ -103,6 +107,9 @@ const OfferBookingScreen = ({route}) => {
                     boatName:postData.boatName
                 },
                 state:state,
+                startDate:startDate,
+                endDate:endDate,
+                bookingId:clickedBooking.id,
                 id:uid(3)
             }
         }, {
@@ -119,7 +126,7 @@ const OfferBookingScreen = ({route}) => {
 
     const acceptBooking = async (id) => {
         await updateState(id, "1")
-        await sendMessage("1")
+        await sendMessage("1", clickedBooking.startDate, clickedBooking.endDate)
     }
 
 
@@ -127,8 +134,6 @@ const OfferBookingScreen = ({route}) => {
         await updateState(id, "-1")
         await sendMessage("-1")
     }
-
-
 
 
 
