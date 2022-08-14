@@ -23,6 +23,7 @@ import OfferBookingScreen from "./Screens/OfferBookingScreen";
 import PaymentScreen from "./Screens/PaymentScreen";
 import {StripeProvider} from "@stripe/stripe-react-native";
 import * as Linking from 'expo-linking';
+import DeclineBookingScreen from "./Screens/DeclineBooking";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -95,36 +96,57 @@ export default function App() {
                         <Stack.Screen name="Tabs" component={Navigation} options={{ headerShown: false }} />
                         <Stack.Screen name="Login" options={{
                             title: 'Larguez les amarres',
-                            headerStyle: {
-                                backgroundColor: '#48B781',
-                            },
-                            headerTintColor: '#fff',
-                            headerTitleStyle: {
-                                fontWeight: 'bold',
-                                fontFamily:"Syne_700Bold",
-                                color:"#FFF",
-                                fontSize:20
-                            },
-                            headerBackVisible:false
-                        }}
-                                      component={LoginScreen} />
+                                headerStyle: {
+                                    backgroundColor: '#48B781',
+                                },
+                                headerTintColor: '#fff',
+                                headerTitleStyle: {
+                                    fontWeight: 'bold',
+                                    fontFamily:"Syne_700Bold",
+                                    color:"#FFF",
+                                    fontSize:20
+                                },
+                                headerBackVisible:false
+                            }} component={LoginScreen}
+                        />
                         <Stack.Screen name="Register"
-                                      options={{
-                                          title: 'Larguez les amarres',
-                                          headerStyle: {
-                                              backgroundColor: '#48B781',
-                                          },
-                                          headerTintColor: '#fff',
-                                          headerTitleStyle: {
-                                              fontWeight: 'bold',
-                                              fontFamily:"Syne_700Bold",
-                                              color:"#FFF",
-                                              fontSize:20
-                                          },
-                                          headerBackVisible:false
-                                      }}
-                                      component={RegisterScreen} />
+                          options={{
+                              title: 'Larguez les amarres',
+                              headerStyle: {
+                                  backgroundColor: '#48B781',
+                              },
+                              headerTintColor: '#fff',
+                              headerTitleStyle: {
+                                  fontWeight: 'bold',
+                                  fontFamily:"Syne_700Bold",
+                                  color:"#FFF",
+                                  fontSize:20
+                              },
+                              headerBackVisible:false
+                          }}
+                          component={RegisterScreen}
+                        />
 
+                        {isUserLogged === true &&
+                            <Stack.Screen
+                                name="DeclineBooking"
+                                component={DeclineBookingScreen}
+                                options={{
+                                    title: 'Larguez les amarres',
+                                    headerStyle: {
+                                        backgroundColor: '#48B781',
+                                    },
+                                    headerTintColor: '#fff',
+                                    headerTitleStyle: {
+                                        fontWeight: 'bold',
+                                        fontFamily:"Syne_700Bold",
+                                        color:"#FFF",
+                                        fontSize:20
+                                    },
+                                    headerBackVisible:false
+                                }}
+                            />
+                        }
                         {isUserLogged === true &&
                             <Stack.Screen
                                 name="EditPost"
