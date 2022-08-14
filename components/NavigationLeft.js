@@ -129,7 +129,7 @@ const NavigationLeft = ({navigation}) => {
             }
 
 
-            {isUserLogged === true &&
+            {isUserLogged === true && ownerTenantState === true &&
                 <Tab.Screen
                     name="Booking"
                     component={BookingScreen}

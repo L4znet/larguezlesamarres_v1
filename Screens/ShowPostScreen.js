@@ -6,63 +6,86 @@ import {
     StyleSheet,
     ImageBackground,
     TextInput,
-    TouchableOpacity, ScrollView
+    TouchableOpacity, ScrollView,
+    ActivityIndicator,
+    Modal
 } from "react-native";
-import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
-import RNPickerSelect from "react-native-picker-select";
-import BouncyCheckbox from "react-native-bouncy-checkbox";
-import {AntDesign, Entypo, Ionicons} from "@expo/vector-icons";
-import { doc, getDoc } from "firebase/firestore";
+import {AntDesign, Ionicons} from "@expo/vector-icons";
 import {auth, db} from "../firebase";
 import {useEffect, useState} from "react";
 import axios from "axios";
-import {useDispatch, useSelector} from "react-redux";
-import useFetch from "react-fetch-hook";
-import Toast from 'react-native-toast-message';
-import {toggleFavoriteAdded} from "../store/statesLoadSlice";
-
+import {useSelector} from "react-redux";
+import {uid} from "uid";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import {collection, doc, setDoc} from "firebase/firestore";
 
 const ShowPostScreen = ({ route, navigation }) => {
     const defaultThumbnail = "https://firebasestorage.googleapis.com/v0/b/larguezlesamarres-a1817.appspot.com/o/thumnails%2Fdefault.png?alt=media&token=8fae89e3-c7d0-47e1-b555-188c55080ef2"
     const {id} = route.params;
     const [offer, setOffer] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [modalVisible, setModalVisible] = useState(false);
     const ownerTenantState = useSelector((state) => state.settings.ownerTenantState)
-    const dispatch = useDispatch()
+    const [isStartDatePickerVisible, setStartDatePickerVisibility] = useState(false);
+    const [isEndDatePickerVisible, setEndDatePickerVisibility] = useState(false);
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
 
-    const askForBooking = () => {
-        if(auth.currentUser.uid !== offer.authorId){
+    const askForBooking = async () => {
+
+        if (auth.currentUser.uid !== offer.authorId) {
+
+            let bookingId = uid(25)
+
             axios.post("http://192.168.1.24:3000/api/booking/ask", {
-                offerId:offer.key,
-                tenantId:auth.currentUser.uid,
-                ownerId:offer.authorId,
-                state:0
+                id: bookingId,
+                offerId: offer.key,
+                offerTitle: offer.title,
+                boatName: offer.boatName,
+                tenantName: auth.currentUser.displayName,
+                startDate: startDate,
+                endDate: endDate,
+                state: "0",
+                tenantId: auth.currentUser.uid,
+                ownerId: offer.authorId,
             }).then(r => {
+                setLoading(false)
             })
+
+            // On envoi un message à la création d'une réservation que l'on updatera par la suite
+
+            const messageRef = collection(db, "messages/")
+            await setDoc(doc(messageRef, auth.currentUser.uid), {
+                [auth.currentUser.uid]:{
+                    post:{
+                        id:offer.key,
+                        title:offer.title,
+                        price:offer.price,
+                        pricePer:offer.pricePer,
+                        boatName:offer.boatName
+                    },
+                    state:"0",
+                    startDate:startDate,
+                    endDate:endDate,
+                    bookingId:bookingId,
+                    tenantId:auth.currentUser.uid,
+                    id:uid(3)
+                }
+            }, {
+                merge: true
+            }).then(() => {
+            });
+
+            setModalVisible(false)
         }
     }
 
 
-    const messageToast = (type, title, message) => {
-        Toast.show({
-            type: type,
-            text1: title,
-            text2: message,
-            onHide:() => {
-                getOffer()
-            }
-        });
-
-    }
-
-    const getOffer = () => {
-        axios.get("http://192.168.1.24:3000/api/posts/" + id).then(response => {
-            setOffer(response.data)
-        })
-    }
-
-
     navigation.addListener('focus', async () => {
-        getOffer()
+        setOffer("")
+        axios.get("http://192.168.1.24:3000/api/posts/" + id).then(r => {
+            setOffer(r.data)
+        })
     });
 
 
@@ -97,14 +120,93 @@ const ShowPostScreen = ({ route, navigation }) => {
         }
     }
 
+    const selectDate = (type, date) => {
+        if(type === "start"){
+            setStartDate(date)
+            hideStartDatePicker()
+        } else if(type === "end"){
+            setEndDate(date)
+            hideEndDatePicker()
+        }
+    }
+
+
+    const hideStartDatePicker = () => {
+        setStartDatePickerVisibility(false);
+    };
+
+    const hideEndDatePicker = () => {
+        setEndDatePickerVisibility(false);
+    };
+
+    console.log(id)
+
     return (
+
         <ScrollView>
+            <Modal
+                animationType="slide"
+                visible={modalVisible}
+                transparent={true}
+                onRequestClose={() => {
+                    setModalVisible(!modalVisible);
+                }} >
+                <View style={modal.modalBooking}>
+                    <Text style={modal.modalBooking.title}>C'est presque fini !</Text>
+                    <Text style={modal.modalBooking.subtitle}>Vérifions la disponibilité, sélectionnez les dates de début et de fin de réservation. </Text>
+                    <TouchableOpacity style={[modal.button, modal.enabled]} onPress={() => setStartDatePickerVisibility(true)}>
+                        <Text style={modal.button_label}>Début de votre réservation</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[modal.button, modal.enabled]} onPress={() => setEndDatePickerVisibility(true)}>
+                        <Text style={modal.button_label}>Fin de votre réservation</Text>
+                    </TouchableOpacity>
+                    <DateTimePickerModal
+                        isVisible={isStartDatePickerVisible}
+                        mode="date"
+                        onConfirm={(date) => selectDate("start", date)}
+                        onCancel={hideStartDatePicker}r
+                    />
+                    <DateTimePickerModal
+                        isVisible={isEndDatePickerVisible}
+                        mode="date"
+                        onConfirm={(date) => selectDate("end", date)}
+                        onCancel={hideEndDatePicker}
+                    />
+                    <Text style={modal.modalBooking.subtitle}>C'est tout bon ? Parfait ! </Text>
+                    <Text style={modal.modalBooking.subtitle}>Validez votre réservation, nous nous occupons du reste :)</Text>
+
+                    {startDate !== null && endDate !== null &&
+                        <TouchableOpacity style={[modal.button, modal.enabled]} onPress={() => askForBooking()}>
+                            <Text style={modal.button_label}>C'est bon !</Text>
+                        </TouchableOpacity>
+                    }
+                    {startDate === null && endDate === null &&
+                        <View style={[modal.button, modal.disabled]}>
+                            <Text style={modal.button_label_disabled}>Choisissez vos dates</Text>
+                        </View>
+                    }
+                    {startDate === null && endDate !== null &&
+                        <View style={[modal.button, modal.disabled]}>
+                            <Text style={modal.button_label_disabled}>Choisissez la dates de début</Text>
+                        </View>
+                    }
+                    {startDate !== null && endDate === null &&
+                        <View style={[modal.button, modal.disabled]}>
+                            <Text style={modal.button_label_disabled}>Choisissez la dates de fin</Text>
+                        </View>
+                    }
+                </View>
+            </Modal>
+
             <View style={styles.single}>
                 <View style={styles.header}></View>
                 <ImageBackground style={styles.thumbnail} source={{ uri: offer.thumbnail }} resizeMode="cover">
                     <View style={styles.thumbnail.thumbnailOverlay}>
-                        <TouchableOpacity style={[styles.thumbnail.button, styles.thumbnail.back]} onPress={() => {navigation.navigate("Feed")}}>
+                        <TouchableOpacity style={styles.thumbnail.button} onPress={() => {navigation.navigate("Feed")}}>
                             <Text style={styles.thumbnail.buttonLabel}><Ionicons name="chevron-back" size={35} color="white" /></Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.thumbnail.button}>
+                            <Text style={styles.thumbnail.buttonLabel}><AntDesign name="heart" size={25} color="white" /></Text>
                         </TouchableOpacity>
                     </View>
                 </ImageBackground>
@@ -134,8 +236,11 @@ const ShowPostScreen = ({ route, navigation }) => {
 
                 {ownerTenantState === true && auth.currentUser.uid !== offer.authorId &&
                     <TouchableOpacity style={styles.single.contact} onPress={() => {
-                        askForBooking()
+                        setModalVisible(true)
                     }}>
+                        {loading &&
+                            <ActivityIndicator size="large" color="#FFF" />
+                        }
                         <Text style={styles.single.contactLabel}>Demander la disponibilité</Text>
                     </TouchableOpacity>
                 }
@@ -154,6 +259,57 @@ const ShowPostScreen = ({ route, navigation }) => {
         </ScrollView>
     );
 }
+
+
+const modal = StyleSheet.create({
+    button:{
+        width:330,
+        height:70,
+        display:"flex",
+        justifyContent:"center",
+        alignItems:"center",
+        borderRadius:10,
+        marginTop:30
+    },
+    enabled:{
+        backgroundColor:"#5ad194",
+    },
+    disabled:{
+        backgroundColor:"#b3b3b3",
+    },
+    button_label:{
+        color:"#FFF",
+        fontSize:25
+    },
+    button_label_disabled:{
+        color:"#e6e6e6",
+        fontSize:25
+    },
+    modalBooking:{
+        width:"100%",
+        height:750,
+        backgroundColor:"#48B781",
+        paddingVertical:50,
+        borderBottomRightRadius:50,
+        borderBottomLeftRadius:50,
+        display:"flex",
+        alignItems:"center",
+        title:{
+            fontSize:40,
+            fontWeight:"bold",
+            textAlign:"center",
+            marginTop:30,
+            color:"#FFF",
+        },
+        subtitle:{
+            fontSize:25,
+            fontWeight:"bold",
+            textAlign:"center",
+            marginTop:30,
+            color:"#FFF",
+        }
+    },
+})
 
 
 const styles = StyleSheet.create({
@@ -176,23 +332,16 @@ const styles = StyleSheet.create({
         button:{
             width:60,
             height:60,
+            backgroundColor:"#46d08d",
             borderRadius:50,
             margin:15,
             display: "flex",
             justifyContent:"center",
             alignItems:"center"
         },
-        back:{
-            backgroundColor:"#46d08d",
-        },
-        like:{
-            backgroundColor:"#46d08d",
-        },
-
         buttonLabel:{
             color:"#FFF"
-        },
-
+        }
     },
     disabled:{
         width:320,
@@ -326,11 +475,13 @@ const styles = StyleSheet.create({
             display:"flex",
             justifyContent:"center",
             alignItems:"center",
-            borderRadius:20
+            borderRadius:20,
+            flexDirection:"row"
         },
         contactLabel:{
             color:"#FFF",
             fontSize:20,
+            marginLeft:10
         }
     }
 })
