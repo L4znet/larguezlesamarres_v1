@@ -15,6 +15,7 @@ import {useSelector} from "react-redux";
 import {uid} from "uid";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import {collection, doc, setDoc} from "firebase/firestore";
+import Toast from "react-native-toast-message";
 
 const ShowPostScreen = ({ route, navigation }) => {
     const defaultThumbnail = "https://firebasestorage.googleapis.com/v0/b/larguezlesamarres-a1817.appspot.com/o/thumnails%2Fdefault.png?alt=media&token=8fae89e3-c7d0-47e1-b555-188c55080ef2"
@@ -117,13 +118,38 @@ const ShowPostScreen = ({ route, navigation }) => {
         }
     }
 
+    const preventSelectOldDate = (date) => {
+
+        let todayDate = new Date();
+        let dateToCheck = new Date(date);
+
+        if(dateToCheck < todayDate){
+            Toast.show({
+                type:  'error',
+                text1: 'PAS BON',
+                text2: 'This is some something 👋'
+            });
+            return false
+        } else if(dateToCheck >= todayDate) {
+            return true
+        }
+    }
+
     const selectDate = (type, date) => {
         if(type === "start"){
-            setStartDate(date)
-            hideStartDatePicker()
+            if(preventSelectOldDate(date)){
+                setStartDate(date)
+                hideStartDatePicker()
+            }
         } else if(type === "end"){
-            setEndDate(date)
-            hideEndDatePicker()
+            if(preventSelectOldDate(date)){
+                if(new Date(date) <= new Date(startDate)){
+                    console.log("Pas bon")
+                } else {
+                    setEndDate(date)
+                    hideEndDatePicker()
+                }
+            }
         }
     }
 
@@ -135,6 +161,13 @@ const ShowPostScreen = ({ route, navigation }) => {
     const hideEndDatePicker = () => {
         setEndDatePickerVisibility(false);
     };
+
+    const formatDate = (dateToFormat) => {
+        let options = { year: 'numeric', month: 'long', day: 'numeric' };
+
+        let date = new Date(dateToFormat)
+        return date.toLocaleDateString("fr-FR", options)
+    }
 
     return (
 
@@ -150,16 +183,26 @@ const ShowPostScreen = ({ route, navigation }) => {
                     <Text style={modal.modalBooking.title}>C'est presque fini !</Text>
                     <Text style={modal.modalBooking.subtitle}>Vérifions la disponibilité, sélectionnez les dates de début et de fin de réservation. </Text>
                     <TouchableOpacity style={[modal.button, modal.enabled]} onPress={() => setStartDatePickerVisibility(true)}>
-                        <Text style={modal.button_label}>Début de votre réservation</Text>
+                        {startDate === null &&
+                            <Text style={modal.button_label}>Début de votre réservation</Text>
+                        }
+                        {startDate !== null &&
+                            <Text style={modal.button_label}> {formatDate(startDate)}</Text>
+                        }
                     </TouchableOpacity>
                     <TouchableOpacity style={[modal.button, modal.enabled]} onPress={() => setEndDatePickerVisibility(true)}>
-                        <Text style={modal.button_label}>Fin de votre réservation</Text>
+                        {endDate === null &&
+                            <Text style={modal.button_label}>Fin de votre réservation</Text>
+                        }
+                        {endDate !== null &&
+                            <Text style={modal.button_label}>{formatDate(endDate)}</Text>
+                        }
                     </TouchableOpacity>
                     <DateTimePickerModal
                         isVisible={isStartDatePickerVisible}
                         mode="date"
                         onConfirm={(date) => selectDate("start", date)}
-                        onCancel={hideStartDatePicker}r
+                        onCancel={hideStartDatePicker}
                     />
                     <DateTimePickerModal
                         isVisible={isEndDatePickerVisible}
