@@ -8,6 +8,7 @@ import axios from "axios";
 import GestureRecognizer from "react-native-swipe-gestures";
 import {collection, doc, getDoc, getDocs, query, where, onSnapshot} from "firebase/firestore";
 import navigation from "../Navigation";
+import firebase from "firebase/compat";
 
 
 const bookedItemHeader = () => {
@@ -48,12 +49,15 @@ const BookedItem = (props) => {
     let navigation = props.navigation
 
     const goToNextScreen = () => {
-        if(JSON.parse(props.item).state){
+
+        if(JSON.parse(props.item).state === "1"){
             navigation.navigate("Payment", {
                 item: JSON.parse(props.item)
             });
-        } else if(JSON.parse(item).state === "-1") {
-            //navigation.navigate("")
+        } else if(JSON.parse(props.item).state === "-1") {
+            navigation.navigate("DeclineBooking", {
+                id: JSON.parse(props.item).post.id
+            });
         }
     }
 
@@ -75,9 +79,7 @@ const BookingScreen = ({navigation, route}) => {
     const [clickedBooking, setClickedBooking] = useState([]);
 
     const getBooking = async () => {
-
-
-        const q = query(collection(db, "messages"));
+       const q = query(collection(db, "messages"), where(firebase.firestore.FieldPath.documentId(), '==', auth.currentUser.uid));
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
             let bookings = [];
             querySnapshot.forEach((doc) => {
@@ -85,7 +87,6 @@ const BookingScreen = ({navigation, route}) => {
             });
             let bookingData = []
             for (const property in bookings[0]) {
-
                 bookingData.push(JSON.stringify(bookings[0][property]))
             }
 
