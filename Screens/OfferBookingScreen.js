@@ -95,43 +95,48 @@ const OfferBookingScreen = ({route}) => {
         return () => controller.abort();
     }, [])
 
-    const sendMessage = async (state, startDate, endDate) => {
-        const messageRef = collection(db, "messages/")
-        await setDoc(doc(messageRef, clickedBooking.tenantId), {
-            [clickedBooking.id]:{
-                post:{
-                    id:postData.key,
-                    title:postData.title,
-                    price:postData.price,
-                    pricePer:postData.pricePer,
-                    boatName:postData.boatName
-                },
-                state:state,
-                startDate:startDate,
-                endDate:endDate,
-                bookingId:clickedBooking.id,
-                id:uid(3)
-            }
-        }, {
-            merge: true
-        }).then(() => {
-        });
+    const sendMessage = async (state, startDate = null, endDate = null) => {
+
+        if(state === "1"){
+            const messageRef = collection(db, "messages/")
+            await setDoc(doc(messageRef, clickedBooking.tenantId), {
+                [clickedBooking.id]:{
+                    state:state,
+                }
+            }, {
+                merge: true
+            }).then(() => {
+            });
+        } else {
+            const messageRef = collection(db, "messages/")
+            await setDoc(doc(messageRef, clickedBooking.tenantId), {
+                [clickedBooking.id]:{
+                    state:state,
+                }
+            }, {
+                merge: true
+            }).then(() => {
+            });
+        }
+
+
+
     }
 
-    const updateState = async (id, state) => {
+    const updateStateBooking = async (id, state) => {
         const bookingToAcceptRef = doc(db, "posts", offerId, "bookings", id);
         await updateDoc(bookingToAcceptRef, {state: state});
     }
 
 
     const acceptBooking = async (id) => {
-        await updateState(id, "1")
-        await sendMessage("1", clickedBooking.startDate, clickedBooking.endDate)
+        await updateStateBooking(id, "1")
+        await sendMessage("1")
     }
 
 
     const declineBooking = async (id) => {
-        await updateState(id, "-1")
+        await updateStateBooking(id, "-1")
         await sendMessage("-1")
     }
 

@@ -17,6 +17,7 @@ import axios from "axios";
 import {useSelector} from "react-redux";
 import {uid} from "uid";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import {collection, doc, setDoc} from "firebase/firestore";
 
 const ShowPostScreen = ({ route, navigation }) => {
     const defaultThumbnail = "https://firebasestorage.googleapis.com/v0/b/larguezlesamarres-a1817.appspot.com/o/thumnails%2Fdefault.png?alt=media&token=8fae89e3-c7d0-47e1-b555-188c55080ef2"
@@ -30,24 +31,50 @@ const ShowPostScreen = ({ route, navigation }) => {
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
 
-    const askForBooking = () => {
+    const askForBooking = async () => {
 
-        if(auth.currentUser.uid !== offer.authorId){
+        if (auth.currentUser.uid !== offer.authorId) {
+
+            let bookingId = uid(25)
 
             axios.post("http://192.168.1.24:3000/api/booking/ask", {
-                id:uid(25),
-                offerId:offer.key,
-                offerTitle:offer.title,
-                boatName:offer.boatName,
-                tenantName:auth.currentUser.displayName,
-                startDate:startDate,
-                endDate:endDate,
-                state:"0",
-                tenantId:auth.currentUser.uid,
-                ownerId:offer.authorId,
+                id: bookingId,
+                offerId: offer.key,
+                offerTitle: offer.title,
+                boatName: offer.boatName,
+                tenantName: auth.currentUser.displayName,
+                startDate: startDate,
+                endDate: endDate,
+                state: "0",
+                tenantId: auth.currentUser.uid,
+                ownerId: offer.authorId,
             }).then(r => {
                 setLoading(false)
             })
+
+            // On envoi un message à la création d'une réservation que l'on updatera par la suite
+
+            const messageRef = collection(db, "messages/")
+            await setDoc(doc(messageRef, auth.currentUser.uid), {
+                [auth.currentUser.uid]:{
+                    post:{
+                        id:offer.key,
+                        title:offer.title,
+                        price:offer.price,
+                        pricePer:offer.pricePer,
+                        boatName:offer.boatName
+                    },
+                    state:"0",
+                    startDate:startDate,
+                    endDate:endDate,
+                    bookingId:bookingId,
+                    tenantId:auth.currentUser.uid,
+                    id:uid(3)
+                }
+            }, {
+                merge: true
+            }).then(() => {
+            });
 
             setModalVisible(false)
         }
@@ -111,6 +138,8 @@ const ShowPostScreen = ({ route, navigation }) => {
     const hideEndDatePicker = () => {
         setEndDatePickerVisibility(false);
     };
+
+    console.log(id)
 
     return (
 

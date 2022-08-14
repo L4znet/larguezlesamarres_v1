@@ -49,15 +49,6 @@ const RegisterScreen = ({ navigation }) => {
                 <Text style={styles.form.title}>Inscrivez-vous</Text>
 
                 <KeyboardAwareScrollView>
-                    <Text style={styles.smallText}>Vous êtes...</Text>
-                    <View style={styles.choices}>
-                        <TouchableOpacity onPress={() => toggleChoice() }>
-                            <Text style={[styles.choices.choiceItem(roleState), styles.choices.choiceItemTrue(roleState)]}>Un locataire</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => toggleChoice() }>
-                            <Text style={[styles.choices.choiceItem(roleState), styles.choices.choiceItemFalse(roleState)]}>Un propriétaire</Text>
-                        </TouchableOpacity>
-                    </View>
                     <TextInput style={styles.form.input} onChangeText={(username) => setUsername(username)} placeholder="Nom d'utilisateur" />
                     <TextInput style={styles.form.input} onChangeText={(email) => setEmail(email)} placeholder="E-mail" />
                     <TextInput style={styles.form.input} onChangeText={(password) => setPassword(password)} placeholder="Mot de passe" />
