@@ -1,18 +1,15 @@
 import {
     Text,
     View,
-    Button,
-    TouchableHighlight,
     StyleSheet,
     ImageBackground,
-    TextInput,
     TouchableOpacity, ScrollView,
     ActivityIndicator,
     Modal
 } from "react-native";
 import {AntDesign, Ionicons} from "@expo/vector-icons";
 import {auth, db} from "../firebase";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import axios from "axios";
 import {useSelector} from "react-redux";
 import {uid} from "uid";
@@ -138,8 +135,6 @@ const ShowPostScreen = ({ route, navigation }) => {
     const hideEndDatePicker = () => {
         setEndDatePickerVisibility(false);
     };
-
-    console.log(id)
 
     return (
 

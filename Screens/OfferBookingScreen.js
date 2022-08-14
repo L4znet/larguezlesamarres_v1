@@ -1,13 +1,9 @@
 import * as React from 'react';
-import {Text, View, StyleSheet, ScrollView, FlatList, TouchableOpacity, Image, Modal} from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import useFetch from "react-fetch-hook";
-import {useCallback, useEffect, useState} from "react";
-import {auth, db} from "../firebase";
-import axios from "axios";
+import {Text, View, StyleSheet, FlatList, TouchableOpacity, Modal} from 'react-native';
+import {useEffect, useState} from "react";
+import {db} from "../firebase";
 import GestureRecognizer from "react-native-swipe-gestures";
-import {collection, doc, getDoc, getDocs, query, updateDoc, onSnapshot, setDoc} from "firebase/firestore";
-import {uid} from "uid";
+import {collection, doc, getDoc, query, updateDoc, onSnapshot, setDoc} from "firebase/firestore";
 
 
 const bookedItemHeader = () => {

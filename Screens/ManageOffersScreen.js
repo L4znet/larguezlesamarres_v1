@@ -1,12 +1,8 @@
 import {Text, View, StyleSheet, FlatList, TouchableOpacity, Alert} from "react-native";
-import {AntDesign} from "@expo/vector-icons";
 import CardOffer from "../components/CardOffer";
 import axios from "axios";
-import useFetch from "react-fetch-hook";
 import {useEffect, useState} from "react";
 import {auth} from "../firebase";
-import {useDispatch, useSelector} from "react-redux";
-import {toggleMyOffersLoaded, toggleOfferSent} from "../store/statesLoadSlice";
 
 const ManageOffers = ({ navigation }) => {
     const [offers, setOffers] = useState([]);

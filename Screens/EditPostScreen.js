@@ -6,12 +6,7 @@ import BouncyCheckbox from "react-native-bouncy-checkbox";
 import axios from "axios";
 import * as ImagePicker from "expo-image-picker";
 import {getDownloadURL, ref, uploadBytes} from "firebase/storage";
-import {auth, storage} from "../firebase";
-import {updateProfile} from "firebase/auth";
-import {BASEAPI} from '@env'
-
-import {useDispatch, useSelector} from "react-redux";
-import {toggleMyOffersLoaded, toggleOfferSent} from "../store/statesLoadSlice";
+import {storage} from "../firebase";
 
 const EditPostScreen = ({ route, navigation }) => {
 

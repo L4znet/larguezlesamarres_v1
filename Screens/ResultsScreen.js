@@ -1,17 +1,11 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
     StyleSheet,
     Text,
     View,
-    SectionList,
-    SafeAreaView,
-    Image,
     FlatList,
-    ScrollView,
-    TouchableOpacity,
     TextInput
 } from 'react-native';
-import axios from "axios";
 import CardOffer from "../components/CardOffer";
 
 const SECTIONS = [

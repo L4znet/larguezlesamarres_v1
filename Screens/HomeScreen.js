@@ -3,11 +3,6 @@ import {
     StyleSheet,
     Text,
     View,
-    SectionList,
-    SafeAreaView,
-    Image,
-    FlatList,
-    ScrollView,
     TouchableOpacity
 } from 'react-native';
 

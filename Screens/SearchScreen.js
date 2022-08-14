@@ -3,7 +3,6 @@ import {
     StyleSheet,
     Text,
     View,
-    SectionList,
     SafeAreaView,
     Image,
     FlatList,

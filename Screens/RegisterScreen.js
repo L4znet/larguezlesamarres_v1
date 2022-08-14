@@ -1,7 +1,7 @@
-import {Text, View, Keyboard, TouchableOpacity, StyleSheet, TextInput, TouchableWithoutFeedback, KeyboardAvoidingView} from "react-native";
-import {getAuth, createUserWithEmailAndPassword, updateProfile} from "firebase/auth";
+import {Text, View, TouchableOpacity, StyleSheet, TextInput} from "react-native";
+import {createUserWithEmailAndPassword, updateProfile} from "firebase/auth";
 import {useState} from "react";
-import {auth, storage, doc, setDoc, db} from '../firebase.js'
+import {auth, doc, setDoc, db} from '../firebase.js'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 const RegisterScreen = ({ navigation }) => {

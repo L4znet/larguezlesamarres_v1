@@ -7,11 +7,8 @@ import axios from "axios";
 import * as ImagePicker from "expo-image-picker";
 import {getDownloadURL, ref, uploadBytes} from "firebase/storage";
 import {auth, storage} from "../firebase";
-import {updateProfile} from "firebase/auth";
-import {BASEAPI} from '@env'
 
 import {useDispatch, useSelector} from "react-redux";
-import {toggleMyOffersLoaded, toggleOfferSent} from "../store/statesLoadSlice";
 
 const AddPostScreen = ({ navigation }) => {
     const defaultThumbnail = "https://firebasestorage.googleapis.com/v0/b/larguezlesamarres-a1817.appspot.com/o/thumnails%2Fdefault.png?alt=media&token=8fae89e3-c7d0-47e1-b555-188c55080ef2"

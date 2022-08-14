@@ -1,5 +1,5 @@
-import {Text, View, Button, TouchableOpacity, StyleSheet, TextInput, LogBox} from "react-native";
-import { getAuth, signInWithEmailAndPassword, signOut  } from "firebase/auth";
+import {Text, View, TouchableOpacity, StyleSheet, TextInput} from "react-native";
+import { signInWithEmailAndPassword  } from "firebase/auth";
 import {useState} from "react";
 import { auth } from '../firebase'
 

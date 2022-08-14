@@ -1,14 +1,5 @@
 import * as React from 'react';
-import {Text, View, StyleSheet, ScrollView, FlatList, TouchableOpacity, Image, Modal, Alert} from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import useFetch from "react-fetch-hook";
-import {useCallback, useEffect, useState} from "react";
-import {auth, db} from "../firebase";
-import axios from "axios";
-import GestureRecognizer from "react-native-swipe-gestures";
-import {collection, doc, getDoc, getDocs, query, where, onSnapshot, updateDoc, setDoc} from "firebase/firestore";
-import {CardField, presentPaymentSheet, useStripe} from '@stripe/stripe-react-native';
-import {uid} from "uid";
+import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
 
 const DeclineBookingScreen = ({route, navigation}) => {
 

@@ -1,12 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {FlatList, Image, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View,} from 'react-native';
+import {FlatList, StyleSheet, Text, TouchableHighlight, View,} from 'react-native';
 import {AntDesign} from '@expo/vector-icons';
 import {useDispatch, useSelector} from "react-redux";
 import {onAuthStateChanged} from "@firebase/auth";
 import {auth, collection, query} from "../firebase";
 import axios from "axios";
-import useFetch from "react-fetch-hook";
-import {toggleOfferSent} from "../store/statesLoadSlice";
 import CardOffer from "../components/CardOffer";
 
 const FeedScreen = ({navigation}) => {
@@ -59,11 +57,10 @@ const FeedScreen = ({navigation}) => {
 
 
     useEffect(() => {
+        const controller = new AbortController();
+        controller.signal;
         getOffer()
-
-        return () => {
-            setOffers([]);
-        };
+        return () => controller.abort();
     }, [])
 
     const RecentlyItem = ({ item }) => {

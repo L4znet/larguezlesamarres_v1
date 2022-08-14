@@ -14,7 +14,6 @@ import {auth, storage} from '../firebase'
 import {useEffect, useState} from "react";
 import * as ImagePicker from 'expo-image-picker';
 import { ref, uploadBytes,getDownloadURL } from "firebase/storage";
-import uuid from "react-native-uuid";
 
 
 const ProfileScreen = ({navigation}) => {

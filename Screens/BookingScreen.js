@@ -1,13 +1,8 @@
 import * as React from 'react';
-import {Text, View, StyleSheet, ScrollView, FlatList, TouchableOpacity, Image, Modal} from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import useFetch from "react-fetch-hook";
-import {useCallback, useEffect, useState} from "react";
+import {Text, View, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
+import {useEffect, useState} from "react";
 import {auth, db} from "../firebase";
-import axios from "axios";
-import GestureRecognizer from "react-native-swipe-gestures";
-import {collection, doc, getDoc, getDocs, query, where, onSnapshot} from "firebase/firestore";
-import navigation from "../Navigation";
+import {collection, query, where, onSnapshot} from "firebase/firestore";
 import firebase from "firebase/compat";
 
 
@@ -95,10 +90,10 @@ const BookingScreen = ({navigation, route}) => {
     }
 
     useEffect( () => {
-         getBooking()
-        return () => {
-            setBookingData([]);
-        };
+        const controller = new AbortController();
+        controller.signal;
+        getBooking()
+        return () => controller.abort();
     }, [])
 
 
