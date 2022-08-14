@@ -12,7 +12,7 @@ import {onAuthStateChanged} from "@firebase/auth";
 import {auth} from "./firebase";
 import {useState} from "react";
 import EditProfilScreen from "./Screens/EditProfilScreen";
-import {Provider} from "react-redux";
+import {Provider, useSelector} from "react-redux";
 import {store} from "./store";
 import AddPostScreen from "./Screens/AddPostScreen";
 import ShowPostScreen from "./Screens/ShowPostScreen";
@@ -29,6 +29,7 @@ const Stack = createNativeStackNavigator();
 export default function App() {
 
     const [isUserLogged, setUserLogged] = useState(false);
+    const ownerTenantState = useSelector((state) => state.settings.ownerTenantState)
     onAuthStateChanged(auth, (user) => {
         if (user) {
             setUserLogged(true)
@@ -294,7 +295,6 @@ export default function App() {
                                           name="AddPost"
                                           component={AddPostScreen} />
                         }
-                        {isUserLogged === true &&
                             <Stack.Screen options={{
                                 title: 'Larguez les amarres',
                                 headerTintColor: '#fff',
@@ -307,10 +307,8 @@ export default function App() {
                                 headerBackVisible:false,
                                 headerShown:false
                             }}
-                                          name="ShowPost"
-                                          component={ShowPostScreen} />
-                        }
-
+                              name="ShowPost"
+                              component={ShowPostScreen} />
                     </Stack.Navigator>
                 </NavigationContainer>
                 <Toast config={toastConfig} />
