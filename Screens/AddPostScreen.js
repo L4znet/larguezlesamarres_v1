@@ -105,11 +105,11 @@ const AddPostScreen = ({ navigation }) => {
                     </ImageBackground>
                 </TouchableHighlight>
 
-                <TextInput style={[styles.form.fullInput, styles.form.input]} onChangeText={(title) => setTitle(title)} placeholder="Titre de l'annonce" />
-                <TextInput style={[styles.form.fullInput, styles.form.input]} onChangeText={(boatName) => setBoatName(boatName)} placeholder="Nom du bateau" />
-                <TextInput style={[styles.form.fullInput, styles.form.input]} onChangeText={(localization) => setLocalization(localization)} placeholder="Votre localisation" />
+                <TextInput style={[styles.form.fullInput, styles.form.input]} onChangeText={(title) => setTitle(title)} placeholderTextColor="#9e9e9e" placeholder="Titre de l'annonce" />
+                <TextInput style={[styles.form.fullInput, styles.form.input]} onChangeText={(boatName) => setBoatName(boatName)} placeholderTextColor="#9e9e9e" placeholder="Nom du bateau" />
+                <TextInput style={[styles.form.fullInput, styles.form.input]} onChangeText={(localization) => setLocalization(localization)} placeholderTextColor="#9e9e9e" placeholder="Votre localisation" />
                 <View style={styles.boatConfiguration.row}>
-                    <TextInput keyboardType="number-pad" style={[styles.form.halfInput, styles.form.input]} onChangeText={(price) => setPrice(price)} placeholder="Prix du véhicule" />
+                    <TextInput keyboardType="number-pad" style={[styles.form.halfInput, styles.form.input]} onChangeText={(price) => setPrice(price)} placeholderTextColor="#9e9e9e" placeholder="Prix du véhicule" />
                     <RNPickerSelect style={selector}
                         onValueChange={(pricePer) => setPricePer(pricePer)}
                         placeholder={{label: 'Par', value: ""}}
@@ -126,15 +126,15 @@ const AddPostScreen = ({ navigation }) => {
                     <Text style={styles.subtitle}>Configuration de votre véhicule</Text>
 
                     <View style={styles.boatConfiguration.row}>
-                        <TextInput keyboardType="number-pad" style={[styles.form.halfInput, styles.form.input]} onChangeText={(capacity) => setCapacity(capacity)} placeholder="Capacités à bord" />
+                        <TextInput keyboardType="number-pad" style={[styles.form.halfInput, styles.form.input]} onChangeText={(capacity) => setCapacity(capacity)} placeholderTextColor="#9e9e9e" placeholder="Capacités à bord" />
                         <Text style={styles.boatConfiguration.label}>personnes</Text>
                     </View>
                     <View style={styles.boatConfiguration.row}>
-                        <TextInput keyboardType="number-pad" style={[styles.form.halfInput, styles.form.input]} onChangeText={(sleeping) => setSleeping(sleeping)} placeholder="Couchages" />
+                        <TextInput keyboardType="number-pad" style={[styles.form.halfInput, styles.form.input]} onChangeText={(sleeping) => setSleeping(sleeping)} placeholderTextColor="#9e9e9e" placeholder="Couchages" />
                         <Text style={styles.boatConfiguration.label}>couchages</Text>
                     </View>
                     <View style={styles.boatConfiguration.row}>
-                        <TextInput keyboardType="number-pad" style={[styles.form.halfInput, styles.form.input]} onChangeText={(cabins) => setCabins(cabins)} placeholder="Cabines" />
+                        <TextInput keyboardType="number-pad" style={[styles.form.halfInput, styles.form.input]} onChangeText={(cabins) => setCabins(cabins)} placeholderTextColor="#9e9e9e" placeholder="Cabines" />
                         <Text style={styles.boatConfiguration.label}>cabines</Text>
                     </View>
                     <View style={styles.boatConfiguration.row}>
@@ -168,6 +168,7 @@ const AddPostScreen = ({ navigation }) => {
                     style={[styles.form.textarea, styles.form.input]}
                     multiline={true}
                     onChangeText={(detail) => setDetail(detail)}
+                    placeholderTextColor="#9e9e9e"
                     placeholder="Texte de votre annonce"
                 />
 
@@ -177,6 +178,7 @@ const AddPostScreen = ({ navigation }) => {
                         style={[styles.form.textarea, styles.form.input]}
                         multiline={true}
                         onChangeText={(equipment) => setEquipments(equipments)}
+                        placeholderTextColor="#9e9e9e"
                         placeholder="Équipement(s) inclu avec votre véhicule"
                     />
                 </View>

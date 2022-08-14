@@ -99,7 +99,7 @@ const ResultsScreen = ({ navigation, route }) => {
                     <Text style={styles.results.resultLabel}>pour votre recherche</Text>
                 </View>
                 <View style={styles.results}>
-                    <TextInput style={styles.results.searchbar} value={results.query} placeholder={"Nom de bateau, capacités à bord..."}/>
+                    <TextInput style={styles.results.searchbar} value={results.query} placeholderTextColor="#9e9e9e" placeholder={"Nom de bateau, capacités à bord..."}/>
                     <Text style={styles.results.cancel} onPress={() => { navigation.replace('Tabs', { screen: 'Search' }) }}>Annuler</Text>
                 </View>
             </View>

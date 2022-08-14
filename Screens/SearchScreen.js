@@ -128,7 +128,7 @@ const SearchScreen = ({ navigation }) => {
             <ScrollView contentInsetAdjustmentBehavior="automatic">
 
                 <View style={styles.search}>
-                    <TextInput style={styles.search.searchbar} onChangeText={(query) => setQuery(query)} placeholder={"Nom de bateau, capacités à bord..."}/>
+                    <TextInput style={styles.search.searchbar} onChangeText={(query) => setQuery(query)} placeholderTextColor="#9e9e9e" placeholder={"Nom de bateau, capacités à bord..."}/>
                     <TouchableOpacity style={styles.search.searchButton} onPress={() => {searchResult()}}>
                         <Text style={styles.search.searchButtonText}>Lancer la recherche</Text>
                     </TouchableOpacity>

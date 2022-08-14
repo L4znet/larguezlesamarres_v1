@@ -24,8 +24,8 @@ const LoginScreen = ({ navigation }) => {
         <View style={styles.container}>
             <View style={styles.form}>
                 <Text style={styles.form.title}>Connectez-vous</Text>
-                <TextInput style={styles.form.input} onChangeText={(email) => setEmail(email)} placeholder="E-mail" />
-                <TextInput style={styles.form.input} onChangeText={(password) => setPassword(password)} placeholder="Mot de passe" />
+                <TextInput style={styles.form.input} onChangeText={(email) => setEmail(email)} placeholderTextColor="#9e9e9e" placeholder="E-mail" />
+                <TextInput style={styles.form.input} onChangeText={(password) => setPassword(password)} placeholderTextColor="#9e9e9e" placeholder="Mot de passe" />
                 <TouchableOpacity style={styles.form.button}  onPress={() => { login() }}>
                     <Text style={styles.form.buttonText}>Connexion</Text>
                 </TouchableOpacity>

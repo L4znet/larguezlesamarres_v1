@@ -49,10 +49,10 @@ const RegisterScreen = ({ navigation }) => {
                 <Text style={styles.form.title}>Inscrivez-vous</Text>
 
                 <KeyboardAwareScrollView>
-                    <TextInput style={styles.form.input} onChangeText={(username) => setUsername(username)} placeholder="Nom d'utilisateur" />
-                    <TextInput style={styles.form.input} onChangeText={(email) => setEmail(email)} placeholder="E-mail" />
-                    <TextInput style={styles.form.input} onChangeText={(password) => setPassword(password)} placeholder="Mot de passe" />
-                    <TextInput style={styles.form.input} onChangeText={(confirmPassword) => setConfirmPassword(confirmPassword)} placeholder="Confirmation du mot de passe" />
+                    <TextInput style={styles.form.input} onChangeText={(username) => setUsername(username)} placeholderTextColor="#9e9e9e" placeholder="Nom d'utilisateur" />
+                    <TextInput style={styles.form.input} onChangeText={(email) => setEmail(email)} placeholderTextColor="#9e9e9e" placeholder="E-mail" />
+                    <TextInput style={styles.form.input} onChangeText={(password) => setPassword(password)} placeholderTextColor="#9e9e9e" placeholder="Mot de passe" />
+                    <TextInput style={styles.form.input} onChangeText={(confirmPassword) => setConfirmPassword(confirmPassword)} placeholderTextColor="#9e9e9e" placeholder="Confirmation du mot de passe" />
                     <TouchableOpacity
                         style={styles.form.button}
                         onPress={() => register() }>
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
         }),
         choiceItemFalse:(state)=> ({
             backgroundColor: state === false ? "#ffffff" : "#48B781",
-            color: state === true ? "#ffffff" : "#000",
+            color: state === true ? "#FFF" : "#000",
         }),
     },
     smallText:{
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
             marginTop:30,
             paddingLeft:20,
             borderRadius:15,
-            fontSize:16
+            fontSize:16,
         },
         button:{
             width:"90%",

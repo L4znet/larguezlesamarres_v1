@@ -91,28 +91,28 @@ const ProfileScreen = ({navigation}) => {
                 onChangeText={newDisplayName => setDisplayName(newDisplayName)}
                 value={displayName}
                 placeholder="Votre nom"
-                placeholderTextColor="#7b7b7b"
+                placeholderTextColor="#9e9e9e"
             />
             <TextInput
                 style={styles.input}
                 onChangeText={newEmail => setEmail(newEmail)}
                 value={email}
                 placeholder="Votre nouvelle adresse e-mail"
-                placeholderTextColor="#7b7b7b"
+                placeholderTextColor="#9e9e9e"
             />
             <TextInput
                 style={styles.input}
                 onChangeText={newPassword => setPassword(newPassword)}
                 value={password}
                 placeholder="Votre nouveau mot de passe"
-                placeholderTextColor="#7b7b7b"
+                placeholderTextColor="#9e9e9e"
             />
             <TextInput
                 style={styles.input}
                 onChangeText={newConfirmPassword => setConfirmPassword(newConfirmPassword)}
                 value={confirmPassword}
                 placeholder="Confirmation du mot de passe"
-                placeholderTextColor="#7b7b7b"
+                placeholderTextColor="#9e9e9e"
             />
             <TouchableOpacity onPress={() => {  changeProfil() }} style={styles.confirmSave}>
                 <Text style={styles.confirmSave.text}>Enregistrer vos modifications</Text>
