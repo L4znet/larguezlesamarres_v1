@@ -122,13 +122,13 @@ const NavigationRight = ({navigation}) => {
                     name="ManageOffers" component={LoginScreen}
                     options={{
                         tabBarIcon: ({ focused }) =>
-                            (<MaterialIcons name="favorite" size={30} color={focused ? "#FFF" : "#348d65"} />),
+                            (<FontAwesome name="pencil-square-o" size={30} color={focused ? "#FFF" : "#348d65"} />),
                         title:"",
                     }}
                 />
             }
 
-            {isUserLogged === true &&
+            {isUserLogged === true && ownerTenantState === true &&
                 <Tab.Screen
                     name="Booking"
                     component={BookingScreen}
