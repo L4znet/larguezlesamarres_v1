@@ -25,11 +25,11 @@ import {StripeProvider} from "@stripe/stripe-react-native";
 import * as Linking from 'expo-linking';
 import DeclineBookingScreen from "./Screens/DeclineBooking";
 const Stack = createNativeStackNavigator();
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function App() {
 
     const [isUserLogged, setUserLogged] = useState(false);
-    const ownerTenantState = useSelector((state) => state.settings.ownerTenantState)
     onAuthStateChanged(auth, (user) => {
         if (user) {
             setUserLogged(true)
@@ -223,7 +223,6 @@ export default function App() {
                                           name="EditProfil"
                                           component={EditProfilScreen} />
                         }
-                        {isUserLogged === true &&
                             <Stack.Screen options={{
                                 title: 'Larguez les amarres',
                                 headerStyle: {
@@ -240,7 +239,6 @@ export default function App() {
                                           name="Results"
                                           component={ResultsScreen}
                             />
-                        }
                         {isUserLogged === true &&
                             <Stack.Screen options={{
                                 title: 'Larguez les amarres',
