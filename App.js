@@ -26,6 +26,7 @@ import * as Linking from 'expo-linking';
 import DeclineBookingScreen from "./Screens/DeclineBooking";
 const Stack = createNativeStackNavigator();
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import ForgotScreen from "./Screens/ForgotScreen";
 
 export default function App() {
 
@@ -255,6 +256,24 @@ export default function App() {
                                 headerBackVisible:false }}
                                           name="Payment"
                                           component={PaymentScreen}
+                            />
+                        }
+                        {isUserLogged === false &&
+                            <Stack.Screen options={{
+                                title: 'Larguez les amarres',
+                                headerStyle: {
+                                    backgroundColor: '#48B781'
+                                },
+                                headerTintColor: '#fff',
+                                headerTitleStyle: {
+                                    fontWeight: 'bold',
+                                    fontFamily:"Syne_700Bold",
+                                    color:"#FFF",
+                                    fontSize:20
+                                },
+                                headerBackVisible:false }}
+                                          name="ForgotPassword"
+                                          component={ForgotScreen}
                             />
                         }
                         {isUserLogged === true &&

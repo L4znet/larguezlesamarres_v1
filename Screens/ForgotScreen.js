@@ -1,49 +1,62 @@
 import {Text, View, TouchableOpacity, StyleSheet, TextInput} from "react-native";
-import { signInWithEmailAndPassword  } from "firebase/auth";
+import {createUserWithEmailAndPassword, sendPasswordResetEmail, updateProfile} from "firebase/auth";
 import {useState} from "react";
-import { auth } from '../firebase'
+import {auth, doc, setDoc, db} from '../firebase.js'
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
-const LoginScreen = ({ navigation }) => {
+const ForgotScreen = ({ navigation }) => {
 
-    const [email, setEmail] = useState("charly.escalona1@hotmail.fr");
-    const [password, setPassword] = useState("Uzkq24051000");
-    const login = () => {
+    const [email, setEmail] = useState("");
 
-        signInWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                navigation.navigate('Feed')
-            })
-            .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-            });
+    const forgotPassword = async () => {
+
+        if (email !== "") {
+            sendPasswordResetEmail(auth, email, null)
+                .then(() => {})
+                .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                });
+
+            navigation.navigate("Login")
+        }
     }
-
 
     return (
         <View style={styles.container}>
             <View style={styles.form}>
-                <Text style={styles.form.title}>Connectez-vous</Text>
+                <Text style={styles.form.title}>Mot de passe oublié</Text>
                 <TextInput style={styles.form.input} onChangeText={(email) => setEmail(email)} placeholderTextColor="#9e9e9e" placeholder="E-mail" />
-                <TextInput style={styles.form.input} onChangeText={(password) => setPassword(password)} placeholderTextColor="#9e9e9e" placeholder="Mot de passe" />
-                <TouchableOpacity style={styles.form.button}  onPress={() => { login() }}>
-                    <Text style={styles.form.buttonText}>Connexion</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.form.buttonPasswordForgot}  onPress={() => { navigation.navigate ('ForgotPassword'); }}>
-                    <Text style={styles.form.buttonPasswordForgotText}>Mot de passe oublié ?</Text>
-                </TouchableOpacity>
-                <Text style={styles.form.registerText}>Pas de compte ?</Text>
-                <TouchableOpacity style={styles.form.buttonRegister} onPress={() => { navigation.push('Register'); }}>
-                    <Text style={styles.form.buttonRegisterText}>Inscrivez-vous</Text>
-                </TouchableOpacity>
+
+                <Text style={styles.smallText}>Nous vous enverrons un lien pour réinitialiser votre mot de passe </Text>
+                    <TouchableOpacity
+                        style={styles.form.button}
+                        onPress={() => forgotPassword() }>
+                        <Text style={styles.form.buttonText}>Envoyer le lien !</Text>
+                    </TouchableOpacity>
+                <Text style={styles.form.title}>Finalement...</Text>
+                <Text style={styles.form.title}>C'est bon je m'en souviens !</Text>
+                <TouchableOpacity
+                        style={styles.form.button}
+                        onPress={() => navigation.navigate("Login") }>
+                        <Text style={styles.form.buttonText}>Se connecter</Text>
+                    </TouchableOpacity>
             </View>
         </View>
+
     );
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+    },
+    smallText:{
+        fontSize:25,
+        paddingHorizontal:20,
+        width:"100%",
+        textAlign:"center",
+        marginTop:30
     },
     form:{
         title:{
@@ -66,7 +79,7 @@ const styles = StyleSheet.create({
             marginTop:30,
             paddingLeft:20,
             borderRadius:15,
-            fontSize:16
+            fontSize:16,
         },
         button:{
             width:"90%",
@@ -117,4 +130,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default LoginScreen;
+export default ForgotScreen;
