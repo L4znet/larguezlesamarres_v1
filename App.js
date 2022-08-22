@@ -27,6 +27,7 @@ import DeclineBookingScreen from "./Screens/DeclineBooking";
 const Stack = createNativeStackNavigator();
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ForgotScreen from "./Screens/ForgotScreen";
+import ContactSupportScreen from "./Screens/ContactSupportScreen";
 
 export default function App() {
 
@@ -274,6 +275,24 @@ export default function App() {
                                 headerBackVisible:false }}
                                           name="ForgotPassword"
                                           component={ForgotScreen}
+                            />
+                        }
+                        {isUserLogged === true &&
+                            <Stack.Screen options={{
+                                title: 'Larguez les amarres',
+                                headerStyle: {
+                                    backgroundColor: '#48B781'
+                                },
+                                headerTintColor: '#fff',
+                                headerTitleStyle: {
+                                    fontWeight: 'bold',
+                                    fontFamily:"Syne_700Bold",
+                                    color:"#FFF",
+                                    fontSize:20
+                                },
+                                headerBackVisible:false }}
+                                          name="ContactSupport"
+                                          component={ContactSupportScreen}
                             />
                         }
                         {isUserLogged === true &&

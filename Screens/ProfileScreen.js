@@ -101,6 +101,10 @@ const ProfileScreen = ({navigation}) => {
                         </View>
                     </View>
                 </View>
+                <View style={styles.contactSupport}>
+                    <Text style={styles.contactSupport.title}>Contacter le support</Text>
+                    <TouchableOpacity onPress={() => { navigation.navigate("ContactSupport") }} style={styles.contactSupport.contactSupportBtn}><Text style={styles.contactSupport.contactSupportText}>Contacter le support</Text></TouchableOpacity>
+                </View>
                 <View style={styles.dangerZone}>
                     <Text style={styles.deleteAccount.title}>DANGER ZONE</Text>
                     <TouchableOpacity onPress={() => { deleteAccount() }} style={styles.deleteAccount}><Text style={styles.deleteAccount.deleteAccountText}>Supprimer mon compte</Text></TouchableOpacity>
@@ -199,6 +203,34 @@ const styles = StyleSheet.create({
         alignItems:"center",
         borderRadius:15,
         logoutText:{
+            color:"#FFF",
+            fontSize:18
+        }
+    },
+    contactSupport:{
+        display:"flex",
+        justifyContent:"center",
+        alignItems:"center",
+        width:"100%",
+        height:150,
+        marginVertical:10,
+        title:{
+            color:"#000000",
+            fontSize:30,
+            fontWeight:"bold",
+            marginVertical:10
+        },
+        contactSupportBtn:{
+            width:"80%",
+            height:60,
+            backgroundColor:"#48B781",
+            marginTop:30,
+            display:"flex",
+            justifyContent:"center",
+            alignItems:"center",
+            borderRadius:15,
+        },
+        contactSupportText:{
             color:"#FFF",
             fontSize:18
         }
