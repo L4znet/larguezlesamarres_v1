@@ -25,6 +25,7 @@ import {onAuthStateChanged} from "@firebase/auth";
 import {auth} from "../firebase";
 import ManageOffersScreen from "../Screens/ManageOffersScreen";
 import {useSelector} from "react-redux";
+import FavoriteScreen from "../Screens/FavoriteScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -146,6 +147,29 @@ const NavigationRight = ({navigation}) => {
                     options={{
                         tabBarIcon: ({ focused }) =>
                             (<Entypo name="calendar" size={30} color={focused ? "#FFF" : "#348d65"} />),
+                        title:"",
+                    }}
+                />
+            }
+            {isUserLogged === true && ownerTenantState === true &&
+                <Tab.Screen
+                    name="Favorite" component={FavoriteScreen}
+                    options={{
+                        tabBarIcon: ({ focused }) =>
+                            (<AntDesign name="heart" size={25} color={focused ? "#FFF" : "#348d65"} />),
+
+                        title:"",
+                    }}
+                />
+            }
+            {isUserLogged === false &&
+                <Tab.Screen
+                    name="Favorite"
+                    component={LoginScreen}
+                    options={{
+                        tabBarIcon: ({ focused }) =>
+                            (<AntDesign name="heart" size={25} color={focused ? "#FFF" : "#348d65"} />),
+
                         title:"",
                     }}
                 />
