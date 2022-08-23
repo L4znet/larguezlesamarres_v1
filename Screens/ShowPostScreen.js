@@ -7,15 +7,26 @@ import {
     ActivityIndicator,
     Modal
 } from "react-native";
-import {AntDesign, Ionicons} from "@expo/vector-icons";
+import {AntDesign, FontAwesome5, Ionicons} from "@expo/vector-icons";
 import {auth, db} from "../firebase";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import axios from "axios";
 import {useSelector} from "react-redux";
 import {uid} from "uid";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import {collection, doc, setDoc} from "firebase/firestore";
+import {
+    collection,
+    deleteDoc,
+    doc,
+    setDoc,
+    updateDoc,
+    deleteField,
+    getDoc,
+    query,
+    onSnapshot
+} from "firebase/firestore";
 import Toast from "react-native-toast-message";
+import firebase from "firebase/compat";
 
 const ShowPostScreen = ({ route, navigation }) => {
     const defaultThumbnail = "https://firebasestorage.googleapis.com/v0/b/larguezlesamarres-a1817.appspot.com/o/thumnails%2Fdefault.png?alt=media&token=8fae89e3-c7d0-47e1-b555-188c55080ef2"
@@ -28,6 +39,11 @@ const ShowPostScreen = ({ route, navigation }) => {
     const [isEndDatePickerVisible, setEndDatePickerVisibility] = useState(false);
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
+    const [favoriteState, setFavoriteState] = useState(false);
+    const [favorites, setFavorites] = useState([]);
+
+
+
 
     const askForBooking = async () => {
 
@@ -79,13 +95,34 @@ const ShowPostScreen = ({ route, navigation }) => {
     }
 
 
-    navigation.addListener('focus', async () => {
-        setOffer("")
-        axios.get("http://192.168.1.24:3000/api/posts/" + id).then(r => {
-            setOffer(r.data)
-        })
-    });
+    useEffect(() => {
 
+        const unsubscribe = onSnapshot(doc(db, "posts", id), (doc) => {
+            setOffer(doc.data())
+            if(doc.data().favorites !== undefined){
+
+                setFavorites(doc.data().favorites)
+
+                if(doc.data().favorites.includes(auth.currentUser.uid)){
+                    setFavoriteState(true)
+                } else {
+                    setFavoriteState(false)
+                }
+            } else {
+                setFavoriteState(false)
+            }
+        });
+
+        return () => {
+            unsubscribe()
+        }
+    }, [])
+
+
+
+
+
+    console.log(offer)
 
     switch (offer.pricePer) {
         case 'week':
@@ -101,6 +138,9 @@ const ShowPostScreen = ({ route, navigation }) => {
             offer.pricePer = "heure"
             break;
     }
+
+
+
 
     const plurialLabel = (value, label) => {
         if(parseInt(value) < 1) {
@@ -168,6 +208,41 @@ const ShowPostScreen = ({ route, navigation }) => {
         let date = new Date(dateToFormat)
         return date.toLocaleDateString("fr-FR", options)
     }
+
+    const addToFavorite = async () => {
+
+        const favoritesRef = collection(db, "favorites/")
+        await setDoc(doc(favoritesRef, auth.currentUser.uid), {
+            [offer.key]: {
+                key:uid(25),
+                offerId: offer.key,
+                thumbnail: offer.thumbnail,
+                title: offer.title,
+                price: offer.price,
+                pricePer: offer.pricePer,
+            }
+        }, {
+            merge: true
+        }).then(() => {
+        });
+
+
+        await updateDoc(doc(db, "posts", offer.key), {favorites: [auth.currentUser.uid]});
+    }
+    const removeFromFavorite = async () => {
+        const favoritesRef = doc(db, 'favorites', auth.currentUser.uid);
+
+        await updateDoc(favoritesRef, {
+            [offer.key]: deleteField()
+        });
+
+
+        let favoriteToUpdate = favorites.map(function(x){return x.replace(auth.currentUser.uid, '');});
+        const postRef = doc(db, "posts", offer.key);
+        await updateDoc(postRef, {favorites: favoriteToUpdate});
+
+    }
+
 
     return (
 
@@ -243,9 +318,20 @@ const ShowPostScreen = ({ route, navigation }) => {
                         <TouchableOpacity style={styles.thumbnail.button} onPress={() => {navigation.navigate("Feed")}}>
                             <Text style={styles.thumbnail.buttonLabel}><Ionicons name="chevron-back" size={35} color="white" /></Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.thumbnail.button}>
-                            <Text style={styles.thumbnail.buttonLabel}><AntDesign name="heart" size={25} color="white" /></Text>
-                        </TouchableOpacity>
+
+
+
+                        {favoriteState === true &&
+                            <TouchableOpacity style={[styles.thumbnail.favoriteButton, styles.thumbnail.unlike]} onPress={() => { removeFromFavorite() }}>
+                                <Text style={styles.thumbnail.buttonLabel}><AntDesign name="heart" size={25} color="#5ad194" /></Text>
+                            </TouchableOpacity>
+                        }
+                        {favoriteState === false &&
+                            <TouchableOpacity style={[styles.thumbnail.favoriteButton, styles.thumbnail.like]} onPress={() => { addToFavorite() }}>
+                                <Text style={styles.thumbnail.buttonLabel}><AntDesign name="heart" size={25} color="white" /></Text>
+                            </TouchableOpacity>
+                        }
+
                     </View>
                 </ImageBackground>
                 <Text style={styles.single.boatName}>{offer.boatName}</Text>
@@ -379,7 +465,23 @@ const styles = StyleSheet.create({
         },
         buttonLabel:{
             color:"#FFF"
+        },
+        favoriteButton:{
+            width:60,
+            height:60,
+            borderRadius:50,
+            margin:15,
+            display: "flex",
+            justifyContent:"center",
+            alignItems:"center",
+        },
+        like:{
+            backgroundColor:"#46d08d",
+        },
+        unlike:{
+            backgroundColor:"#ffffff",
         }
+
     },
     disabled:{
         width:320,
