@@ -22,18 +22,29 @@ import MapView from 'react-native-maps';
 
 
 
-const FilterItem = ({ item, onPress, backgroundColor, textColor }) => {
-
-    return (
-        <TouchableOpacity  onPress={onPress} style={[styles.searchItem, backgroundColor]}>
-            <Image
-                source={item.thumbnail}
-                style={styles.searchItem.itemPhoto}
-                resizeMode="cover"
-            />
-            <View style={styles.searchItem.itemCaption}><Text style={[styles.searchItem.itemCaptionText, textColor]}>{item.name}</Text></View>
-        </TouchableOpacity>
-    );
+const FilterItem = ({ item, onPress, backgroundColor, textColor, isTypeItem }) => {
+    if(isTypeItem){
+        return (
+            (
+                <TouchableOpacity  onPress={onPress} style={[styles.typeItem, backgroundColor]}>
+                    <Image
+                        source={item.thumbnail}
+                        style={styles.typeItem.itemPhoto}
+                        resizeMode="cover"
+                    />
+                    <View style={styles.typeItem.itemCaption}><Text style={[styles.typeItem.itemCaptionText, textColor]}>{item.name}</Text></View>
+                </TouchableOpacity>
+            )
+        )
+    } else {
+        return (
+            (
+                <TouchableOpacity  onPress={onPress} style={[styles.wishItem, backgroundColor]}>
+                    <View style={styles.wishItem.itemCaption}><Text style={[styles.wishItem.itemCaptionText, textColor]}>{item.name}</Text></View>
+                </TouchableOpacity>
+            )
+        )
+    }
 }
 
 const SearchScreen = ({ navigation }) => {
@@ -41,22 +52,25 @@ const SearchScreen = ({ navigation }) => {
     const [searchQuery, setQuery] = useState("");
     const [modalState, setModalState] = useState(false);
     const [region, setRegion] = useState({latitude: 37.78825, longitude: -122.4324, latitudeDelta: 0.0922, longitudeDelta: 0.0421});
-    const [filterLocalization, setFilterLocalization] = useState("");
-    const [filterWish, setFilterWish] = useState("");
     const mapRef = useRef(null);
-    const [selectedId, setSelectedId] = useState(null);
-    const [selectedItemName, setSelectedItemName] = useState("");
+    const [selectedTypeId, setSelectedTypeId] = useState(null);
+    const [selectedWishId, setSelectedWishId] = useState(null);
+    const [selectWishName, setSelectedWishName] = useState("");
+    const [selectedTypeName, setSelectedTypeName] = useState("");
+    const [filterLocalization, setFilterLocalization] = useState("");
 
     const vehicules = [
         {
             key: '1',
             name: 'Catamarans',
+            slug: 'catamarans',
             thumbnail: require('../assets/catamarans.jpg'),
             selected:false,
         },
         {
             key: '2',
             name: 'Yacht',
+            slug: 'yacht',
             thumbnail: require('../assets/yacht.jpeg'),
             selected:false,
         },
@@ -64,39 +78,85 @@ const SearchScreen = ({ navigation }) => {
         {
             key: '3',
             name: 'Voilier',
+            slug: 'voilier',
             thumbnail: require('../assets/voilier.jpg'),
             selected:false,
         },
         {
             key: '4',
             name: 'Bateau de plaisance',
+            slug: 'plaisance',
             thumbnail: require('../assets/plaisance.jpg'),
             selected:false,
         },
         {
             key: '5',
             name: 'Jet-Ski',
+            slug: 'jetski',
             thumbnail: require('../assets/jetski.jpg'),
             selected:false,
         },
         {
             key: '6',
             name: 'Semi-Rigide',
+            slug: 'semirigide',
             thumbnail: require('../assets/semirigide.png'),
             selected:false,
         },
     ]
+    const wishs = [
+        {
+            key: '1',
+            name: 'Proposer des balades en mer',
+            selected:false,
+        },
+        {
+            key: '2',
+            name: 'Faire découvrir mon lieu de vie',
+            selected:false,
+        },
 
-    const renderItem = ({ item }) => {
-        const backgroundColor = item.key === selectedId ? "#48B781" : "#ffffff";
-        const color = item.key === selectedId ? 'white' : 'black';
+        {
+            key: '3',
+            name: 'Proposer des vacances, avec équipages',
+            selected:false,
+        },
+        {
+            key: '4',
+            name: 'Partager mon savoir',
+            selected:false,
+        }
+    ]
+
+    const renderTypeItem = ({ item }) => {
+        const backgroundColor = item.key === selectedTypeId ? "#48B781" : "#ffffff";
+        const color = item.key === selectedTypeId ? 'white' : 'black';
 
         return (
             <FilterItem
                 item={item}
+                isTypeItem={true}
                 onPress={() => {
-                    setSelectedId(item.key)
-                    setSelectedItemName(item.name)
+                    setSelectedTypeId(item.key)
+                    setSelectedTypeName(item.slug)
+                }}
+                backgroundColor={{ backgroundColor }}
+                textColor={{ color }}
+            />
+        );
+    };
+
+    const renderWishItem = ({ item }) => {
+        const backgroundColor = item.key === selectedWishId ? "#48B781" : "#ffffff";
+        const color = item.key === selectedWishId ? 'white' : 'black';
+
+        return (
+            <FilterItem
+                item={item}
+                isTypeItem={false}
+                onPress={() => {
+                    setSelectedWishId(item.key)
+                    setSelectedWishName(item.name)
                 }}
                 backgroundColor={{ backgroundColor }}
                 textColor={{ color }}
@@ -105,13 +165,12 @@ const SearchScreen = ({ navigation }) => {
     };
 
 
-
     const searchResult = () => {
-
         axios.post("http://192.168.1.24:3000/api/search", {
             query: searchQuery,
             localizationFilter:filterLocalization,
-            typeFilter:selectedItemName,
+            typeFilter:selectedTypeName,
+            wishFilter:selectWishName,
         }).then(response => {
             navigation.navigate('Results', {
                 results:response.data,
@@ -121,8 +180,6 @@ const SearchScreen = ({ navigation }) => {
 
 
     const getRegion = (item) => {
-
-
         if(item.address.streetName !== undefined){
             setFilterLocalization(item.address.freeformAddress)
         } else if(item.address.municipality !== undefined) {
@@ -168,13 +225,11 @@ const SearchScreen = ({ navigation }) => {
                     </TouchableOpacity>
                 </View>
                 <Text style={styles.sectionHeader}>Par destinations</Text>
-
                 <Modal
                     animationType="slide"
                     visible={modalState}
                     transparent={true}
-                    onRequestClose={() => { setModalState(!modalState); }}
-                >
+                    onRequestClose={() => { setModalState(!modalState); }}>
                     <View style={styles.modalBooking}>
                         <AutoCompleteInput
                             inputProps={{
@@ -229,14 +284,32 @@ const SearchScreen = ({ navigation }) => {
                         <FlatList
                             style={styles.searchItemContainer}
                             data={vehicules}
-                            extraData={selectedId}
-                            renderItem={renderItem}
+                            extraData={selectedTypeId}
+                            renderItem={renderTypeItem}
                             horizontal={true}
                             showsVerticalScrollIndicator={false}
                             showsHorizontalScrollIndicator={false}
                         />
                     </ScrollView>
                 </SafeAreaView>
+
+                <SafeAreaView style={styles.wishs}>
+                    <ScrollView
+                        showsVerticalScrollIndicator={false}
+                        showsHorizontalScrollIndicator={false}>
+                        <Text style={styles.sectionHeader}>Par envies</Text>
+                        <FlatList
+                            style={styles.searchItemContainer}
+                            data={wishs}
+                            extraData={selectedWishId}
+                            renderItem={renderWishItem}
+                            horizontal={true}
+                            showsVerticalScrollIndicator={false}
+                            showsHorizontalScrollIndicator={false}
+                        />
+                    </ScrollView>
+                </SafeAreaView>
+
             </KeyboardAwareScrollView>
         </View>
     );
@@ -244,13 +317,6 @@ const SearchScreen = ({ navigation }) => {
 
 
 const styles = StyleSheet.create({
-    overlay:{
-        width:"100%",
-        height:"100%",
-        backgroundColor:"rgb(72,183,129)",
-        position:"absolute",
-        zIndex:9999
-    },
     button:{
         width:"90%",
         height:60,
@@ -310,7 +376,12 @@ const styles = StyleSheet.create({
         }
     },
     types:{
-        marginBottom:70
+        marginBottom:10
+    },
+    wishs:{
+        marginBottom:70,
+        display:"flex",
+        flexDirection:"column"
     },
     sectionHeader: {
         fontWeight: '800',
@@ -330,7 +401,7 @@ const styles = StyleSheet.create({
     searchItemContainer:{
         marginLeft:15,
     },
-    searchItem: {
+    typeItem: {
         marginRight:15,
         borderRadius:20,
         backgroundColor: "#FFF",
@@ -343,6 +414,29 @@ const styles = StyleSheet.create({
             borderTopLeftRadius:20,
             borderTopRightRadius:20
         },
+        itemCaption: {
+            color: '#000',
+            width:"100%",
+            fontWeight: "bold",
+            display:"flex",
+            justifyContent:"center",
+            alignItems:"center",
+            height:50,
+            borderBottomLeftRadius:20,
+            borderBottomRightRadius:20
+        },
+        itemCaptionText: {
+            fontSize:20,
+            fontWeight:"bold"
+        },
+    },
+    wishItem: {
+        marginRight:15,
+        borderRadius:20,
+        backgroundColor: "#FFF",
+        height:50,
+        width:"auto",
+        paddingHorizontal:20,
         itemCaption: {
             color: '#000',
             width:"100%",
@@ -390,60 +484,7 @@ const styles = StyleSheet.create({
             fontSize:20,
             fontWeight:"bold"
         },
-    },
-    countrySectionHeader: {
-        fontWeight: '800',
-        fontSize: 25,
-        color: '#000',
-        marginVertical: 40,
-        width:"100%",
-        paddingLeft: 15
-    },
-    countrySection:{
-        display:"flex",
-        justifyContent:"center",
-        alignItems:"center"
-    },
-    countryGrid:{
-        display:"flex",
-        flexWrap:"wrap",
-        flexDirection:"row",
-        justifyContent:"center",
-        countryItem:{
-            width:170,
-            height:170,
-            backgroundColor:"#FFF"
-        }
-    },
-    countryItemContent:{
-        width:"100%",
-        height:"100%",
-        countryBackgroundImage:{
-            width:"100%",
-            height:"100%",
-            position:"absolute",
-            zIndex:9997,
-        },
-        countryItemLabel:{
-            backgroundColor:"#000",
-            width:"100%",
-            height:"100%",
-            display:"flex",
-            justifyContent:"center",
-            alignItems:"center",
-            opacity:0.6,
-            position:"absolute",
-            zIndex:9998,
-        },
-        countryItemLabelText:{
-            color:"#FFF",
-            position:"absolute",
-            fontSize:20,
-            fontWeight:"bold"
-        }
     }
-
-
 });
 
 const selector = StyleSheet.create({
