@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {
     StyleSheet,
     Text,
@@ -8,196 +8,219 @@ import {
     FlatList,
     ScrollView,
     TouchableOpacity,
-    TextInput
+    TextInput,
+    SectionList,
+    VirtualizedList, Modal
 } from 'react-native';
 import axios from "axios";
-
-const SECTIONS = [
-    {
-        key: '1',
-        text: 'Catamarans',
-        uri: 'https://picsum.photos/id/1/200',
-    },
-    {
-        key: '2',
-        text: 'Yacht',
-        uri: 'https://picsum.photos/id/10/200',
-    },
-
-    {
-        key: '3',
-        text: 'Voilier',
-        uri: 'https://picsum.photos/id/1002/200',
-    },
-    {
-        key: '4',
-        text: 'Bateau de plaisance',
-        uri: 'https://picsum.photos/id/1006/200',
-    }
-];
+import SearchableDropdown from 'react-native-searchable-dropdown';
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
+import RNPickerSelect from "react-native-picker-select";
+import GestureRecognizer from "react-native-swipe-gestures";
+import AutoCompleteInput from "react-native-tomtom-autocomplete";
+import MapView from 'react-native-maps';
 
 
-const RECENTLY = [
-    {
-        key: '1',
-        text: 'Yacht Imperator 44m',
-        price: "300 €/semaine",
-        uri: 'https://picsum.photos/id/1/200',
-    },
-    {
-        key: '2',
-        text: 'Yacht Imperator 44m',
-        price: "300 €/semaine",
-        uri: 'https://picsum.photos/id/10/200',
-    },
 
-    {
-        key: '3',
-        text: 'Yacht Imperator 44m',
-        price: "300 €/semaine",
-        uri: 'https://picsum.photos/id/1002/200',
-    },
-    {
-        key: '4',
-        text: 'Yacht Imperator 44m',
-        price: "300 €/semaine",
-        uri: 'https://picsum.photos/id/1006/200',
-    },
-    {
-        key: '5',
-        text: 'Yacht Imperator 44m',
-        price: "300 €/semaine",
-        uri: 'https://picsum.photos/id/1008/200',
-    },
-];
+const FilterItem = ({ item, onPress, backgroundColor, textColor }) => {
 
-
-const SearchItem = ({ item }) => {
     return (
-        <View style={styles.searchItem}>
+        <TouchableOpacity  onPress={onPress} style={[styles.searchItem, backgroundColor]}>
             <Image
-                source={{
-                    uri: item.uri,
-                }}
+                source={item.thumbnail}
                 style={styles.searchItem.itemPhoto}
                 resizeMode="cover"
             />
-            <View style={styles.searchItem.itemCaption}><Text style={styles.searchItem.itemCaptionText}>{item.text}</Text></View>
-        </View>
+            <View style={styles.searchItem.itemCaption}><Text style={[styles.searchItem.itemCaptionText, textColor]}>{item.name}</Text></View>
+        </TouchableOpacity>
     );
-};
-const RecentlyItem = ({ item }) => {
-    return (
-        <View style={styles.recentlyItem}>
-            <Image
-                source={{
-                    uri: item.uri,
-                }}
-                style={styles.recentlyItem.itemPhoto}
-                resizeMode="cover"
-            />
-            <View style={styles.recentlyItem.itemCaption}><Text style={styles.recentlyItem.itemCaptionText}>{item.text}</Text></View>
-            <View style={styles.recentlyItem.itemCaption}><Text style={styles.recentlyItem.itemCaptionText}>{item.price}</Text></View>
-        </View>
-    );
-};
+}
 
 const SearchScreen = ({ navigation }) => {
 
-    const [searchQuery, setQuery] = useState("500");
+    const [searchQuery, setQuery] = useState("");
+    const [modalState, setModalState] = useState(false);
+    const [region, setRegion] = useState({latitude: 37.78825, longitude: -122.4324, latitudeDelta: 0.0922, longitudeDelta: 0.0421});
+    const [filterLocalization, setFilterLocalization] = useState("");
+    const [filterWish, setFilterWish] = useState("");
+    const mapRef = useRef(null);
+    const [selectedId, setSelectedId] = useState(null);
+    const [selectedItemName, setSelectedItemName] = useState("");
+
+    const vehicules = [
+        {
+            key: '1',
+            name: 'Catamarans',
+            thumbnail: require('../assets/catamarans.jpg'),
+            selected:false,
+        },
+        {
+            key: '2',
+            name: 'Yacht',
+            thumbnail: require('../assets/yacht.jpeg'),
+            selected:false,
+        },
+
+        {
+            key: '3',
+            name: 'Voilier',
+            thumbnail: require('../assets/voilier.jpg'),
+            selected:false,
+        },
+        {
+            key: '4',
+            name: 'Bateau de plaisance',
+            thumbnail: require('../assets/plaisance.jpg'),
+            selected:false,
+        },
+        {
+            key: '5',
+            name: 'Jet-Ski',
+            thumbnail: require('../assets/jetski.jpg'),
+            selected:false,
+        },
+        {
+            key: '6',
+            name: 'Semi-Rigide',
+            thumbnail: require('../assets/semirigide.png'),
+            selected:false,
+        },
+    ]
+
+    const renderItem = ({ item }) => {
+        const backgroundColor = item.key === selectedId ? "#48B781" : "#ffffff";
+        const color = item.key === selectedId ? 'white' : 'black';
+
+        return (
+            <FilterItem
+                item={item}
+                onPress={() => {
+                    setSelectedId(item.key)
+                    setSelectedItemName(item.name)
+                }}
+                backgroundColor={{ backgroundColor }}
+                textColor={{ color }}
+            />
+        );
+    };
+
+
 
     const searchResult = () => {
 
-
         axios.post("http://192.168.1.24:3000/api/search", {
-            query: searchQuery
+            query: searchQuery,
+            localizationFilter:filterLocalization,
+            typeFilter:selectedItemName,
         }).then(response => {
             navigation.navigate('Results', {
                 results:response.data,
             });
         })
+    }
 
 
+    const getRegion = (item) => {
+
+
+        if(item.address.streetName !== undefined){
+            setFilterLocalization(item.address.freeformAddress)
+        } else if(item.address.municipality !== undefined) {
+            setFilterLocalization(item.address.municipality)
+        } else if(item.address.country !== undefined){
+            setFilterLocalization(item.address.country)
+        } else {
+            console.log("Error")
+        }
+
+        const ASPECT_RATIO = 500 / 700;
+
+        const lat = parseFloat(item.position.lat);
+        const lng = parseFloat(item.position.lon);
+
+        let southEast;
+        let northWest;
+
+        if(item.boundingBox !== undefined){
+            southEast = parseFloat(item.boundingBox.btmRightPoint.lat);
+            northWest = parseFloat(item.boundingBox.topLeftPoint.lat);
+        } else {
+            southEast = parseFloat(item.viewport.btmRightPoint.lat);
+            northWest = parseFloat(item.viewport.topLeftPoint.lat);
+        }
+
+        const latDelta = northWest - southEast;
+        const lngDelta = latDelta * ASPECT_RATIO;
+
+        setRegion({latitude: lat, longitude: lng, latitudeDelta: latDelta, longitudeDelta: lngDelta})
 
     }
 
     return (
         <View style={styles.container}>
 
-            <ScrollView contentInsetAdjustmentBehavior="automatic">
-
+            <KeyboardAwareScrollView>
                 <View style={styles.search}>
                     <TextInput style={styles.search.searchbar} onChangeText={(query) => setQuery(query)} placeholderTextColor="#9e9e9e" placeholder={"Nom de bateau, capacités à bord..."}/>
+
                     <TouchableOpacity style={styles.search.searchButton} onPress={() => {searchResult()}}>
                         <Text style={styles.search.searchButtonText}>Lancer la recherche</Text>
                     </TouchableOpacity>
                 </View>
+                <Text style={styles.sectionHeader}>Par destinations</Text>
 
-                <View style={styles.countrySection}>
-                    <Text style={styles.countrySectionHeader}>Par destinations</Text>
-                    <View style={styles.countryGrid}>
-                        <TouchableOpacity style={styles.countryGrid.countryItem}>
-                            <View style={styles.countryItemContent}>
-                                <View style={styles.countryItemContent.countryItemLabel}>
-                                    <Text style={styles.countryItemContent.countryItemLabelText}>
-                                        Côte d'Azur
-                                    </Text>
-                                </View>
-                                <Image
-                                    source={{
-                                        uri: "https://picsum.photos/id/50/200",
-                                    }}
-                                    style={styles.countryItemContent.countryBackgroundImage}
-                                />
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.countryGrid.countryItem}>
-                            <View style={styles.countryItemContent}>
-                                <View style={styles.countryItemContent.countryItemLabel}>
-                                    <Text style={styles.countryItemContent.countryItemLabelText}>
-                                        Guadeloupe
-                                    </Text>
-                                </View>
-                                <Image
-                                    source={{
-                                        uri: "https://picsum.photos/id/200/200",
-                                    }}
-                                    style={styles.countryItemContent.countryBackgroundImage}
-                                />
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.countryGrid.countryItem}>
-                            <View style={styles.countryItemContent}>
-                                <View style={styles.countryItemContent.countryItemLabel}>
-                                    <Text style={styles.countryItemContent.countryItemLabelText}>
-                                        Guyane
-                                    </Text>
-                                </View>
-                                <Image
-                                    source={{
-                                        uri: "https://picsum.photos/id/20/200",
-                                    }}
-                                    style={styles.countryItemContent.countryBackgroundImage}
-                                />
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.countryGrid.countryItem}>
-                            <View style={styles.countryItemContent}>
-                                <View style={styles.countryItemContent.countryItemLabel}>
-                                    <Text style={styles.countryItemContent.countryItemLabelText}>
-                                        Martinique
-                                    </Text>
-                                </View>
-                                <Image
-                                    source={{
-                                        uri: "https://picsum.photos/id/506/200",
-                                    }}
-                                    style={styles.countryItemContent.countryBackgroundImage}
-                                />
-                            </View>
-                        </TouchableOpacity>
+                <Modal
+                    animationType="slide"
+                    visible={modalState}
+                    transparent={true}
+                    onRequestClose={() => { setModalState(!modalState); }}
+                >
+                    <View style={styles.modalBooking}>
+                        <AutoCompleteInput
+                            inputProps={{
+                                placeholder: "Un pays, une ville, une adresse...",
+                                placeholderTextColor: '#aeaeae',
+                                fontSize:25,
+                                display:"flex",
+                                paddingLeft:10,
+                                justifyContent:"center",
+                                alignItems:"center",
+                                height:80
+                            }}
+                            onPress={(item) => {
+                                getRegion(item)
+                            }}
+                            inputContainerStyle={{
+                                width:"100%",
+                                height:80,
+                                color:"#000",
+                                fontSize:30,
+                            }}
+                            listItemsContainerStyle={{
+                                padding: 0,
+                                marginHorizontal: 10,
+                                height:"100%"
+                            }}
+                            tomtomOptions={{ key: "PIFKrwjNy0lZNmUGGaD6J8dWXWTxzrSi" }}
+                        />
+                        <MapView
+                            pitchEnabled={false} rotateEnabled={false} zoomEnabled={false} scrollEnabled={false}
+                            ref={mapRef}
+                            style={{width: 700, height: 700}}
+                            initialRegion={region}
+                            region={region}
+                            onRegionChange={(coordinate) => setRegion(coordinate)}
+                        />
                     </View>
-                </View>
+                    <TouchableOpacity onPress={() => setModalState(false)} style={styles.button}>
+                        <Text style={styles.button.buttonText}>Fermer la carte</Text>
+                    </TouchableOpacity>
+                </Modal>
+
+                <TouchableOpacity onPress={() => setModalState(true)} style={styles.button}>
+                    <Text style={styles.button.buttonText}>Sélectionnez la destination</Text>
+                </TouchableOpacity>
+
                 <SafeAreaView style={styles.types}>
                     <ScrollView
                         showsVerticalScrollIndicator={false}
@@ -205,21 +228,54 @@ const SearchScreen = ({ navigation }) => {
                         <Text style={styles.sectionHeader}>Par types de véhicules</Text>
                         <FlatList
                             style={styles.searchItemContainer}
-                            data={SECTIONS}
-                            renderItem={({ item }) => <SearchItem item={item} />}
+                            data={vehicules}
+                            extraData={selectedId}
+                            renderItem={renderItem}
                             horizontal={true}
                             showsVerticalScrollIndicator={false}
                             showsHorizontalScrollIndicator={false}
                         />
                     </ScrollView>
                 </SafeAreaView>
-            </ScrollView>
+            </KeyboardAwareScrollView>
         </View>
     );
 };
 
 
 const styles = StyleSheet.create({
+    overlay:{
+        width:"100%",
+        height:"100%",
+        backgroundColor:"rgb(72,183,129)",
+        position:"absolute",
+        zIndex:9999
+    },
+    button:{
+        width:"90%",
+        height:60,
+        backgroundColor:"#48B781",
+        marginLeft:20,
+        marginBottom: 50,
+        display:"flex",
+        justifyContent:"center",
+        alignItems:"center",
+        borderRadius:15,
+        buttonText:{
+            color:"#FFF",
+            fontSize:20
+        }
+    },
+    modalBooking:{
+        width:"100%",
+        height:700,
+        backgroundColor:"#efefef",
+        paddingVertical:100,
+        borderBottomRightRadius:50,
+        borderBottomLeftRadius:50,
+        display:"flex",
+        alignItems:"center"
+    },
     container: {
         flex: 1,
     },
@@ -260,8 +316,16 @@ const styles = StyleSheet.create({
         fontWeight: '800',
         fontSize: 25,
         color: '#000',
-        marginVertical:40,
-        marginLeft:15
+        marginTop:40,
+        marginLeft:15,
+        marginBottom:30
+    },
+    subHeaderText: {
+        fontWeight: '800',
+        fontSize: 20,
+        color: '#000',
+        marginLeft:15,
+        marginVertical:20,
     },
     searchItemContainer:{
         marginLeft:15,
@@ -272,6 +336,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#FFF",
         height:200,
         width:250,
+        position:"relative",
         itemPhoto: {
             width: 250,
             height: 150,
@@ -379,6 +444,29 @@ const styles = StyleSheet.create({
     }
 
 
+});
+
+const selector = StyleSheet.create({
+    inputIOS: {
+        width:"90%",
+        height:70,
+        backgroundColor:"#FFF",
+        borderRadius: 10,
+        paddingLeft:10,
+        fontSize:20,
+        marginLeft:15
+    },
+    inputAndroid: {
+        fontSize: 16,
+        paddingHorizontal: 8,
+        paddingVertical: 8,
+        borderWidth: 0.5,
+        borderColor: 'purple',
+        borderRadius: 8,
+        color: 'black',
+        paddingRight: 30, // to ensure the text is never behind the icon
+        backgroundColor:"#FFF"
+    },
 });
 
 
