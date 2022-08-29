@@ -174,7 +174,6 @@ const NavigationRight = ({navigation}) => {
                     }}
                 />
             }
-
         </Tab.Navigator>
     )
 };
