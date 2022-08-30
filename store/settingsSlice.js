@@ -7,12 +7,14 @@ const settingsSlice = createSlice({
         ownerTenantState:false
     },
     reducers: {
-        toggleLeftHandMode(state){
-           state.leftHandMode = !state.leftHandMode
+        toggleLeftHandMode(state, action){
+            state.leftHandMode = action.payload.hand
         },
         toggleTenantOwner(state){
            state.ownerTenantState = !state.ownerTenantState
         }
+
+
     }
 })
 export const { toggleLeftHandMode, toggleTenantOwner } = settingsSlice.actions

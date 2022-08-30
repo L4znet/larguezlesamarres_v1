@@ -1,17 +1,30 @@
 import {Text, View, TouchableOpacity, StyleSheet, TextInput} from "react-native";
 import { signInWithEmailAndPassword  } from "firebase/auth";
 import {useState} from "react";
-import { auth } from '../firebase'
+import {auth, db} from '../firebase'
+import {doc, getDoc} from "firebase/firestore";
+import {toggleLeftHandMode} from "../store/settingsSlice";
+import {useDispatch} from "react-redux";
 
 const LoginScreen = ({ navigation }) => {
 
     const [email, setEmail] = useState("charly.escalona1@hotmail.fr");
     const [password, setPassword] = useState("Uzkq24051000");
-    const login = () => {
+    const dispatch = useDispatch()
 
+
+
+    const login = () => {
         signInWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
+            .then(async (userCredential) => {
+
+                const docRef = doc(db, "users", auth.currentUser.uid);
+                const docSnap = await getDoc(docRef);
+
+                let hand = docSnap.data().hand
+
                 navigation.navigate('Feed')
+                dispatch(toggleLeftHandMode({hand:hand}))
             })
             .catch((error) => {
                 const errorCode = error.code;

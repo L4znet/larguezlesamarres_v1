@@ -1,22 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {FlatList, Image, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View,} from 'react-native';
-import {AntDesign} from '@expo/vector-icons';
+import {FlatList, Image, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
 import {useDispatch, useSelector} from "react-redux";
-import {onAuthStateChanged} from "@firebase/auth";
 import {auth, db, query} from "../firebase";
-import axios from "axios";
-import CardOffer from "../components/CardOffer";
-import {doc, getDoc, onSnapshot, collection} from "firebase/firestore";
-import * as PropTypes from "prop-types";
+import {doc, onSnapshot} from "firebase/firestore";
 
 const FavoriteScreen = ({navigation}) => {
 
-    const ownerTenantState = useSelector((state) => state.settings.ownerTenantState)
-    const offerSent = useSelector((state) => state.statesLoad.offerSent)
     const [favorites, setFavoriteData] = useState(null);
     const [isRefreshing, setIsRefreshing] = useState(false);
-    const dispatch = useDispatch()
-
 
     const createJson = (data) => {
 

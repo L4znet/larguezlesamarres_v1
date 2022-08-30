@@ -1,33 +1,41 @@
 import React, {useEffect, useState} from 'react';
 import {FlatList, StyleSheet, Text, TouchableHighlight, View,} from 'react-native';
 import {AntDesign} from '@expo/vector-icons';
-import {useDispatch, useSelector} from "react-redux";
 import {onAuthStateChanged} from "@firebase/auth";
-import {auth, collection, query} from "../firebase";
+import {auth, collection, db, query} from "../firebase";
 import axios from "axios";
 import CardOffer from "../components/CardOffer";
+import {useSelector} from "react-redux";
 
 const FeedScreen = ({navigation}) => {
 
-    const leftHandMode = useSelector((state) => state.settings.leftHandMode)
     const ownerTenantState = useSelector((state) => state.settings.ownerTenantState)
     const offerSent = useSelector((state) => state.statesLoad.offerSent)
     const [offers, setOffers] = useState([]);
     const [isRefreshing, setIsRefreshing] = useState(false);
-    const dispatch = useDispatch()
+    const leftHandModeState = useSelector((state) => state.settings.leftHandMode)
+
 
     const [isUserLogged, setUserLogged] = useState(false);
     /**
      * Permet de savoir si l'utilisateur est connecté ou non, et de détecter un éventuel changement d'état (déconnexion etc..)
      *
      */
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            setUserLogged(true)
-        } else {
-            setUserLogged(false)
+    useEffect(() => {
+        let unsubscribe = onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                setUserLogged(true)
+            } else {
+                setUserLogged(false)
+            }
+        });
+
+        return () => {
+            unsubscribe()
         }
-    });
+    }, [])
+
+
 
     /**
      * Method qui va load les données, on détecte via un paramètre si cette méthode est exécuté dans le cas d'un pull to refresh
@@ -35,12 +43,13 @@ const FeedScreen = ({navigation}) => {
      * @param refreshingTriggered
      */
     const getOffer = (refreshingTriggered = false) => {
-        if(refreshingTriggered){
+        if (refreshingTriggered) {
             setIsRefreshing(true)
         }
         axios.get("http://192.168.1.24:3000/api/posts").then(r => {
+
             setOffers(r.data)
-            if(refreshingTriggered){
+            if (refreshingTriggered) {
                 setIsRefreshing(false)
             }
         })
@@ -55,15 +64,14 @@ const FeedScreen = ({navigation}) => {
         getOffer(true)
     }
 
-
     useEffect(() => {
-        const controller = new AbortController();
-        controller.signal;
         getOffer()
-        return () => controller.abort();
+        return () => {
+            setOffers([])
+        }
     }, [])
 
-    const RecentlyItem = ({ item }) => {
+    const RecentlyItem = ({item}) => {
 
         return (
             <CardOffer item={item} navigation={navigation}/>
@@ -77,8 +85,8 @@ const FeedScreen = ({navigation}) => {
                 fontWeight: '800',
                 fontSize: 25,
                 color: '#000',
-                marginVertical:40,
-                marginLeft:15,
+                marginVertical: 40,
+                marginLeft: 15,
             }}> Les derniers ajouts</Text>
         );
     }
@@ -88,7 +96,7 @@ const FeedScreen = ({navigation}) => {
             <FlatList
                 style={styles.recentlyItemContainer}
                 data={offers}
-                renderItem={({ item }) => <RecentlyItem item={item} />}
+                renderItem={({item}) => <RecentlyItem item={item}/>}
                 keyExtractor={item => item.key}
                 ListHeaderComponent={FlatList_Header}
                 showsVerticalScrollIndicator={false}
@@ -101,8 +109,8 @@ const FeedScreen = ({navigation}) => {
                     activeOpacity={1}
                     underlayColor="#5ee1a0"
                     onPress={() => navigation.navigate('AddPost')}
-                    style={[styles.addButton, leftHandMode ? {right:20} : {left:20}]}>
-                    <AntDesign name="plus" size={30} color="white" />
+                    style={[styles.addButton, leftHandModeState ? {right: 20} : {left: 20}]}>
+                    <AntDesign name="plus" size={30} color="white"/>
                 </TouchableHighlight>
             }
         </View>

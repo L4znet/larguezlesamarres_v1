@@ -6,27 +6,20 @@ import {Image, Text, TouchableOpacity, View, StyleSheet} from "react-native";
 
 const CardOffer = ({item, navigation}) => {
 
-
-    console.log(item.pricePer)
-
-
     switch (item.pricePer) {
         case 'week':
-            item.pricePer = "semaine"
+            item.pricePer = "Semaine"
             break;
         case 'month':
-            item.pricePer = "mois"
+            item.pricePer = "Mois"
             break;
         case 'day':
-            item.pricePer = "jour"
+            item.pricePer = "Jour"
             break;
         case 'hour':
-            item.pricePer = "heure"
+            item.pricePer = "Heure"
             break;
     }
-
-
-
 
     return (
         <TouchableOpacity style={styles.recentlyItem} onPress={() => {

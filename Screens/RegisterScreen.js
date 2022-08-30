@@ -1,4 +1,4 @@
-import {Text, View, TouchableOpacity, StyleSheet, TextInput} from "react-native";
+import {Text, View, TouchableOpacity, StyleSheet, TextInput, ScrollView} from "react-native";
 import {createUserWithEmailAndPassword, updateProfile} from "firebase/auth";
 import {useState} from "react";
 import {auth, doc, setDoc, db} from '../firebase.js'
@@ -10,9 +10,9 @@ const RegisterScreen = ({ navigation }) => {
     const [username, setUsername] = useState("Charly");
     const [password, setPassword] = useState("Uzkq24051000");
     const [confirmPassword, setConfirmPassword] = useState("Uzkq24051000");
-    const [roleState, setRoleState] = useState(false);
-    const toggleChoice = () => {
-        setRoleState(!roleState)
+    const [handState, setHandState] = useState(false);
+    const toggleChoice = (value) => {
+        setHandState(value)
     }
 
     const register = async () => {
@@ -30,7 +30,7 @@ const RegisterScreen = ({ navigation }) => {
                         })
 
                         await setDoc(doc(db, "users", user.uid), {
-                            role: roleState,
+                            hand: handState,
                         });
                     })
                     .catch((error) => {
@@ -46,19 +46,32 @@ const RegisterScreen = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <View style={styles.form}>
-                <Text style={styles.form.title}>Inscrivez-vous</Text>
 
                 <KeyboardAwareScrollView>
-                    <TextInput style={styles.form.input} onChangeText={(username) => setUsername(username)} placeholderTextColor="#9e9e9e" placeholder="Nom d'utilisateur" />
-                    <TextInput style={styles.form.input} onChangeText={(email) => setEmail(email)} placeholderTextColor="#9e9e9e" placeholder="E-mail" />
-                    <TextInput style={styles.form.input} onChangeText={(password) => setPassword(password)} placeholderTextColor="#9e9e9e" placeholder="Mot de passe" />
-                    <TextInput style={styles.form.input} onChangeText={(confirmPassword) => setConfirmPassword(confirmPassword)} placeholderTextColor="#9e9e9e" placeholder="Confirmation du mot de passe" />
-                    <TouchableOpacity
-                        style={styles.form.button}
-                        onPress={() => register() }>
-                        <Text style={styles.form.buttonText}>Inscription</Text>
-                    </TouchableOpacity>
+                    <ScrollView>
+                        <Text style={styles.form.title}>Inscription</Text>
+                        <Text style={styles.text}>Pour vous proposer une expérience de navigation optimale</Text>
+                        <Text style={styles.smallText}>Nous aimerions savoir, vous êtes gaucher(ère) ou droiter(ère) ?</Text>
+                        <View style={styles.choices}>
+                            <TouchableOpacity onPress={() => toggleChoice(true) }>
+                                <Text style={[styles.choices.choiceItem(handState), styles.choices.choiceItemFalse(handState)]}>Gaucher(ère)</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => toggleChoice(false) }>
+                                <Text style={[styles.choices.choiceItem(handState), styles.choices.choiceItemTrue(handState)]}>Droitier(ère)</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <TextInput style={styles.form.input} onChangeText={(username) => setUsername(username)} placeholderTextColor="#9e9e9e" placeholder="Nom d'utilisateur" />
+                        <TextInput style={styles.form.input} onChangeText={(email) => setEmail(email)} placeholderTextColor="#9e9e9e" placeholder="E-mail" />
+                        <TextInput style={styles.form.input} onChangeText={(password) => setPassword(password)} placeholderTextColor="#9e9e9e" placeholder="Mot de passe" />
+                        <TextInput style={styles.form.input} onChangeText={(confirmPassword) => setConfirmPassword(confirmPassword)} placeholderTextColor="#9e9e9e" placeholder="Confirmation du mot de passe" />
+                        <TouchableOpacity
+                            style={styles.form.button}
+                            onPress={() => register() }>
+                            <Text style={styles.form.buttonText}>Inscription</Text>
+                        </TouchableOpacity>
+                    </ScrollView>
                 </KeyboardAwareScrollView>
+
             </View>
         </View>
 
@@ -75,31 +88,37 @@ const styles = StyleSheet.create({
         flexDirection:"row",
         justifyContent:"center",
         alignItems:"center",
-        marginTop:20,
+        marginTop:10,
         choiceItem:(state)=> ({
-            height:80,
+            height:50,
             display:"flex",
             paddingHorizontal: 20,
             textAlign:"center",
-            lineHeight:80,
+            lineHeight:50,
             fontWeight:"bold",
             fontSize:17,
+            width:200,
         }),
         choiceItemTrue:(state)=> ({
-            backgroundColor: state === true ? "#ffffff" : "#48B781",
-            color: state === false ? "#ffffff" : "#000",
+            backgroundColor: state === true ? "#FFF" : "#48B781",
+            color: state === true ? "#000" : "#ffffff",
         }),
         choiceItemFalse:(state)=> ({
-            backgroundColor: state === false ? "#ffffff" : "#48B781",
+            backgroundColor: state === true ? "#48B781" : "#FFF",
             color: state === true ? "#FFF" : "#000",
         }),
     },
-    smallText:{
-        fontSize:25,
-        paddingHorizontal:20,
+    text:{
+        fontSize:23,
         width:"100%",
         textAlign:"center",
-        marginTop:30
+        marginVertical:10
+    },
+    smallText:{
+        fontSize:18,
+        paddingHorizontal:5,
+        width:"100%",
+        textAlign:"center",
     },
     form:{
         title:{

@@ -5,7 +5,7 @@ import { useState} from "react";
 import {ref} from "firebase/storage";
 import ToggleSwitch from "toggle-switch-react-native";
 import {useDispatch, useSelector} from "react-redux";
-import {toggleLeftHandMode, toggleTenantOwner} from "../store/settingsSlice";
+import { toggleTenantOwner} from "../store/settingsSlice";
 
 const logout = () => {
     signOut(auth).then(() => {})
@@ -46,10 +46,6 @@ const ProfileScreen = ({navigation}) => {
         });
     });
 
-    const leftMode = () => {
-        dispatch(toggleLeftHandMode())
-    }
-
     const ownerTenantMode = () => {
         dispatch(toggleTenantOwner())
     }
@@ -72,32 +68,14 @@ const ProfileScreen = ({navigation}) => {
                 </View>
                 <View  style={[{marginTop:30, paddingBottom:30}, styles.options]}>
                     <Text style={styles.options.title}>Options d'interface</Text>
-                    <ToggleSwitch
-                        style={{marginTop:30, width:"100%", display:"flex", flexDirection:"row", alignItems:"center", justifyContent:"center"}}
-                        isOn={leftHandMode}
-                        onColor="green"
-                        offColor="#a9a9a9"
-                        label="Mode gaucher"
-                        labelStyle={{ color: "black", fontWeight: "900", fontSize:20 }}
-                        size="large"
-                        animationSpeed={150}
-                        onToggle={isOn => leftMode()}
-                    />
                     <View style={{display:"flex", flexDirection:"column", width:"100%"}}>
-                        <ToggleSwitch
-                            style={{marginTop:40, width:"100%", alignItems:"center", justifyContent:"center"}}
-                            isOn={ownerTenantState}
-                            onColor="green"
-                            offColor="blue"
-                            animationSpeed={150}
-                            label="Changer de type de profil"
-                            labelStyle={{ color: "black", fontWeight: "900", fontSize:20, marginBottom:20 }}
-                            size="large"
-                            onToggle={isOn => ownerTenantMode()}
-                        />
-                        <View style={{display:"flex", flexDirection:"row", justifyContent:"space-between", marginTop:20}}>
-                            <Text style={{fontSize:20, marginLeft:60}}> Propriétaire</Text>
-                            <Text style={{fontSize:20, marginRight:80}}>Locataire</Text>
+                        <View style={styles.choices}>
+                            <TouchableOpacity onPress={() => ownerTenantMode() }>
+                                <Text style={[styles.choices.choiceItem(ownerTenantState), styles.choices.choiceItemTrue(ownerTenantState)]}>Propriétaire</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => ownerTenantMode() }>
+                                <Text style={[styles.choices.choiceItem(ownerTenantState), styles.choices.choiceItemFalse(ownerTenantState)]}>Locataire</Text>
+                            </TouchableOpacity>
                         </View>
                     </View>
                 </View>
@@ -119,6 +97,32 @@ const ProfileScreen = ({navigation}) => {
 
 
 const styles = StyleSheet.create({
+    choices:{
+        width:"100%",
+        display:"flex",
+        flexDirection:"row",
+        justifyContent:"center",
+        alignItems:"center",
+        marginTop:40,
+        choiceItem:(state)=> ({
+            height:80,
+            display:"flex",
+            paddingHorizontal: 20,
+            textAlign:"center",
+            lineHeight:80,
+            fontWeight:"bold",
+            fontSize:20,
+            width:200,
+        }),
+        choiceItemTrue:(state)=> ({
+            backgroundColor: state === true ? "#ffffff" : "#48B781",
+            color: state === false ? "#ffffff" : "#000",
+        }),
+        choiceItemFalse:(state)=> ({
+            backgroundColor: state === false ? "#ffffff" : "#48B781",
+            color: state === true ? "#FFF" : "#000",
+        }),
+    },
     container:{
         flex:1,
         display:"flex",

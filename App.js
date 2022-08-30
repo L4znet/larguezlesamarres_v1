@@ -10,7 +10,7 @@ import HomeScreen from './Screens/HomeScreen'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {onAuthStateChanged} from "@firebase/auth";
 import {auth} from "./firebase";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import EditProfilScreen from "./Screens/EditProfilScreen";
 import {Provider, useSelector} from "react-redux";
 import {store} from "./store";
@@ -25,20 +25,28 @@ import {StripeProvider} from "@stripe/stripe-react-native";
 import * as Linking from 'expo-linking';
 import DeclineBookingScreen from "./Screens/DeclineBooking";
 const Stack = createNativeStackNavigator();
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import ForgotScreen from "./Screens/ForgotScreen";
 import ContactSupportScreen from "./Screens/ContactSupportScreen";
 
 export default function App() {
 
     const [isUserLogged, setUserLogged] = useState(false);
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            setUserLogged(true)
-        } else {
-            setUserLogged(false)
+
+    useEffect(() => {
+        let unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                setUserLogged(true)
+            } else {
+                setUserLogged(false)
+            }
+        });
+
+        return() => {
+            unsubscribe()
         }
-    });
+    }, [])
+
+
 
     const toastConfig = {
         success: (props) => (
@@ -80,13 +88,6 @@ export default function App() {
         )
     };
 
-    const prefix = Linking.createURL('/');
-
-    const linking = {
-        prefixes: [prefix],
-    };
-
-
     return (
         <StripeProvider
             publishableKey="pk_test_51LVn5JL4arJWUBbmOSkZphMuSBftatz3P54TS9huruc1XOCN1RqcIrLUmHxNwEtWE7R1m48BWkXoqEgDLCixHP2y00MPGChMt8"
@@ -94,7 +95,7 @@ export default function App() {
             merchantIdentifier="merchant.com.larguezlesamarres"
         >
             <Provider store={store}>
-                <NavigationContainer linking={linking} fallback={<Text>Loading....</Text>}>
+                <NavigationContainer>
                     <Stack.Navigator>
                         <Stack.Screen name="Tabs" component={Navigation} options={{ headerShown: false }} />
                         <Stack.Screen name="Login" options={{

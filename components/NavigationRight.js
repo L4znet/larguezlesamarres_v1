@@ -30,17 +30,15 @@ import FavoriteScreen from "../Screens/FavoriteScreen";
 const Tab = createBottomTabNavigator();
 
 
-const NavigationRight = ({navigation}) => {
+const NavigationRight = (props) => {
+
+    const navigation = props.navigation
 
     const ownerTenantState = useSelector((state) => state.settings.ownerTenantState)
-    const [isUserLogged, setUserLogged] = useState(false);
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            setUserLogged(true)
-        } else {
-            setUserLogged(false)
-        }
-    });
+
+
+
+    let isUserLogged = props.isUserLogged
 
     let [fontsLoaded] = useFonts({
         Syne_400Regular,
