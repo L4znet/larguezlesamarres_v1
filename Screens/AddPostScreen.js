@@ -13,11 +13,9 @@ import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import RNPickerSelect from 'react-native-picker-select';
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import axios from "axios";
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import {getDownloadURL, ref, uploadBytes} from "firebase/storage";
 import {auth, storage} from "../firebase";
 
-import {useDispatch, useSelector} from "react-redux";
 import AutoCompleteInput from "react-native-tomtom-autocomplete";
 import MapView from "react-native-maps";
 import * as ImagePicker from "expo-image-picker";

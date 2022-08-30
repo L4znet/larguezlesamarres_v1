@@ -1,11 +1,8 @@
 import {Text, View, TouchableOpacity, StyleSheet, TextInput, TouchableHighlight, ImageBackground} from "react-native";
-import {createUserWithEmailAndPassword, sendPasswordResetEmail, updateProfile} from "firebase/auth";
 import {useState} from "react";
 import {auth, doc, setDoc, db} from '../firebase.js'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import axios from "axios";
-import RNPickerSelect from "react-native-picker-select";
-import BouncyCheckbox from "react-native-bouncy-checkbox";
 
 const ContactSupportScreen = ({ navigation }) => {
 
