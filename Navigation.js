@@ -23,8 +23,6 @@ const Navigation = ({navigation}) => {
         }
     });
 
-    console.log("leftHandModeState", leftHandModeState)
-
     return (
         <>
             {leftHandModeState === false &&
