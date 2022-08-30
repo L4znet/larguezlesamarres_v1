@@ -58,6 +58,7 @@ const SearchScreen = ({ navigation }) => {
     const [selectWishName, setSelectedWishName] = useState("");
     const [selectedTypeName, setSelectedTypeName] = useState("");
     const [filterLocalization, setFilterLocalization] = useState("");
+    const [localization, setLocalization] = useState("En attente du lieu de location...");
 
     const vehicules = [
         {
@@ -272,9 +273,11 @@ const SearchScreen = ({ navigation }) => {
                     </TouchableOpacity>
                 </Modal>
 
+                <View style={styles.localizationDisplay} placeholderTextColor="#9e9e9e"><Text style={styles.localizationDisplay.text}>{filterLocalization ? filterLocalization : 'En attente du lieu de location...'}</Text></View>
                 <TouchableOpacity onPress={() => setModalState(true)} style={styles.button}>
-                    <Text style={styles.button.buttonText}>Sélectionnez la destination</Text>
+                    <Text style={styles.button.buttonText}>Sélectionnez le lieu de location</Text>
                 </TouchableOpacity>
+
 
                 <SafeAreaView style={styles.types}>
                     <ScrollView
@@ -317,6 +320,23 @@ const SearchScreen = ({ navigation }) => {
 
 
 const styles = StyleSheet.create({
+    localizationDisplay:{
+        backgroundColor:"#ffffff",
+        marginLeft:20,
+        marginTop:30,
+        paddingLeft:20,
+        borderTopLeftRadius:15,
+        borderTopRightRadius:15,
+        fontSize:16,
+        height:70,
+        display:"flex",
+        justifyContent:"center",
+        width:"90%",
+        text:{
+            color:"#000000",
+            fontSize:20
+        }
+    },
     button:{
         width:"90%",
         height:60,
@@ -326,7 +346,8 @@ const styles = StyleSheet.create({
         display:"flex",
         justifyContent:"center",
         alignItems:"center",
-        borderRadius:15,
+        borderBottomLeftRadius:15,
+        borderBottomRightRadius:15,
         buttonText:{
             color:"#FFF",
             fontSize:20
