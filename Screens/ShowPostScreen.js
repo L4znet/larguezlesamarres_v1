@@ -22,6 +22,7 @@ import {
     updateDoc,
     deleteField,
     getDoc,
+    getDocs,
     query,
     onSnapshot
 } from "firebase/firestore";
@@ -41,8 +42,7 @@ const ShowPostScreen = ({ route, navigation }) => {
     const [endDate, setEndDate] = useState(null);
     const [favoriteState, setFavoriteState] = useState(false);
     const [favorites, setFavorites] = useState([]);
-
-
+    const [locked, setLock] = useState(null);
 
 
     const askForBooking = async () => {
@@ -65,8 +65,6 @@ const ShowPostScreen = ({ route, navigation }) => {
             }).then(r => {
                 setLoading(false)
             })
-
-            // On envoi un message à la création d'une réservation que l'on updatera par la suite
 
             const messageRef = collection(db, "messages/")
             await setDoc(doc(messageRef, auth.currentUser.uid), {
@@ -97,8 +95,11 @@ const ShowPostScreen = ({ route, navigation }) => {
 
     useEffect(() => {
 
+        checkBooking(id)
+
         const unsubscribe = onSnapshot(doc(db, "posts", id), (doc) => {
             setOffer(doc.data())
+
             if(doc.data().favorites !== undefined){
 
                 setFavorites(doc.data().favorites)
@@ -119,11 +120,6 @@ const ShowPostScreen = ({ route, navigation }) => {
     }, [])
 
 
-
-
-
-    console.log(offer)
-
     switch (offer.pricePer) {
         case 'week':
             offer.pricePer = "semaine"
@@ -138,8 +134,6 @@ const ShowPostScreen = ({ route, navigation }) => {
             offer.pricePer = "heure"
             break;
     }
-
-
 
 
     const plurialLabel = (value, label) => {
@@ -191,6 +185,21 @@ const ShowPostScreen = ({ route, navigation }) => {
                 }
             }
         }
+    }
+
+    const checkBooking = async (offerId) => {
+        const q = query(collection(db, "posts", offerId, "bookings"));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+
+            if(doc.data().tenantId === auth.currentUser.uid){ setLock(true) } else { setLock(false) }
+
+            if(doc.data().ownerId === auth.currentUser.uid){ setLock(true) } else { setLock(false) }
+
+            if(doc.data().state === 1){ setLock(true) } else { setLock(false) }
+
+        });
+
     }
 
 
@@ -319,8 +328,6 @@ const ShowPostScreen = ({ route, navigation }) => {
                             <Text style={styles.thumbnail.buttonLabel}><Ionicons name="chevron-back" size={35} color="white" /></Text>
                         </TouchableOpacity>
 
-
-
                         {favoriteState === true &&
                             <TouchableOpacity style={[styles.thumbnail.favoriteButton, styles.thumbnail.unlike]} onPress={() => { removeFromFavorite() }}>
                                 <Text style={styles.thumbnail.buttonLabel}><AntDesign name="heart" size={25} color="#5ad194" /></Text>
@@ -358,7 +365,7 @@ const ShowPostScreen = ({ route, navigation }) => {
                     {offer.equipments}
                 </Text>
 
-                {ownerTenantState === true && auth.currentUser.uid !== offer.authorId &&
+                {ownerTenantState === true && auth.currentUser.uid !== offer.authorId && locked === false &&
                     <TouchableOpacity style={styles.single.contact} onPress={() => {
                         setModalVisible(true)
                     }}>
@@ -369,6 +376,11 @@ const ShowPostScreen = ({ route, navigation }) => {
                     </TouchableOpacity>
                 }
                 {ownerTenantState === false &&
+                    <View style={styles.disabled}>
+                        <Text style={styles.disabled.disabledLabel}>Demander la disponibilité</Text>
+                    </View>
+                }
+                {locked === true &&
                     <View style={styles.disabled}>
                         <Text style={styles.disabled.disabledLabel}>Demander la disponibilité</Text>
                     </View>
