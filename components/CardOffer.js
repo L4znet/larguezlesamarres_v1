@@ -16,9 +16,6 @@ const CardOffer = ({item, navigation}) => {
         case 'day':
             item.pricePer = "Jour"
             break;
-        case 'hour':
-            item.pricePer = "Heure"
-            break;
     }
 
     return (

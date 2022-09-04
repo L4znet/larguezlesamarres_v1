@@ -173,7 +173,6 @@ const AddPostScreen = ({ navigation }) => {
                                 {label: 'Mois', value: 'month'},
                                 {label: 'Semaine', value: 'week'},
                                 {label: 'Jour', value: 'day'},
-                                {label: 'Heure', value: 'hour'},
                             ]}
                         />
                     </View>
