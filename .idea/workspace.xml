@@ -3,7 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="5a86a01f-4fc1-4bc5-90a6-11d5188f116f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Navigation.js" beforeDir="false" afterPath="$PROJECT_DIR$/Navigation.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Screens/DeclineBooking.js" beforeDir="false" afterPath="$PROJECT_DIR$/Screens/DeclineBooking.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Screens/OfferBookingScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/Screens/OfferBookingScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Screens/PaymentScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/Screens/PaymentScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Screens/ProfileScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/Screens/ProfileScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Screens/ShowPostScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/Screens/ShowPostScreen.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,18 +31,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "C:/Users/Charly/Desktop/react-native-searchable-picker",
-    "nodejs_package_manager_path": "yarn",
-    "settings.editor.selected.configurable": "reference.settings.ide.settings.notifications",
-    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\IntelliJ IDEA 2022.1\\plugins\\JavaScriptLanguage\\jsLanguageServicesImpl\\external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Charly/Desktop/react-native-searchable-picker&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.ide.settings.notifications&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\IntelliJ IDEA 2022.1\\plugins\\JavaScriptLanguage\\jsLanguageServicesImpl\\external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Charly\Desktop\larguezlesamarres\Screens" />
@@ -58,7 +62,8 @@
       <workItem from="1658956520768" duration="5233000" />
       <workItem from="1659399426734" duration="4706000" />
       <workItem from="1660838665101" duration="726000" />
-      <workItem from="1661013335698" duration="99432000" />
+      <workItem from="1661013335698" duration="100016000" />
+      <workItem from="1662115625714" duration="16223000" />
     </task>
     <servers />
   </component>

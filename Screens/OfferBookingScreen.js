@@ -1,9 +1,9 @@
 import * as React from 'react';
-import {Text, View, StyleSheet, FlatList, TouchableOpacity, Modal} from 'react-native';
-import {useEffect, useState} from "react";
+import {useEffect, useState} from 'react';
+import {FlatList, Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {db} from "../firebase";
 import GestureRecognizer from "react-native-swipe-gestures";
-import {collection, doc, getDoc, query, updateDoc, onSnapshot, setDoc} from "firebase/firestore";
+import {collection, doc, getDoc, onSnapshot, query, setDoc, updateDoc} from "firebase/firestore";
 
 
 const bookedItemHeader = () => {
@@ -49,14 +49,14 @@ const BookedItem = (props) => {
             <View style={{flexDirection:"column", display:"flex"}}>
                 <Text style={styles.item.title}>{props.postData.title}</Text>
                 <Text style={[styles.state, style]}>{state}</Text>
-                <Text style={styles.item.askedBy}>Demande envoyée par</Text>
+                <Text style={styles.item.askedBy}>Demande envoyée par {props.bookingClicked.tenantName}</Text>
             </View>
         </TouchableOpacity>
     )
 }
 
 
-const OfferBookingScreen = ({route}) => {
+const OfferBookingScreen = ({route, navigation}) => {
 
     const {offerId} = route.params
     const [modalState, setModalState] = useState(false);
@@ -84,11 +84,10 @@ const OfferBookingScreen = ({route}) => {
 
 
     useEffect( () => {
-
-        const controller = new AbortController();
-        controller.signal;
         getBooking()
-        return () => controller.abort();
+        return () => {
+            setBookingData([])
+        }
     }, [])
 
     const sendMessage = async (state, startDate = null, endDate = null) => {
@@ -114,10 +113,8 @@ const OfferBookingScreen = ({route}) => {
             }).then(() => {
             });
         }
-
-
-
     }
+
 
     const updateStateBooking = async (id, state) => {
         const bookingToAcceptRef = doc(db, "posts", offerId, "bookings", id);
@@ -128,18 +125,20 @@ const OfferBookingScreen = ({route}) => {
     const acceptBooking = async (id) => {
         await updateStateBooking(id, "1")
         await sendMessage("1")
+        setModalState(false)
     }
 
 
     const declineBooking = async (id) => {
         await updateStateBooking(id, "-1")
         await sendMessage("-1")
+        setModalState(false)
     }
 
 
 
     const openModal = () => {
-        setModalState(!modalState)
+        setModalState(true)
     }
 
     const formatDate = (dateToFormat) => {
@@ -158,38 +157,58 @@ const OfferBookingScreen = ({route}) => {
                     transparent={true}
                     onRequestClose={() => {
                         setModalState(!modalState);
-                    }}
-                >
+                    }}>
                     <View style={styles.modalBooking}>
-                        <Text style={[styles.label, styles.explainingLabel]}>
-                            <Text style={styles.bold}>John Doe</Text> aimerait
-                        </Text>
 
-                        <Text style={[styles.label, styles.explainingLabel]}>
-                            réserver votre bateau
-                        </Text>
-                        <Text style={[styles.label, styles.explainingLabel, {marginTop:10}]}>
-                            <Text style={styles.bold}>"{postData.boatName}"</Text>
-                        </Text>
-                        <Text style={[styles.label, styles.explainingLabel, {marginTop:10}]}>
-                            du <Text style={styles.bold}>{formatDate(clickedBooking.startDate)}</Text>
-                        </Text>
-                        <Text style={[styles.label, styles.explainingLabel]}>
-                            au <Text style={styles.bold}>{formatDate(clickedBooking.endDate)}</Text>
-                        </Text>
-                        <Text style={[styles.label, styles.explainingLabel, {marginVertical:20}]}>Vous pouvez</Text>
+                        {parseInt(clickedBooking.state) === 0 &&
+                            <>
+                                <Text style={[styles.label, styles.explainingLabel]}>
+                                    <Text style={styles.bold}>{clickedBooking.tenantName}</Text> aimerait
+                                </Text>
 
-                        <TouchableOpacity style={[styles.button, styles.accept]} onPress={() => acceptBooking(clickedBooking.id)}>
-                            <Text style={styles.button_label}>Accepter</Text>
-                        </TouchableOpacity>
-                        <Text style={[styles.label, styles.explainingLabel]}>ou</Text>
-                        <TouchableOpacity style={[styles.button, styles.decline]} onPress={() => declineBooking((clickedBooking.id))}>
-                            <Text style={styles.button_label}>Refuser</Text>
-                        </TouchableOpacity>
-                        <Text style={[styles.label, styles.explainingLabel]}>sa demande.</Text>
-                        <Text style={[styles.label, styles.explainingLabel, {marginTop:30}]}>Ensuite nous informerons </Text>
-                        <Text style={[styles.label, styles.explainingLabel]}><Text style={[styles.label, styles.bold]}>John Doe</Text> </Text>
-                        <Text style={[styles.label, styles.explainingLabel]}> de votre réponse :)</Text>
+                                <Text style={[styles.label, styles.explainingLabel]}>
+                                    réserver votre bateau
+                                </Text>
+                                <Text style={[styles.label, styles.explainingLabel, {marginTop:10}]}>
+                                    <Text style={styles.bold}>"{postData.boatName}"</Text>
+                                </Text>
+                                <Text style={[styles.label, styles.explainingLabel, {marginTop:10}]}>
+                                    du <Text style={styles.bold}>{formatDate(clickedBooking.startDate)}</Text>
+                                </Text>
+                                <Text style={[styles.label, styles.explainingLabel]}>
+                                    au <Text style={styles.bold}>{formatDate(clickedBooking.endDate)}</Text>
+                                </Text>
+                                <Text style={[styles.label, styles.explainingLabel, {marginVertical:20}]}>Vous pouvez</Text>
+
+                                <TouchableOpacity style={[styles.button, styles.accept]} onPress={() => acceptBooking(clickedBooking.id)}>
+                                    <Text style={styles.button_label}>Accepter</Text>
+                                </TouchableOpacity>
+                                <Text style={[styles.label, styles.explainingLabel]}>ou</Text>
+                                <TouchableOpacity style={[styles.button, styles.decline]} onPress={() => declineBooking((clickedBooking.id))}>
+                                    <Text style={styles.button_label}>Refuser</Text>
+                                </TouchableOpacity>
+
+                                <Text style={[styles.label, styles.explainingLabel]}>sa demande.</Text>
+                                <Text style={[styles.label, styles.explainingLabel, {marginTop:30}]}>Ensuite nous informerons </Text>
+                                <Text style={[styles.label, styles.explainingLabel]}><Text style={[styles.label, styles.bold]}>{clickedBooking.tenantName}</Text> </Text>
+                                <Text style={[styles.label, styles.explainingLabel]}> de votre réponse :)</Text>
+                            </>
+                        }
+
+                        {parseInt(clickedBooking.state) !== 0 &&
+                            <>
+                                <Text style={[styles.label, styles.explainingLabel]}>
+                                    <Text style={styles.bold}>Vous avez déjà transmis votre réponse pour cette réservation.</Text>
+                                </Text>
+                                <Text style={[styles.label, styles.explainingLabel]}>
+                                    <Text>Cette réservation prendra fin le </Text>
+                                </Text>
+                                <Text style={[styles.label, styles.explainingLabel]}>
+                                    <Text style={styles.bold}>{formatDate(clickedBooking.endDate)}</Text>
+                                </Text>
+                            </>
+                        }
+
                     </View>
                 </Modal>
             </GestureRecognizer>
@@ -280,10 +299,13 @@ const styles = StyleSheet.create({
         title:{
             fontSize:20,
             width:"100%",
-            fontWeight:"bold"
+            fontWeight:"bold",
+            marginBottom:5
         },
         askedBy:{
-            fontSize:18
+            fontSize:18,
+            fontWeight:"bold",
+            marginTop:5
         },
     },
 

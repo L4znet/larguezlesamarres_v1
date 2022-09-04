@@ -132,7 +132,7 @@ const PaymentScreen = ({route, navigation}) => {
     return (
         <View style={styles.box}>
             <Text style={styles.title}>Génial !</Text>
-            <Text style={styles.title}>Votre réservation a été acceptée par <Text style={styles.bold}>John Doe</Text></Text>
+            <Text style={styles.title}>Votre réservation a été acceptée !</Text>
             <Text style={styles.subtitle}>Vous pourrez profiter de votre bateau </Text>
             <Text style={styles.subtitle}>Du <Text style={styles.bold}> {formatDate(item.startDate)} </Text> </Text>
             <Text style={styles.subtitle}>Au <Text style={styles.bold}>{formatDate(item.endDate)}</Text> </Text>

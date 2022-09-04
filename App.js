@@ -24,11 +24,17 @@ import PaymentScreen from "./Screens/PaymentScreen";
 import {StripeProvider} from "@stripe/stripe-react-native";
 import * as Linking from 'expo-linking';
 import DeclineBookingScreen from "./Screens/DeclineBooking";
+
 const Stack = createNativeStackNavigator();
 import ForgotScreen from "./Screens/ForgotScreen";
 import ContactSupportScreen from "./Screens/ContactSupportScreen";
 
+import { LogBox } from 'react-native';
+
+
 export default function App() {
+
+    LogBox.ignoreLogs(['AsyncStorage']);
 
     const [isUserLogged, setUserLogged] = useState(false);
 

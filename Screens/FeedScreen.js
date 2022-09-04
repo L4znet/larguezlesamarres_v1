@@ -6,6 +6,7 @@ import {auth, collection, db, query} from "../firebase";
 import axios from "axios";
 import CardOffer from "../components/CardOffer";
 import {useSelector} from "react-redux";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const FeedScreen = ({navigation}) => {
 
@@ -42,7 +43,7 @@ const FeedScreen = ({navigation}) => {
      *
      * @param refreshingTriggered
      */
-    const getOffer = (refreshingTriggered = false) => {
+    const getOffers = (refreshingTriggered = false) => {
         if (refreshingTriggered) {
             setIsRefreshing(true)
         }
@@ -61,11 +62,11 @@ const FeedScreen = ({navigation}) => {
      */
     const getRefresh = () => {
         setIsRefreshing(true)
-        getOffer(true)
+        getOffers(true)
     }
 
     useEffect(() => {
-        getOffer()
+        getOffers()
         return () => {
             setOffers([])
         }

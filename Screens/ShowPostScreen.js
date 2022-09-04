@@ -22,6 +22,7 @@ import {
     updateDoc,
     deleteField,
     getDoc,
+    getDocs,
     query,
     onSnapshot
 } from "firebase/firestore";
@@ -41,8 +42,7 @@ const ShowPostScreen = ({ route, navigation }) => {
     const [endDate, setEndDate] = useState(null);
     const [favoriteState, setFavoriteState] = useState(false);
     const [favorites, setFavorites] = useState([]);
-
-
+    const [alreadyBookedState, setAlreadyBooked] = useState(false);
 
 
     const askForBooking = async () => {
@@ -66,8 +66,6 @@ const ShowPostScreen = ({ route, navigation }) => {
                 setLoading(false)
             })
 
-            // On envoi un message à la création d'une réservation que l'on updatera par la suite
-
             const messageRef = collection(db, "messages/")
             await setDoc(doc(messageRef, auth.currentUser.uid), {
                 [auth.currentUser.uid]:{
@@ -83,6 +81,7 @@ const ShowPostScreen = ({ route, navigation }) => {
                     endDate:endDate,
                     bookingId:bookingId,
                     tenantId:auth.currentUser.uid,
+                    tenantName: auth.currentUser.displayName,
                     id:uid(3)
                 }
             }, {
@@ -97,8 +96,11 @@ const ShowPostScreen = ({ route, navigation }) => {
 
     useEffect(() => {
 
+        checkBooking(id)
+
         const unsubscribe = onSnapshot(doc(db, "posts", id), (doc) => {
             setOffer(doc.data())
+
             if(doc.data().favorites !== undefined){
 
                 setFavorites(doc.data().favorites)
@@ -119,11 +121,6 @@ const ShowPostScreen = ({ route, navigation }) => {
     }, [])
 
 
-
-
-
-    console.log(offer)
-
     switch (offer.pricePer) {
         case 'week':
             offer.pricePer = "semaine"
@@ -138,8 +135,6 @@ const ShowPostScreen = ({ route, navigation }) => {
             offer.pricePer = "heure"
             break;
     }
-
-
 
 
     const plurialLabel = (value, label) => {
@@ -193,6 +188,17 @@ const ShowPostScreen = ({ route, navigation }) => {
         }
     }
 
+    const checkBooking = async (offerId) => {
+        const q = query(collection(db, "posts", offerId, "bookings"));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+
+            if(doc.data().state === 1){ setAlreadyBooked(true) } else { setAlreadyBooked(false) }
+
+        });
+
+    }
+
 
     const hideStartDatePicker = () => {
         setStartDatePickerVisibility(false);
@@ -240,6 +246,45 @@ const ShowPostScreen = ({ route, navigation }) => {
         let favoriteToUpdate = favorites.map(function(x){return x.replace(auth.currentUser.uid, '');});
         const postRef = doc(db, "posts", offer.key);
         await updateDoc(postRef, {favorites: favoriteToUpdate});
+    }
+
+
+    const renderBookButton = () => {
+
+        if(auth.currentUser.uid !== offer.authorId){
+            if(ownerTenantState === true) {
+                if(alreadyBookedState){
+                    return (
+                        <TouchableOpacity style={styles.single.contact} onPress={() => { setModalVisible(true) }}>
+                            {loading &&
+                                <ActivityIndicator size="large" color="#FFF" />
+                            }
+                            <Text style={styles.single.contactLabel}>Demander la disponibilité</Text>
+                        </TouchableOpacity>
+                    )
+                } else {
+                    return (
+                        <View style={styles.disabled}>
+                            <Text style={styles.disabled.disabledLabel}>Vous avez déjà réservé cette offre.</Text>
+                        </View>
+                    )
+                }
+            } else {
+                return (
+                    <View style={styles.disabled}>
+                        <Text style={styles.disabled.disabledLabel}>Vous ne pouvez pas réserver en tant que propriétaire</Text>
+                    </View>
+                )
+            }
+        } else {
+            return (
+                <View style={styles.disabled}>
+                    <Text style={styles.disabled.disabledLabel}>Vous ne pouvez pas réserver votre offre</Text>
+                </View>
+            )
+        }
+
+
 
     }
 
@@ -319,17 +364,19 @@ const ShowPostScreen = ({ route, navigation }) => {
                             <Text style={styles.thumbnail.buttonLabel}><Ionicons name="chevron-back" size={35} color="white" /></Text>
                         </TouchableOpacity>
 
-
-
-                        {favoriteState === true &&
-                            <TouchableOpacity style={[styles.thumbnail.favoriteButton, styles.thumbnail.unlike]} onPress={() => { removeFromFavorite() }}>
-                                <Text style={styles.thumbnail.buttonLabel}><AntDesign name="heart" size={25} color="#5ad194" /></Text>
-                            </TouchableOpacity>
-                        }
-                        {favoriteState === false &&
-                            <TouchableOpacity style={[styles.thumbnail.favoriteButton, styles.thumbnail.like]} onPress={() => { addToFavorite() }}>
-                                <Text style={styles.thumbnail.buttonLabel}><AntDesign name="heart" size={25} color="white" /></Text>
-                            </TouchableOpacity>
+                        {offer.authorId === auth.currentUser.uid &&
+                            <>
+                                {favoriteState === true &&
+                                    <TouchableOpacity style={[styles.thumbnail.favoriteButton, styles.thumbnail.unlike]} onPress={() => { removeFromFavorite() }}>
+                                        <Text style={styles.thumbnail.buttonLabel}><AntDesign name="heart" size={25} color="#5ad194" /></Text>
+                                    </TouchableOpacity>
+                                }
+                                {favoriteState === false &&
+                                    <TouchableOpacity style={[styles.thumbnail.favoriteButton, styles.thumbnail.like]} onPress={() => { addToFavorite() }}>
+                                        <Text style={styles.thumbnail.buttonLabel}><AntDesign name="heart" size={25} color="white" /></Text>
+                                    </TouchableOpacity>
+                                }
+                            </>
                         }
 
                     </View>
@@ -358,26 +405,7 @@ const ShowPostScreen = ({ route, navigation }) => {
                     {offer.equipments}
                 </Text>
 
-                {ownerTenantState === true && auth.currentUser.uid !== offer.authorId &&
-                    <TouchableOpacity style={styles.single.contact} onPress={() => {
-                        setModalVisible(true)
-                    }}>
-                        {loading &&
-                            <ActivityIndicator size="large" color="#FFF" />
-                        }
-                        <Text style={styles.single.contactLabel}>Demander la disponibilité</Text>
-                    </TouchableOpacity>
-                }
-                {ownerTenantState === false &&
-                    <View style={styles.disabled}>
-                        <Text style={styles.disabled.disabledLabel}>Demander la disponibilité</Text>
-                    </View>
-                }
-                {ownerTenantState === true && auth.currentUser.uid === offer.authorId &&
-                    <View style={styles.disabled}>
-                        <Text style={styles.disabled.disabledLabel}>Demander la disponibilité</Text>
-                    </View>
-                }
+                {renderBookButton()}
 
             </View>
         </ScrollView>

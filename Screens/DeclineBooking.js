@@ -8,7 +8,6 @@ const DeclineBookingScreen = ({route, navigation}) => {
         <View style={styles.box}>
             <Text style={styles.title}>Malheureusement</Text>
             <Text style={styles.title}>votre réservation a été refusée</Text>
-            <Text style={styles.title}>par <Text style={styles.bold}>John Doe</Text></Text>
             <Text style={styles.subtitle}>Vous pouvez réserver de nouveau depuis l'offre</Text>
             <TouchableOpacity onPress={() => {
                 navigation.navigate("ShowPost", {
