@@ -131,9 +131,6 @@ const ShowPostScreen = ({ route, navigation }) => {
         case 'day':
             offer.pricePer = "jour"
             break;
-        case 'hour':
-            offer.pricePer = "heure"
-            break;
     }
 
 

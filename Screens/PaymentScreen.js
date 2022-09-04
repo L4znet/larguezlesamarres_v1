@@ -39,9 +39,6 @@ const PaymentScreen = ({route, navigation}) => {
             case "month":
                 total = price * monthDiff(startDate, endDate)
                 break
-            case "hour":
-                total = price * diff_days
-                break
             case "day":
                 total = price * diff_days
                 break
