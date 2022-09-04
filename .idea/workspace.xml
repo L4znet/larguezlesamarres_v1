@@ -3,10 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="5a86a01f-4fc1-4bc5-90a6-11d5188f116f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Screens/FeedScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/Screens/FeedScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Screens/DeclineBooking.js" beforeDir="false" afterPath="$PROJECT_DIR$/Screens/DeclineBooking.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Screens/OfferBookingScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/Screens/OfferBookingScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Screens/PaymentScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/Screens/PaymentScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Screens/ProfileScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/Screens/ProfileScreen.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Screens/ShowPostScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/Screens/ShowPostScreen.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,7 +63,7 @@
       <workItem from="1659399426734" duration="4706000" />
       <workItem from="1660838665101" duration="726000" />
       <workItem from="1661013335698" duration="100016000" />
-      <workItem from="1662115625714" duration="8190000" />
+      <workItem from="1662115625714" duration="16223000" />
     </task>
     <servers />
   </component>
