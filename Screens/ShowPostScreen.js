@@ -42,7 +42,7 @@ const ShowPostScreen = ({ route, navigation }) => {
     const [endDate, setEndDate] = useState(null);
     const [favoriteState, setFavoriteState] = useState(false);
     const [favorites, setFavorites] = useState([]);
-    const [locked, setLock] = useState(null);
+    const [alreadyBookedState, setAlreadyBooked] = useState(false);
 
 
     const askForBooking = async () => {
@@ -81,6 +81,7 @@ const ShowPostScreen = ({ route, navigation }) => {
                     endDate:endDate,
                     bookingId:bookingId,
                     tenantId:auth.currentUser.uid,
+                    tenantName: auth.currentUser.displayName,
                     id:uid(3)
                 }
             }, {
@@ -192,11 +193,7 @@ const ShowPostScreen = ({ route, navigation }) => {
         const querySnapshot = await getDocs(q);
         querySnapshot.forEach((doc) => {
 
-            if(doc.data().tenantId === auth.currentUser.uid){ setLock(true) } else { setLock(false) }
-
-            if(doc.data().ownerId === auth.currentUser.uid){ setLock(true) } else { setLock(false) }
-
-            if(doc.data().state === 1){ setLock(true) } else { setLock(false) }
+            if(doc.data().state === 1){ setAlreadyBooked(true) } else { setAlreadyBooked(false) }
 
         });
 
@@ -249,6 +246,45 @@ const ShowPostScreen = ({ route, navigation }) => {
         let favoriteToUpdate = favorites.map(function(x){return x.replace(auth.currentUser.uid, '');});
         const postRef = doc(db, "posts", offer.key);
         await updateDoc(postRef, {favorites: favoriteToUpdate});
+    }
+
+
+    const renderBookButton = () => {
+
+        if(auth.currentUser.uid !== offer.authorId){
+            if(ownerTenantState === true) {
+                if(alreadyBookedState){
+                    return (
+                        <TouchableOpacity style={styles.single.contact} onPress={() => { setModalVisible(true) }}>
+                            {loading &&
+                                <ActivityIndicator size="large" color="#FFF" />
+                            }
+                            <Text style={styles.single.contactLabel}>Demander la disponibilité</Text>
+                        </TouchableOpacity>
+                    )
+                } else {
+                    return (
+                        <View style={styles.disabled}>
+                            <Text style={styles.disabled.disabledLabel}>Vous avez déjà réservé cette offre.</Text>
+                        </View>
+                    )
+                }
+            } else {
+                return (
+                    <View style={styles.disabled}>
+                        <Text style={styles.disabled.disabledLabel}>Vous ne pouvez pas réserver en tant que propriétaire</Text>
+                    </View>
+                )
+            }
+        } else {
+            return (
+                <View style={styles.disabled}>
+                    <Text style={styles.disabled.disabledLabel}>Vous ne pouvez pas réserver votre offre</Text>
+                </View>
+            )
+        }
+
+
 
     }
 
@@ -328,15 +364,19 @@ const ShowPostScreen = ({ route, navigation }) => {
                             <Text style={styles.thumbnail.buttonLabel}><Ionicons name="chevron-back" size={35} color="white" /></Text>
                         </TouchableOpacity>
 
-                        {favoriteState === true &&
-                            <TouchableOpacity style={[styles.thumbnail.favoriteButton, styles.thumbnail.unlike]} onPress={() => { removeFromFavorite() }}>
-                                <Text style={styles.thumbnail.buttonLabel}><AntDesign name="heart" size={25} color="#5ad194" /></Text>
-                            </TouchableOpacity>
-                        }
-                        {favoriteState === false &&
-                            <TouchableOpacity style={[styles.thumbnail.favoriteButton, styles.thumbnail.like]} onPress={() => { addToFavorite() }}>
-                                <Text style={styles.thumbnail.buttonLabel}><AntDesign name="heart" size={25} color="white" /></Text>
-                            </TouchableOpacity>
+                        {offer.authorId === auth.currentUser.uid &&
+                            <>
+                                {favoriteState === true &&
+                                    <TouchableOpacity style={[styles.thumbnail.favoriteButton, styles.thumbnail.unlike]} onPress={() => { removeFromFavorite() }}>
+                                        <Text style={styles.thumbnail.buttonLabel}><AntDesign name="heart" size={25} color="#5ad194" /></Text>
+                                    </TouchableOpacity>
+                                }
+                                {favoriteState === false &&
+                                    <TouchableOpacity style={[styles.thumbnail.favoriteButton, styles.thumbnail.like]} onPress={() => { addToFavorite() }}>
+                                        <Text style={styles.thumbnail.buttonLabel}><AntDesign name="heart" size={25} color="white" /></Text>
+                                    </TouchableOpacity>
+                                }
+                            </>
                         }
 
                     </View>
@@ -365,31 +405,7 @@ const ShowPostScreen = ({ route, navigation }) => {
                     {offer.equipments}
                 </Text>
 
-                {ownerTenantState === true && auth.currentUser.uid !== offer.authorId && locked === false &&
-                    <TouchableOpacity style={styles.single.contact} onPress={() => {
-                        setModalVisible(true)
-                    }}>
-                        {loading &&
-                            <ActivityIndicator size="large" color="#FFF" />
-                        }
-                        <Text style={styles.single.contactLabel}>Demander la disponibilité</Text>
-                    </TouchableOpacity>
-                }
-                {ownerTenantState === false &&
-                    <View style={styles.disabled}>
-                        <Text style={styles.disabled.disabledLabel}>Demander la disponibilité</Text>
-                    </View>
-                }
-                {locked === true &&
-                    <View style={styles.disabled}>
-                        <Text style={styles.disabled.disabledLabel}>Demander la disponibilité</Text>
-                    </View>
-                }
-                {ownerTenantState === true && auth.currentUser.uid === offer.authorId &&
-                    <View style={styles.disabled}>
-                        <Text style={styles.disabled.disabledLabel}>Demander la disponibilité</Text>
-                    </View>
-                }
+                {renderBookButton()}
 
             </View>
         </ScrollView>
