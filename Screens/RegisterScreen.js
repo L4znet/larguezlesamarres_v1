@@ -3,6 +3,7 @@ import {createUserWithEmailAndPassword, updateProfile} from "firebase/auth";
 import {useState} from "react";
 import {auth, doc, setDoc, db} from '../firebase.js'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import Toast from "react-native-toast-message";
 
 const RegisterScreen = ({ navigation }) => {
 
@@ -15,7 +16,9 @@ const RegisterScreen = ({ navigation }) => {
         setHandState(value)
     }
 
+
     const register = async () => {
+
         if (email !== "" && password !== "" && username !== "" && confirmPassword !== "") {
             if (confirmPassword === password) {
                 createUserWithEmailAndPassword(auth, email, password)
@@ -31,14 +34,57 @@ const RegisterScreen = ({ navigation }) => {
                         await setDoc(doc(db, "users", user.uid), {
                             hand: handState,
                         });
+                        Toast.show({
+                            type: 'success',
+                            text1: 'Génial !',
+                            text2: 'Vous êtes inscrit !'
+                        });
+
+                        navigation.navigate("Login")
+
                     })
                     .catch((error) => {
-                        const errorCode = error.code;
-                        const errorMessage = error.message;
+                        if(error.code === "auth/email-already-in-use"){
+                            Toast.show({
+                                type: 'error',
+                                text1: 'Compte existant',
+                                text2: 'Il y a déjà un compte avec cet e-mail'
+                            });
+                        } else if(error.code === "auth/weak-password"){
+                            Toast.show({
+                                type: 'error',
+                                text1: "Mot de passe pas assez fort",
+                                text2: "6 caractères minimum pour le mot de passe"
+                            });
+                        } else if(error.code === "auth/invalid-email"){
+                            Toast.show({
+                                type: 'error',
+                                text1: 'Email invalide',
+                                text2: "L'email saisi est invalide"
+                            });
+                        } else {
+                            Toast.show({
+                                type: 'error',
+                                text1: 'Une erreur a été rencontrée',
+                                text2: 'Veuillez réessayer'
+                            });
+                        }
                     });
 
-                navigation.navigate("Login")
+
+            } else {
+                Toast.show({
+                    type: 'error',
+                    text1: 'Mots de passe',
+                    text2: 'Ils ne sont pas identique'
+                });
             }
+        } else {
+            Toast.show({
+                type: 'error',
+                text1: 'Champs vide',
+                text2: 'Vous devez remplir tous les champs'
+            });
         }
     }
 

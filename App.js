@@ -266,24 +266,22 @@ export default function App() {
                                           component={PaymentScreen}
                             />
                         }
-                        {isUserLogged === false &&
-                            <Stack.Screen options={{
-                                title: 'Larguez les amarres',
-                                headerStyle: {
-                                    backgroundColor: '#48B781'
-                                },
-                                headerTintColor: '#fff',
-                                headerTitleStyle: {
-                                    fontWeight: 'bold',
-                                    fontFamily:"Syne_700Bold",
-                                    color:"#FFF",
-                                    fontSize:20
-                                },
-                                headerBackVisible:false }}
-                                          name="ForgotPassword"
-                                          component={ForgotScreen}
-                            />
-                        }
+                        <Stack.Screen options={{
+                            title: 'Larguez les amarres',
+                            headerStyle: {
+                                backgroundColor: '#48B781'
+                            },
+                            headerTintColor: '#fff',
+                            headerTitleStyle: {
+                                fontWeight: 'bold',
+                                fontFamily:"Syne_700Bold",
+                                color:"#FFF",
+                                fontSize:20
+                            },
+                            headerBackVisible:false }}
+                                      name="ForgotPassword"
+                                      component={ForgotScreen}
+                        />
                         {isUserLogged === true &&
                             <Stack.Screen options={{
                                 title: 'Larguez les amarres',

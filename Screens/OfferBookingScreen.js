@@ -91,28 +91,15 @@ const OfferBookingScreen = ({route, navigation}) => {
     }, [])
 
     const sendMessage = async (state, startDate = null, endDate = null) => {
-
-        if(state === "1"){
-            const messageRef = collection(db, "messages/")
-            await setDoc(doc(messageRef, clickedBooking.tenantId), {
-                [clickedBooking.id]:{
-                    state:state,
-                }
-            }, {
-                merge: true
-            }).then(() => {
-            });
-        } else {
-            const messageRef = collection(db, "messages/")
-            await setDoc(doc(messageRef, clickedBooking.tenantId), {
-                [clickedBooking.id]:{
-                    state:state,
-                }
-            }, {
-                merge: true
-            }).then(() => {
-            });
-        }
+        const messageRef = collection(db, "messages/")
+        await setDoc(doc(messageRef, clickedBooking.tenantId), {
+            [clickedBooking.id]:{
+                state:state,
+            }
+        }, {
+            merge: true
+        }).then(() => {
+        });
     }
 
 

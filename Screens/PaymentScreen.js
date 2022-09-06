@@ -24,29 +24,32 @@ const PaymentScreen = ({route, navigation}) => {
         let start = item.startDate
         let end = item.endDate
 
-        let startDate = new Date(start);
-        let endDate = new Date(end);
+        let startDate = new Date(start.seconds*1000);
+        let endDate = new Date(end.seconds*1000);
 
         let diff_time = endDate.getTime() - startDate.getTime();
         let diff_days = diff_time / (1000 * 3600 * 24);
 
         let total = 0;
+        console.log(perPrice)
 
         switch (perPrice) {
             case "semaine":
                 total = price * (diff_days / 7)
                 break
-            case "month":
+            case "mois":
                 total = price * monthDiff(startDate, endDate)
                 break
-            case "day":
+            case "jour":
                 total = price * diff_days
                 break
         }
 
+        console.log(total)
+
         setTotal(total.toFixed(2))
 
-        const response = await fetch(`http://192.168.1.24:3000/api/payment/payment-sheet`, {
+        const response = await fetch(`https://apilarguezlesamarres.vercel.app/api/payment/payment-sheet`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -101,30 +104,29 @@ const PaymentScreen = ({route, navigation}) => {
 
     const openPaymentSheet = async () => {
         const { error } = await presentPaymentSheet();
-
         if (!error) {
-            // Le paiement a été validée
             await updateState()
+
             navigation.navigate('Booking')
         } else {
-
+            console.log(error)
         }
     };
 
     useEffect(() => {
-        const controller = new AbortController();
-        controller.signal;
+
         initializePaymentSheet()
-        return () => controller.abort();
+
     }, []);
 
 
     const formatDate = (dateToFormat) => {
         let options = { year: 'numeric', month: 'long', day: 'numeric' };
 
-        let date = new Date(dateToFormat)
+        let date = new Date(dateToFormat.seconds*1000)
         return date.toLocaleDateString("fr-FR", options)
     }
+
 
     return (
         <View style={styles.box}>

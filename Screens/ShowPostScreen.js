@@ -89,6 +89,16 @@ const ShowPostScreen = ({ route, navigation }) => {
             }).then(() => {
             });
 
+            Toast.show({
+                type: 'success',
+                text1: 'Génial !',
+                text2: 'Votre proposition a été transmise'
+            });
+
+            navigation.navigate("ShowPost", {
+                id: offer.key,
+            });
+
             setModalVisible(false)
         }
     }
@@ -158,8 +168,8 @@ const ShowPostScreen = ({ route, navigation }) => {
         if(dateToCheck < todayDate){
             Toast.show({
                 type:  'error',
-                text1: 'PAS BON',
-                text2: 'This is some something 👋'
+                text1: "Nom de zeus",
+                text2: 'Vous ne pouvez pas réserver dans le passé'
             });
             return false
         } else if(dateToCheck >= todayDate) {
@@ -176,7 +186,11 @@ const ShowPostScreen = ({ route, navigation }) => {
         } else if(type === "end"){
             if(preventSelectOldDate(date)){
                 if(new Date(date) <= new Date(startDate)){
-                    console.log("Pas bon")
+                    Toast.show({
+                        type:  'error',
+                        text1: "Nom de zeus",
+                        text2: 'Vous ne pouvez pas réserver dans le passé'
+                    });
                 } else {
                     setEndDate(date)
                     hideEndDatePicker()
@@ -186,13 +200,23 @@ const ShowPostScreen = ({ route, navigation }) => {
     }
 
     const checkBooking = async (offerId) => {
+
         const q = query(collection(db, "posts", offerId, "bookings"));
         const querySnapshot = await getDocs(q);
-        querySnapshot.forEach((doc) => {
 
-            if(doc.data().state === 1){ setAlreadyBooked(true) } else { setAlreadyBooked(false) }
+        if(querySnapshot.empty){
+            setAlreadyBooked(false)
+        } else {
+            querySnapshot.forEach((doc) => {
+                if(doc.data().state === "1"){
+                    setAlreadyBooked(true)
+                } else {
+                    setAlreadyBooked(false)
+                }
+            });
 
-        });
+        }
+
 
     }
 
@@ -250,7 +274,7 @@ const ShowPostScreen = ({ route, navigation }) => {
 
         if(auth.currentUser.uid !== offer.authorId){
             if(ownerTenantState === true) {
-                if(alreadyBookedState){
+                if(!alreadyBookedState){
                     return (
                         <TouchableOpacity style={styles.single.contact} onPress={() => { setModalVisible(true) }}>
                             {loading &&
@@ -428,11 +452,11 @@ const modal = StyleSheet.create({
     },
     button_label:{
         color:"#FFF",
-        fontSize:25
+        fontSize:25,
     },
     button_label_disabled:{
         color:"#e6e6e6",
-        fontSize:25
+        fontSize:25,
     },
     modalBooking:{
         width:"100%",
@@ -520,7 +544,9 @@ const styles = StyleSheet.create({
         borderRadius:20,
         disabledLabel:{
             color:"#949494",
-            fontSize:20
+            fontSize:20,
+            textAlign:"center",
+            paddingHorizontal:10
         }
     },
     single:{

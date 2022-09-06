@@ -3,7 +3,6 @@ import {signOut} from "firebase/auth";
 import {auth, db, doc, deleteDoc, storage, deleteObject} from '../firebase'
 import { useState} from "react";
 import {ref} from "firebase/storage";
-import ToggleSwitch from "toggle-switch-react-native";
 import {useDispatch, useSelector} from "react-redux";
 import { toggleTenantOwner} from "../store/settingsSlice";
 
@@ -12,21 +11,24 @@ const logout = () => {
 }
 
 const deleteAccount = async () => {
-    auth.currentUser.delete().then(function () {})
 
-    const fileRef = ref(storage, auth.currentUser.uid);
+    if(auth){
+        auth.currentUser.delete().then(function () {})
 
-    if(fileRef.name !== "default"){
-        const profilPict = ref(storage, fileRef.name);
-        deleteObject(profilPict).then(() => {
-        }).catch((error) => {
-        });
+        const fileRef = ref(storage, auth.currentUser.uid);
+
+        if(fileRef.name !== "default"){
+            const profilPict = ref(storage, fileRef.name);
+            deleteObject(profilPict).then(() => {
+            }).catch((error) => {
+            });
+        }
+
+        await deleteDoc(doc(db, "users", auth.currentUser.uid));
+
+        signOut(auth).then(() => {
+        })
     }
-
-    await deleteDoc(doc(db, "users", auth.currentUser.uid));
-
-    signOut(auth).then(() => {
-    })
 }
 
 
@@ -36,7 +38,6 @@ const ProfileScreen = ({navigation}) => {
 
 
     const [currentUser, setCurrentUser] = useState(JSON.stringify(auth.currentUser));
-    const leftHandMode = useSelector((state) => state.settings.leftHandMode)
     const ownerTenantState = useSelector((state) => state.settings.ownerTenantState)
     const dispatch = useDispatch()
 
