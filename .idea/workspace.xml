@@ -2,17 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5a86a01f-4fc1-4bc5-90a6-11d5188f116f" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Screens/AddPostScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/Screens/AddPostScreen.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Screens/ContactSupportScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/Screens/ContactSupportScreen.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Screens/EditPostScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/Screens/EditPostScreen.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Screens/EditProfilScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/Screens/EditProfilScreen.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Screens/ForgotScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/Screens/ForgotScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Screens/BookingScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/Screens/BookingScreen.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Screens/LoginScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/Screens/LoginScreen.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Screens/OfferBookingScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/Screens/OfferBookingScreen.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Screens/ProfileScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/Screens/ProfileScreen.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Screens/RegisterScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/Screens/RegisterScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Screens/PaymentScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/Screens/PaymentScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Screens/ShowPostScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/Screens/ShowPostScreen.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

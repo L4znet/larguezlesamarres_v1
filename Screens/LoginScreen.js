@@ -25,34 +25,32 @@ const LoginScreen = ({ navigation }) => {
     const login = () => {
 
         if(email !== "" && password !== ""){
-            if(validateEmail(email)){
-                signInWithEmailAndPassword(auth, email, password)
-                    .then(async (userCredential) => {
+            signInWithEmailAndPassword(auth, email, password)
+                .then(async (userCredential) => {
 
-                        const docRef = doc(db, "users", auth.currentUser.uid);
-                        const docSnap = await getDoc(docRef);
+                    const docRef = doc(db, "users", auth.currentUser.uid);
+                    const docSnap = await getDoc(docRef);
 
-                        let hand = docSnap.data().hand
+                    let hand = docSnap.data().hand
 
-                        navigation.navigate('Feed')
-                        dispatch(toggleLeftHandMode({hand:hand}))
-                    })
-                    .catch((error) => {
-                        if(error.code === "auth/wrong-password"){
-                            Toast.show({
-                                type: 'error',
-                                text1: 'Identifiants incorrect',
-                                text2: "Les identifiants saisis sont incorrect"
-                            });
-                        }
-                    });
-            } else {
-                Toast.show({
-                    type: 'error',
-                    text1: "Erreur sur l'adresse e-mail",
-                    text2: "L'adresse e-mail n'est pas valide"
+                    navigation.navigate('Feed')
+                    dispatch(toggleLeftHandMode({hand:hand}))
+                })
+                .catch((error) => {
+                    if(error.code === "auth/wrong-password"){
+                        Toast.show({
+                            type: 'error',
+                            text1: 'Identifiants incorrect',
+                            text2: "Les identifiants saisis sont incorrect"
+                        });
+                    } else if(error.code === "auth/invalid-email"){
+                        Toast.show({
+                            type: 'error',
+                            text1: "Erreur sur l'adresse e-mail",
+                            text2: "L'adresse e-mail n'est pas valide"
+                        });
+                    }
                 });
-            }
         } else {
             Toast.show({
                 type: 'error',
