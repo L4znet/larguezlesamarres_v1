@@ -69,7 +69,7 @@ const AddPostScreen = ({ navigation }) => {
     const savePost = async () => {
 
         try {
-            axios.post("http://192.168.1.24:3000/api/posts", {
+            axios.post("https://apilarguezlesamarres.vercel.app/api/posts", {
                 title: title,
                 boatName: boatName,
                 localization: localization,

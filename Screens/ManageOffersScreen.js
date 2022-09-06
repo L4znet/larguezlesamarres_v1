@@ -15,7 +15,7 @@ const ManageOffers = ({ navigation }) => {
                 {
                     text: "Supprimer",
                     onPress: () => {
-                        axios.delete('http://192.168.1.24:3000/api/posts/' + id)
+                        axios.delete('https://apilarguezlesamarres.vercel.app/api/posts/' + id)
                         navigation.replace('Tabs', { screen: 'Feed' });
                     },
                 },
@@ -29,7 +29,7 @@ const ManageOffers = ({ navigation }) => {
 
 
     const getMyOffers = () => {
-        axios.get('http://192.168.1.24:3000/api/posts/' + auth.currentUser.uid + '/posts').then((response) => {
+        axios.get('https://apilarguezlesamarres.vercel.app/api/posts/' + auth.currentUser.uid + '/posts').then((response) => {
             setOffers(response.data)
         })
     }

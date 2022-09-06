@@ -51,7 +51,7 @@ const ShowPostScreen = ({ route, navigation }) => {
 
             let bookingId = uid(25)
 
-            axios.post("http://192.168.1.24:3000/api/booking/ask", {
+            axios.post("https://apilarguezlesamarres.vercel.app/api/booking/ask", {
                 id: bookingId,
                 offerId: offer.key,
                 offerTitle: offer.title,

@@ -53,7 +53,7 @@ const EditPostScreen = ({ route, navigation }) => {
     const updatePost = async () => {
 
         try {
-            axios.put("http://192.168.1.24:3000/api/posts", {
+            axios.put("https://apilarguezlesamarres.vercel.app/api/posts", {
                 offerId:item.key,
                 title: title,
                 boatName: boatName,

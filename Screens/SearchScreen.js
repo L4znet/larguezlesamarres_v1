@@ -167,7 +167,7 @@ const SearchScreen = ({ navigation }) => {
 
 
     const searchResult = () => {
-        axios.post("http://192.168.1.24:3000/api/search", {
+        axios.post("https://apilarguezlesamarres.vercel.app/api/search", {
             query: searchQuery,
             localizationFilter:filterLocalization,
             typeFilter:selectedTypeName,

@@ -47,7 +47,7 @@ const FeedScreen = ({navigation}) => {
         if (refreshingTriggered) {
             setIsRefreshing(true)
         }
-        axios.get("http://192.168.1.24:3000/api/posts").then(r => {
+        axios.get("https://apilarguezlesamarres.vercel.app/api/posts").then(r => {
 
             setOffers(r.data)
             if (refreshingTriggered) {

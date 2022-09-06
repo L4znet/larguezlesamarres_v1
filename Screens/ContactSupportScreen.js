@@ -10,7 +10,7 @@ const ContactSupportScreen = ({ navigation }) => {
     const contactSupport = async () => {
 
         if (request !== "") {
-            axios.post("http://192.168.1.24:3000/api/support", {
+            axios.post("https://apilarguezlesamarres.vercel.app/api/support", {
                 userId: auth.currentUser.uid,
                 fromEmail: auth.currentUser.email,
                 displayname: auth.currentUser.displayName,
