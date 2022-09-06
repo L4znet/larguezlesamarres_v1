@@ -19,6 +19,7 @@ import {auth, storage} from "../firebase";
 import AutoCompleteInput from "react-native-tomtom-autocomplete";
 import MapView from "react-native-maps";
 import * as ImagePicker from "expo-image-picker";
+import Toast from "react-native-toast-message";
 
 
 const AddPostScreen = ({ navigation }) => {
@@ -68,30 +69,43 @@ const AddPostScreen = ({ navigation }) => {
 
     const savePost = async () => {
 
-        try {
-            axios.post("https://apilarguezlesamarres.vercel.app/api/posts", {
-                title: title,
-                boatName: boatName,
-                localization: localization,
-                capacity: capacity,
-                sleeping: sleeping,
-                cabins: cabins,
-                captain: captain,
-                teams: teams,
-                detail: detail,
-                equipments: equipments,
-                thumbnail:thumbnail,
-                price:price,
-                pricePer:pricePer,
-                type:type,
-                wishs:wishs,
-                authorId:auth.currentUser.uid
-            }).then(() => {
-            })
+        if(title !== "" && boatName !== "" && localization !== "" && capacity !== "" && sleeping !== "" && cabins !== "" && detail !== "" && thumbnail !== "" && pricePer !== "" && price !== "" && type !== "") {
+            try {
+                axios.post("https://apilarguezlesamarres.vercel.app/api/posts", {
+                    title: title,
+                    boatName: boatName,
+                    localization: localization,
+                    capacity: capacity,
+                    sleeping: sleeping,
+                    cabins: cabins,
+                    captain: captain,
+                    teams: teams,
+                    detail: detail,
+                    equipments: equipments,
+                    thumbnail:thumbnail,
+                    price:price,
+                    pricePer:pricePer,
+                    type:type,
+                    wishs:wishs,
+                    authorId:auth.currentUser.uid
+                }).then(() => {
+                })
 
-            navigation.replace('Tabs', { screen: 'Feed' });
-        } catch (error) {
-            console.log("An error has occurred : " + error)
+                Toast.show({
+                    type: 'success',
+                    text1: 'Génial !',
+                    text2: 'Votre offre a bien été ajoutée !'
+                });
+                navigation.replace('Tabs', { screen: 'Feed' });
+            } catch (error) {
+                console.log("An error has occurred : " + error)
+            }
+        } else {
+            Toast.show({
+                type: 'error',
+                text1: 'Champs vide',
+                text2: 'Vous devez remplir tous les champs'
+            });
         }
 
     }

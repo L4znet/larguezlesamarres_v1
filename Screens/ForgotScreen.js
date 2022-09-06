@@ -3,6 +3,7 @@ import {createUserWithEmailAndPassword, sendPasswordResetEmail, updateProfile} f
 import {useState} from "react";
 import {auth, doc, setDoc, db} from '../firebase.js'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import Toast from "react-native-toast-message";
 
 const ForgotScreen = ({ navigation }) => {
 
@@ -12,13 +13,34 @@ const ForgotScreen = ({ navigation }) => {
 
         if (email !== "") {
             sendPasswordResetEmail(auth, email, null)
-                .then(() => {})
+                .then(() => {
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Génial !',
+                        text2: 'Nous avons envoyé un e-mail :)'
+                    });
+
+                    navigation.navigate("Login")
+                })
                 .catch((error) => {
-                    const errorCode = error.code;
-                    const errorMessage = error.message;
+                    if(error.code === "auth/invalid-email"){
+                        Toast.show({
+                            type: 'error',
+                            text1: 'Email invalide',
+                            text2: "L'email saisi est invalide"
+                        });
+                    } else if(error.code === "auth/user-not-found"){
+                        Toast.show({
+                            type: 'error',
+                            text1: 'Compte introuvable',
+                            text2: "Nous n'avons pas trouvé de compte associé à cet e-mail"
+                        });
+                    }
                 });
 
-            navigation.navigate("Login")
+
+
+
         }
     }
 

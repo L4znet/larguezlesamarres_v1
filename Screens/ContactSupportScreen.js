@@ -3,6 +3,7 @@ import {useState} from "react";
 import {auth, doc, setDoc, db} from '../firebase.js'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import axios from "axios";
+import Toast from "react-native-toast-message";
 
 const ContactSupportScreen = ({ navigation }) => {
 
@@ -18,7 +19,19 @@ const ContactSupportScreen = ({ navigation }) => {
             }).then(() => {
             })
 
+            Toast.show({
+                type: 'success',
+                text1: 'Génial !',
+                text2: 'Votre requête a été tranmise'
+            });
+
             navigation.navigate("Profile")
+        } else {
+            Toast.show({
+                type: 'error',
+                text1: 'Requêtes vide',
+                text2: 'Vous devez saisir une requête / un problème'
+            });
         }
     }
 

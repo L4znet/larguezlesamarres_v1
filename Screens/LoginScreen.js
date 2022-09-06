@@ -5,6 +5,7 @@ import {auth, db} from '../firebase'
 import {doc, getDoc} from "firebase/firestore";
 import {toggleLeftHandMode} from "../store/settingsSlice";
 import {useDispatch} from "react-redux";
+import Toast from "react-native-toast-message";
 
 const LoginScreen = ({ navigation }) => {
 
@@ -12,24 +13,55 @@ const LoginScreen = ({ navigation }) => {
     const [password, setPassword] = useState("Uzkq24051000");
     const dispatch = useDispatch()
 
+    const validateEmail = (email) => {
+        return String(email)
+            .toLowerCase()
+            .match(
+                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            );
+    };
 
 
     const login = () => {
-        signInWithEmailAndPassword(auth, email, password)
-            .then(async (userCredential) => {
 
-                const docRef = doc(db, "users", auth.currentUser.uid);
-                const docSnap = await getDoc(docRef);
+        if(email !== "" && password !== ""){
+            if(validateEmail(email)){
+                signInWithEmailAndPassword(auth, email, password)
+                    .then(async (userCredential) => {
 
-                let hand = docSnap.data().hand
+                        const docRef = doc(db, "users", auth.currentUser.uid);
+                        const docSnap = await getDoc(docRef);
 
-                navigation.navigate('Feed')
-                dispatch(toggleLeftHandMode({hand:hand}))
-            })
-            .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
+                        let hand = docSnap.data().hand
+
+                        navigation.navigate('Feed')
+                        dispatch(toggleLeftHandMode({hand:hand}))
+                    })
+                    .catch((error) => {
+                        if(error.code === "auth/wrong-password"){
+                            Toast.show({
+                                type: 'error',
+                                text1: 'Identifiants incorrect',
+                                text2: "Les identifiants saisis sont incorrect"
+                            });
+                        }
+                    });
+            } else {
+                Toast.show({
+                    type: 'error',
+                    text1: "Erreur sur l'adresse e-mail",
+                    text2: "L'adresse e-mail n'est pas valide"
+                });
+            }
+        } else {
+            Toast.show({
+                type: 'error',
+                text1: 'Champs vide',
+                text2: 'Vous devez remplir tous les champs'
             });
+        }
+
+
     }
 
 

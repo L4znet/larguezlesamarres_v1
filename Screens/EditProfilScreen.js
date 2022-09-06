@@ -14,6 +14,7 @@ import {auth, storage} from '../firebase'
 import {useEffect, useState} from "react";
 import * as ImagePicker from 'expo-image-picker';
 import { ref, uploadBytes,getDownloadURL } from "firebase/storage";
+import Toast from "react-native-toast-message";
 
 
 const ProfileScreen = ({navigation}) => {
@@ -42,6 +43,13 @@ const ProfileScreen = ({navigation}) => {
             updateProfile(auth.currentUser, {
                 photoURL: downloadURl
             }).then(() => {
+
+                Toast.show({
+                    type: 'success',
+                    text1: 'Génial !',
+                    text2: 'Votre photo de profil a bien été modifiée'
+                });
+
                 navigation.navigate("Profile")
             }).catch((error) => {
             });
@@ -57,24 +65,64 @@ const ProfileScreen = ({navigation}) => {
             updateProfile(auth.currentUser, {
                 displayName: displayName
             }).then(() => {
+
+                Toast.show({
+                    type: 'success',
+                    text1: 'Génial !',
+                    text2: 'Votre nom a bien été modifié'
+                });
+
                 navigation.navigate("Profile")
             }).catch((error) => {
             });
         }
 
         if(email !== auth.currentUser.email){
-
             updateEmail(auth.currentUser, email).then(() => {
+
+                Toast.show({
+                    type: 'success',
+                    text1: 'Génial !',
+                    text2: 'Votre e-mail a bien été modifié'
+                });
+
                 navigation.navigate("Profile")
             }).catch((error) => {
+
+                if(error.code === "invalid-email"){
+                    Toast.show({
+                        type: 'error',
+                        text1: 'E-mail',
+                        text2: "L'email saisi n'est pas valide"
+                    });
+                } else if(error.code === 'auth/email-already-in-use'){
+                    Toast.show({
+                        type: 'error',
+                        text1: 'E-mail',
+                        text2: "Il y a déjà un compte associé à cet e-mail"
+                    });
+                }
             });
         }
 
         if(password === confirmPassword && password !== ""){
-
             updatePassword(auth.currentUser, password).then(() => {
+
+                Toast.show({
+                    type: 'success',
+                    text1: 'Génial !',
+                    text2: 'Votre mot de passe a bien été modifié'
+                });
+
                 navigation.navigate("Profile")
             }).catch((error) => {
+                if(error.code === "auth/weak-password"){
+                    Toast.show({
+                        type: 'error',
+                        text1: "Mot de passe pas assez fort",
+                        text2: "6 caractères minimum pour le mot de passe"
+                    });
+                }
             });
         }
     }
