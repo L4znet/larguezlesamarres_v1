@@ -46,9 +46,10 @@ const BookedItem = (props) => {
     const goToNextScreen = () => {
 
         if(JSON.parse(props.item).state === "1"){
-            navigation.navigate("Payment", {
+           navigation.navigate("Payment", {
                 item: JSON.parse(props.item)
             });
+
         } else if(JSON.parse(props.item).state === "-1") {
             navigation.navigate("DeclineBooking", {
                 id: JSON.parse(props.item).post.id
@@ -95,15 +96,6 @@ const BookingScreen = ({navigation, route}) => {
         getBooking()
         return () => controller.abort();
     }, [])
-
-
-    const formatDate = (dateToFormat) => {
-        let options = { year: 'numeric', month: 'long', day: 'numeric' };
-
-        let date = new Date(dateToFormat)
-        return date.toLocaleDateString("fr-FR", options)
-    }
-
 
 
     return (
