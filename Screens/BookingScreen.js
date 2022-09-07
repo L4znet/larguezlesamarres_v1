@@ -85,9 +85,6 @@ const BookedItem = (props) => {
                 });
             break;
         }
-
-
-        console.log(state)
     }
 
     return (
