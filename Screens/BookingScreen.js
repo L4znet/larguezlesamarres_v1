@@ -4,6 +4,7 @@ import {useEffect, useState} from "react";
 import {auth, db} from "../firebase";
 import {collection, query, where, onSnapshot} from "firebase/firestore";
 import firebase from "firebase/compat";
+import Toast from "react-native-toast-message";
 
 
 const bookedItemHeader = () => {
@@ -18,7 +19,11 @@ const BookedItem = (props) => {
 
     let state = ""
     let style = ""
-    switch (JSON.parse(props.item).state) {
+
+    console.log(typeof props.item.state)
+
+
+    switch (props.item.state) {
         case '0':
             state = "En attente"
             style = {color: "#3fbdf1"}
@@ -33,7 +38,7 @@ const BookedItem = (props) => {
             break;
         case '3':
             state = "Passée"
-            style = {color: "#bababa"}
+            style = {color: "#aeaeae"}
             break;
         case '-1':
             state = "Refusée"
@@ -45,22 +50,50 @@ const BookedItem = (props) => {
 
     const goToNextScreen = () => {
 
-        if(JSON.parse(props.item).state === "1"){
-           navigation.navigate("Payment", {
-                item: JSON.parse(props.item)
-            });
+        switch (props.item.state) {
+            case "1":
+                navigation.navigate("Payment", {
+                    item: props.item
+                });
+            break;
+            case "2":
+                let todayDate = new Date();
+                let endDate = new Date(props.item.endDate.seconds*1000);
+                const monthTodayDate = todayDate.getMonth()+1;
+                const monthDateToCheck = endDate.getMonth()+1;
+                todayDate = todayDate.getDate()+"-"+monthTodayDate+"-"+todayDate.getFullYear()
+                endDate = endDate.getDate()+"-"+monthDateToCheck+"-"+endDate.getFullYear()
 
-        } else if(JSON.parse(props.item).state === "-1") {
-            navigation.navigate("DeclineBooking", {
-                id: JSON.parse(props.item).post.id
-            });
+                if(todayDate === endDate){
+
+                    navigation.navigate("EndBooking", {
+                        tenantId: props.item.tenantId,
+                        offerId:props.item.post.id,
+                        bookingId:props.item.bookingId,
+                    });
+                } else {
+                    Toast.show({
+                        type: 'info',
+                        text1: 'Revenez plus tard',
+                        text2: 'Votre réservation est en cours...'
+                    });
+                }
+            break;
+            case "-1":
+                navigation.navigate("DeclineBooking", {
+                    id: props.item.post.id
+                });
+            break;
         }
+
+
+        console.log(state)
     }
 
     return (
         <TouchableOpacity style={styles.item} onPress={() => goToNextScreen()}>
             <View style={{flexDirection:"column", display:"flex"}}>
-                <Text style={styles.item.title}>{JSON.parse(props.item).post.title}</Text>
+                <Text style={styles.item.title}>{props.item.post.title}</Text>
                 <Text style={[styles.state, style]}>{state}</Text>
             </View>
         </TouchableOpacity>
@@ -69,25 +102,30 @@ const BookedItem = (props) => {
 
 
 const BookingScreen = ({navigation, route}) => {
-    const [modalState, setModalState] = useState(false);
-    const [postData, setPostData] = useState([]);
     const [bookingData, setBookingData] = useState(null);
-    const [clickedBooking, setClickedBooking] = useState([]);
 
     const getBooking = async () => {
+
+
        const q = query(collection(db, "messages"), where(firebase.firestore.FieldPath.documentId(), '==', auth.currentUser.uid));
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
             let bookings = [];
             querySnapshot.forEach((doc) => {
                 bookings.push(doc.data());
             });
+            let bookingDataToSet = []
             let bookingData = []
             for (const property in bookings[0]) {
-                bookingData.push(JSON.stringify(bookings[0][property]))
+                bookingDataToSet.push(JSON.stringify(bookings[0][property]))
             }
-
+            for (const property in JSON.parse(bookingDataToSet)) {
+                bookingData.push(JSON.parse(bookingDataToSet)[property])
+            }
             setBookingData(bookingData)
         });
+
+
+
     }
 
     useEffect( () => {

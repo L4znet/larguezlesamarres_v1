@@ -1,9 +1,10 @@
 import * as React from 'react';
 import {useEffect, useState} from 'react';
 import {FlatList, Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {db} from "../firebase";
+import {auth, db} from "../firebase";
 import GestureRecognizer from "react-native-swipe-gestures";
 import {collection, doc, getDoc, onSnapshot, query, setDoc, updateDoc} from "firebase/firestore";
+import {uid} from "uid";
 
 
 const bookedItemHeader = () => {
@@ -90,12 +91,14 @@ const OfferBookingScreen = ({route, navigation}) => {
         }
     }, [])
 
-    const sendMessage = async (state, startDate = null, endDate = null) => {
+    const sendMessage = async (state) => {
         const messageRef = collection(db, "messages/")
         await setDoc(doc(messageRef, clickedBooking.tenantId), {
+        [auth.currentUser.uid]:{
             [clickedBooking.id]:{
                 state:state,
             }
+        }
         }, {
             merge: true
         }).then(() => {

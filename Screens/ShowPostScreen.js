@@ -69,25 +69,29 @@ const ShowPostScreen = ({ route, navigation }) => {
             const messageRef = collection(db, "messages/")
             await setDoc(doc(messageRef, auth.currentUser.uid), {
                 [auth.currentUser.uid]:{
-                    post:{
-                        id:offer.key,
-                        title:offer.title,
-                        price:offer.price,
-                        pricePer:offer.pricePer,
-                        boatName:offer.boatName
-                    },
-                    state:"0",
-                    startDate:startDate,
-                    endDate:endDate,
-                    bookingId:bookingId,
-                    tenantId:auth.currentUser.uid,
-                    tenantName: auth.currentUser.displayName,
-                    id:uid(3)
+                    [bookingId]:{
+                        post:{
+                            id:offer.key,
+                            title:offer.title,
+                            price:offer.price,
+                            pricePer:offer.pricePer,
+                            boatName:offer.boatName
+                        },
+                        state:"0",
+                        startDate:startDate,
+                        endDate:endDate,
+                        bookingId:bookingId,
+                        tenantId:auth.currentUser.uid,
+                        tenantName: auth.currentUser.displayName,
+                        id:uid(3)
+                    }
                 }
             }, {
                 merge: true
             }).then(() => {
             });
+
+            setModalVisible(false)
 
             Toast.show({
                 type: 'success',
@@ -98,8 +102,6 @@ const ShowPostScreen = ({ route, navigation }) => {
             navigation.navigate("ShowPost", {
                 id: offer.key,
             });
-
-            setModalVisible(false)
         }
     }
 
@@ -165,15 +167,20 @@ const ShowPostScreen = ({ route, navigation }) => {
         let todayDate = new Date();
         let dateToCheck = new Date(date);
 
-        if(dateToCheck < todayDate){
+        const monthTodayDate = todayDate.getMonth()+1;
+        const monthDateToCheck = dateToCheck.getMonth()+1;
+        todayDate = todayDate.getDate()+"-"+monthTodayDate+"-"+todayDate.getFullYear()
+        dateToCheck = dateToCheck.getDate()+"-"+monthDateToCheck+"-"+dateToCheck.getFullYear()
+
+        if(dateToCheck >= todayDate){
+            return true;
+        } else {
             Toast.show({
                 type:  'error',
                 text1: "Nom de zeus",
                 text2: 'Vous ne pouvez pas réserver dans le passé'
             });
             return false
-        } else if(dateToCheck >= todayDate) {
-            return true
         }
     }
 
@@ -208,7 +215,7 @@ const ShowPostScreen = ({ route, navigation }) => {
             setAlreadyBooked(false)
         } else {
             querySnapshot.forEach((doc) => {
-                if(doc.data().state === "1"){
+                if(parseInt(doc.data().state) >= 1 && parseInt(doc.data().state) < 3){
                     setAlreadyBooked(true)
                 } else {
                     setAlreadyBooked(false)
@@ -409,11 +416,11 @@ const ShowPostScreen = ({ route, navigation }) => {
                 <Text style={styles.single.descriptionLabel}>Description</Text>
                 <Text style={styles.single.description}>{offer.detail}</Text>
                 <View style={styles.single.config}>
-                    <Text style={styles.single.capacity}>Idéal pour {offer.capacity} {plurialLabel(offer.capacity, "personne")}</Text>
+                    <Text style={styles.single.capacity}>Idéal pour {parseInt(offer.capacity)} {plurialLabel(offer.capacity, "personne")}</Text>
                     <View style={styles.single.row}>
                         <View style={styles.single.column}>
-                            <Text style={styles.single.sleeping}>{offer.sleeping} {plurialLabel(offer.sleeping, "couchage")}</Text>
-                            <Text style={styles.single.cabins}>{offer.cabins} {plurialLabel(offer.cabins, "cabine")}</Text>
+                            <Text style={styles.single.sleeping}>{parseInt(offer.sleeping)} {plurialLabel(offer.sleeping, "couchage")}</Text>
+                            <Text style={styles.single.cabins}>{parseInt(offer.cabins)} {plurialLabel(offer.cabins, "cabine")}</Text>
                         </View>
                         <View style={styles.single.column}>
                             <Text style={styles.single.captain}>{withOrWithout(offer.captain)} capitaine</Text>

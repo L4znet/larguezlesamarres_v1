@@ -16,14 +16,15 @@ import {Provider, useSelector} from "react-redux";
 import {store} from "./store";
 import AddPostScreen from "./Screens/AddPostScreen";
 import ShowPostScreen from "./Screens/ShowPostScreen";
-import Toast, {BaseToast, ErrorToast} from 'react-native-toast-message';
+import Toast, {BaseToast, ErrorToast, InfoToast} from 'react-native-toast-message';
 import EditPostScreen from "./Screens/EditPostScreen";
 import ResultsScreen from "./Screens/ResultsScreen";
 import OfferBookingScreen from "./Screens/OfferBookingScreen";
 import PaymentScreen from "./Screens/PaymentScreen";
 import {StripeProvider} from "@stripe/stripe-react-native";
 import * as Linking from 'expo-linking';
-import DeclineBookingScreen from "./Screens/DeclineBooking";
+import DeclineBookingScreen from "./Screens/DeclineBookingScreen";
+import EndBookingScreen from "./Screens/EndBookingScreen";
 
 const Stack = createNativeStackNavigator();
 import ForgotScreen from "./Screens/ForgotScreen";
@@ -68,7 +69,7 @@ export default function App() {
                     fontSize: 15,
                     fontWeight: '400',
                     color:"#000",
-                       width:"100%",
+                   width:"100%",
                 }}
             />
         ),
@@ -86,12 +87,23 @@ export default function App() {
                 }}
             />
         ),
-        tomatoToast: ({ text1, props }) => (
-            <View style={{ height: 60, width: '100%', backgroundColor: 'tomato' }}>
-                <Text>{text1}</Text>
-                <Text>{props.uuid}</Text>
-            </View>
-        )
+        info: (props) => (
+            <BaseToast
+                {...props}
+                style={{ borderLeftColor: '#008aff', borderLeftWidth:10, height:100}}
+                contentContainerStyle={{ paddingHorizontal: 15 }}
+                text1Style={{
+                    fontSize: 20,
+                    fontWeight: '400'
+                }}
+                text2Style={{
+                    fontSize: 15,
+                    fontWeight: '400',
+                    color:"#000",
+                    width:"100%",
+                }}
+            />
+        ),
     };
 
     return (
@@ -136,7 +148,26 @@ export default function App() {
                           }}
                           component={RegisterScreen}
                         />
-
+                        {isUserLogged === true &&
+                            <Stack.Screen
+                                name="EndBooking"
+                                component={EndBookingScreen}
+                                options={{
+                                    title: 'Larguez les amarres',
+                                    headerStyle: {
+                                        backgroundColor: '#48B781',
+                                    },
+                                    headerTintColor: '#fff',
+                                    headerTitleStyle: {
+                                        fontWeight: 'bold',
+                                        fontFamily:"Syne_700Bold",
+                                        color:"#FFF",
+                                        fontSize:20
+                                    },
+                                    headerBackVisible:false
+                                }}
+                            />
+                        }
                         {isUserLogged === true &&
                             <Stack.Screen
                                 name="DeclineBooking"
