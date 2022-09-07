@@ -4,12 +4,12 @@ import {useEffect, useState} from "react";
 import {auth, db} from "../firebase";
 import {collection, doc, updateDoc, setDoc} from "firebase/firestore";
 import {useStripe} from '@stripe/stripe-react-native';
+import Toast from "react-native-toast-message";
 
 const PaymentScreen = ({route, navigation}) => {
     const {item} = route.params;
 
     const { initPaymentSheet, presentPaymentSheet } = useStripe();
-    const [loading, setLoading] = useState(false);
     const [totalamount, setTotal] = useState(0);
 
     const monthDiff = (dateFrom, dateTo) => {
@@ -31,7 +31,6 @@ const PaymentScreen = ({route, navigation}) => {
         let diff_days = diff_time / (1000 * 3600 * 24);
 
         let total = 0;
-        console.log(perPrice)
 
         switch (perPrice) {
             case "semaine":
@@ -44,8 +43,6 @@ const PaymentScreen = ({route, navigation}) => {
                 total = price * diff_days
                 break
         }
-
-        console.log(total)
 
         setTotal(total.toFixed(2))
 
@@ -77,23 +74,22 @@ const PaymentScreen = ({route, navigation}) => {
             customerId: customer,
             customerEphemeralKeySecret: ephemeralKey,
             paymentIntentClientSecret: paymentIntent,
-            amount:5000,
             allowsDelayedPaymentMethods: true,
         });
-        if (!error) {
-            setLoading(true);
-        }
     };
 
 
     const updateState = async () => {
+
         const bookingRef = doc(db, "posts", item.post.id, "bookings", item.bookingId);
         await updateDoc(bookingRef, {state: "2"});
 
         const messageRef = collection(db, "messages/")
         await setDoc(doc(messageRef, auth.currentUser.uid), {
-            [item.bookingId]:{
-                state:"2"
+            [item.tenantId]:{
+                [item.bookingId]:{
+                    state:"2"
+                }
             }
         }, {
             merge: true
@@ -106,10 +102,19 @@ const PaymentScreen = ({route, navigation}) => {
         const { error } = await presentPaymentSheet();
         if (!error) {
             await updateState()
-
+            Toast.show({
+                type: 'success',
+                text1: 'Paiement réussi',
+                text2: 'Offre réglée avec succès'
+            });
+            navigation.navigate('Feed')
+        } else if(error.code === "Canceled"){
+            Toast.show({
+                type: 'error',
+                text1: "Transaction annulée",
+                text2: "Nous n'avons pas pu procéder au paiement"
+            });
             navigation.navigate('Booking')
-        } else {
-            console.log(error)
         }
     };
 
