@@ -362,7 +362,7 @@ const AddPostScreen = ({ navigation }) => {
                     <TextInput
                         style={[styles.form.textarea, styles.form.input]}
                         multiline={true}
-                        onChangeText={(equipment) => setEquipments(equipments)}
+                        onChangeText={(equipment) => setEquipments(equipment)}
                         placeholderTextColor="#9e9e9e"
                         placeholder="Équipement(s) inclu avec votre véhicule"
                     />
